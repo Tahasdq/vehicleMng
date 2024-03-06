@@ -8,11 +8,12 @@ import Services from './pages/Services/Sevices.jsx'
 import Layout from './Layout/Layout.jsx'
 import ArrivalAtOccurence from './pages/ArrivalAtOccurence/ArrivalAtOccurence.jsx'
 import ClosingOccurence from './pages/ClosingOccurence/ClosingOccurence.jsx'
-import StaffRegistration from './pages/StaffRegistration/StaffRegistration.jsx'
-import VehicleRegistration from './pages/VehicleRegistration/VehicleRegistration.jsx'
-import ApplicatinRegistration from './pages/ApplicatinRegistration/ApplicatinRegistration.jsx'
-import OccurenceCode from './pages/OccurenceCode/OccurenceCode.jsx'
-import GuOfTheDay from './pages/GuOfTheDay/GuOfTheDay.jsx'
+import StaffRegistration from './pages//Registation/StaffRegistration/StaffRegistration.jsx'
+import VehicleRegistration from './pages/Registation/VehicleRegistration/VehicleRegistration.jsx'
+import ApplicantRegistration from './pages/Registation/ApplicantRegistration/ApplicantRegistration.jsx'
+import OccurenceCodeRegistration from './pages/Registation/OccurenceCodeRegistration/OccurenceCodeRegistration.jsx'
+// import GuOfTheDay from './pages/GuOfTheDay/GuOfTheDay.jsx'
+import StreetRegistration from './pages/Registation/StreetRegistration/StreetRegistration.jsx'
 
 
 const router = createBrowserRouter(
@@ -24,10 +25,10 @@ const router = createBrowserRouter(
       <Route path='closing' element={<ClosingOccurence />} />
       <Route path='staffregistration' element={<StaffRegistration />} />
       <Route path='vehicleregistration' element={<VehicleRegistration />} />
-      <Route path='guoftheday' element={<GuOfTheDay />} />
-      <Route path='appilcantregistration' element={<ApplicatinRegistration />} />
-      <Route path='streetregistration' element={<ApplicatinRegistration />} />
-      <Route path='occurencecode' element={<OccurenceCode />} />
+      {/* <Route path='guoftheday' element={<GuOfTheDay />} /> */}
+      <Route path='appilcantregistration' element={<ApplicantRegistration />} />
+      <Route path='streetregistration' element={<StreetRegistration />} />
+      <Route path='occurencecode' element={<OccurenceCodeRegistration />} />
 
 
     </Route>

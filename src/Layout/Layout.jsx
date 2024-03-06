@@ -9,8 +9,8 @@ const Layout = () => {
     <>
     <Header/>
     <main className='layout'>
-    <Aside />
-    <Outlet/>
+    <Aside className="aside-layout" />
+    <Outlet className="main-layout"/>
     </main>
     </>
   )
