@@ -5,10 +5,13 @@ const Aside = () => {
     return (
         <div className='main-left'>
             <div className="operation ">
-                <h4>Operation</h4>
+                <h5>Operation</h5>
                 <ul>
                     <li>
                         <Link to="/service" >Services</Link>
+                    </li>
+                    <li>
+                        <Link to="/guoftheday" >Gu of the day</Link>
                     </li>
                     <li>
                         <Link to="/arrival" >Arrival at occurence</Link>
@@ -21,7 +24,7 @@ const Aside = () => {
 
             </div>
             <div className="registration">
-                <h4>Registration</h4>
+                <h5>Registration</h5>
                 <ul>
                     <li>
                         <Link to="/staffregistration" > Staff Registration</Link>
@@ -30,7 +33,7 @@ const Aside = () => {
                         <Link to="/vehicleregistration" > Vehicle</Link>
                     </li>
                     <li>
-                        <Link to="/guoftheday" > Gu of the day</Link>
+                        <Link to="/guregistration" > Gu of the day</Link>
                     </li>
                     <li>
                         <Link to="/appilcantregistration" > applicants</Link>

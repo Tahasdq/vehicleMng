@@ -1,16 +1,20 @@
 import React from 'react'
  import './Layout.scss'
-import Header from '../components/Header/Header'
+import Header from '../components/Header/Header.jsx'
 // import Aside from '../components/Aside/Aside'
 import { Outlet } from 'react-router-dom'
-import Aside from '../components/Aside/Aside'
+import Aside from '../components/Aside/Aside.jsx'
 const Layout = () => {
   return (
     <>
     <Header/>
     <main className='layout'>
-    <Aside className="aside-layout" />
-    <Outlet className="main-layout"/>
+      <aside className='aside-layout'>
+    <Aside />
+      </aside>
+    <div className='main-layout'>
+    <Outlet />
+    </div>
     </main>
     </>
   )

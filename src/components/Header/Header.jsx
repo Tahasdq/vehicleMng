@@ -8,13 +8,17 @@ const Header = () => {
                 <div className="header-wrapper">
 
                     <div className="header-left header-children">
-                       <Link to="/">
-                       
-                       Logo is here
-                       </Link> 
+                        <Link to="/">
+                            LOGO
+                        </Link>
+                        <div className="menu-icon">
+                            <div></div>
+                            <div></div>
+                            <div></div> 
+                        </div>
                     </div>
                     <div className="header-right header-children">
-                       <span>Dashboard</span>
+                        <span>Dashboard</span>
                     </div>
                 </div>
             </div>
