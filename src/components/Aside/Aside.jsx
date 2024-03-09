@@ -52,7 +52,6 @@ const Aside = () => {
                         </li>
                     </ul>
 
-                </div>
                 <div className="registration">
                     <h5>Registros</h5>
                     <ul>
@@ -85,6 +84,7 @@ const Aside = () => {
                     </ul>
                 </div>
             </div>
+        </div>
         </div>
     )
 }
