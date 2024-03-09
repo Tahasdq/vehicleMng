@@ -2,13 +2,13 @@ import React from 'react'
 import ReactDOM from 'react-dom/client'
 import './index.css'
 // import Layout from './components/Layout/Layout.jsx'
-import { BrowserRouter, RouterProvider, Route, createBrowserRouter, createRoutesFromElements } from 'react-router-dom'
+import { BrowserRouter, RouterProvider, Route, createBrowserRouter, createRoutesFromElements, Outlet } from 'react-router-dom'
 import Home from './pages/Home/Home.jsx'
 import Services from './pages/Services/Sevices.jsx'
 import Layout from './Layout/Layout.jsx'
 import ArrivalAtOccurence from './pages/ArrivalAtOccurence/ArrivalAtOccurence.jsx'
 import ClosingOccurence from './pages/ClosingOccurence/ClosingOccurence.jsx'
-import Guoftheday from './pages/GuOfTheDay/GuOfTheDay.jsx' 
+import Guoftheday from './pages/GuOfTheDay/GuOfTheDay.jsx'
 import StaffRegistration from './pages//Registation/StaffRegistration/StaffRegistration.jsx'
 import VehicleRegistration from './pages/Registation/VehicleRegistration/VehicleRegistration.jsx'
 import ApplicantRegistration from './pages/Registation/ApplicantRegistration/ApplicantRegistration.jsx'
@@ -17,19 +17,21 @@ import GuRegistration from './pages/Registation/guRegistration/guRegistration.js
 import StreetRegistration from './pages/Registation/StreetRegistration/StreetRegistration.jsx'
 import NewServices from './pages/Services/ServiceNew.jsx'
 import ListServices from "./pages/Services/ServiceList.jsx"
+import ListServiceChild from './pages/Services/ServiceListChild.jsx'
 
 
 const router = createBrowserRouter(
   createRoutesFromElements(
-    <Route path='/' element={<Layout/>}>
+    <Route path='/' element={<Layout />}>
       <Route path='' element={<Home />} />
       <Route path='service/' element={<Services />} >
-
-      <Route path='newservice' element={< NewServices/>}/>
-      <Route path='listservice' element={< ListServices/>}/>
-      
+        <Route path='newservice' element={< NewServices />} />
+        <Route path='listservice/' element={< ListServices />}>
+        
+          <Route path='listchild'  element={<ListServiceChild />} >
+            </Route>
+        </Route>
       </Route>
-
       <Route path='arrival' element={<ArrivalAtOccurence />} />
       <Route path='guoftheday' element={<Guoftheday />} />
       <Route path='closing' element={<ClosingOccurence />} />

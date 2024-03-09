@@ -16,7 +16,7 @@ const Services = () => {
       {/* <Link to="/service/newservice">New</Link>
       <Link to="/service/listservice">List</Link> */}
       </div>
-      <Outlet/>
+      <Outlet />
     </>
   )
 }

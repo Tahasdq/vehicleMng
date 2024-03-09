@@ -7,7 +7,7 @@ import Aside from '../components/Aside/Aside.jsx'
 const Layout = () => {
   return (
     <>
-    <Header/>
+    {/* <Header/> */}
     <main className='layout'>
       <aside className='aside-layout'>
     <Aside />

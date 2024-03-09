@@ -1,53 +1,86 @@
 import React from 'react'
 import './Aside.scss'
 import { Link } from 'react-router-dom'
+import BoltIcon from '@mui/icons-material/Bolt';
+import EmojiObjectsIcon from '@mui/icons-material/EmojiObjects';
+import GroupIcon from '@mui/icons-material/Group';
+import SettingsIcon from '@mui/icons-material/Settings';
+
+import LibraryBooksIcon from '@mui/icons-material/LibraryBooks';
 const Aside = () => {
     return (
         <div className='main-left'>
-            <div className="operation ">
-                <h5>Operation</h5>
-                <ul>
-                    <li>
-                        <Link to="/service" >Services</Link>
-                    </li>
-                    <li>
-                        <Link to="/guoftheday" >Gu of the day</Link>
-                    </li>
-                    <li>
-                        <Link to="/arrival" >Arrival at occurence</Link>
+            <div className="logo">
 
-                    </li>
-                    <li>
-                        <Link to="/closing" >Closing occurence</Link>
-                    </li>
-                </ul>
-
+                <Link to="/">
+                    LOGO
+                </Link>
             </div>
-            <div className="registration">
-                <h5>Registration</h5>
-                <ul>
-                    <li>
-                        <Link to="/staffregistration" > Staff Registration</Link>
-                    </li>
-                    <li>
-                        <Link to="/vehicleregistration" > Vehicle</Link>
-                    </li>
-                    <li>
-                        <Link to="/guregistration" > Gu of the day</Link>
-                    </li>
-                    <li>
-                        <Link to="/appilcantregistration" > applicants</Link>
+            <div className="main-left-wrapper">
 
-                    </li>
-                    <li>
-                        <Link to="/streetregistration" > steet</Link>
+                <div className="operation ">
 
-                    </li>
-                    <li>
 
-                        <Link to="/occurencecode" > occurence code</Link>
-                    </li>
-                </ul>
+                    <h5>Operações</h5>
+                    <ul>
+
+                        <li>
+                            <BoltIcon fontSize="small"  />
+                            <Link to="/service" >Serviço</Link>
+                        </li>
+
+                        <li>
+                            <EmojiObjectsIcon fontSize="small" />
+                            <Link to="/guoftheday" >Despacho da Guarnição</Link>
+                        </li>
+
+
+
+                        <li>
+                            <GroupIcon  fontSize="small"/>
+                            <Link to="/arrival" >Chegada à Ocorrência</Link>
+
+                        </li>
+
+
+                        <li>
+                            <LibraryBooksIcon fontSize="small" />
+                            <Link to="/closing" >Encerramento da Ocorrência</Link>
+                        </li>
+                    </ul>
+
+                </div>
+                <div className="registration">
+                    <h5>Registros</h5>
+                    <ul>
+                        <li>
+                            <EmojiObjectsIcon  fontSize="small"/>
+                            <Link to="/staffregistration" > Equipe</Link>
+                        </li>
+                        <li>
+                            <SettingsIcon fontSize="small" />
+                            <Link to="/vehicleregistration" > Veículo</Link>
+                        </li>
+                        <li>
+                            <SettingsIcon fontSize="small" />
+                            <Link to="/guregistration" > Guarnição do Dia</Link>
+                        </li>
+                        <li>
+                            <SettingsIcon fontSize="small"/>
+                            <Link to="/appilcantregistration" > Candidato</Link>
+
+                        </li>
+                        <li>
+                            <SettingsIcon fontSize="small"/>
+                            <Link to="/streetregistration" > Endereço</Link>
+
+                        </li>
+                        <li>
+                            <SettingsIcon fontSize="small"/>
+                            <Link to="/occurencecode" > occurence code</Link>
+                        </li>
+                    </ul>
+                </div>
             </div>
         </div>
     )
