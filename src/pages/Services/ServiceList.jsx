@@ -22,8 +22,8 @@ return(
   <div className="col-md-8 col-sm-12">
       
       <div className="list mt-5">
-            <h4>Phone : {v.phone} </h4>
-            <h4>Applicant : {v.Applicant} </h4>
+            <h4>Telephono : {v.phone} </h4>
+            <h4>Candidato : {v.Applicant} </h4>
         </div>
       </div>
 )

@@ -8,24 +8,26 @@ const VehicleRegistration = () => {
                 <div className="form-wrapper">
 
                     <div className="form-heading">
-                        <h2>Vehicle registration</h2>
+                        <h2>Registro de Veículo
+</h2>
                     </div>
                     <form className='form-body' action="">
-                    <label for="fname">Vehicle Number</label>
-                     <input type="text" id="fname" name="firstname" placeholder="Your vehicle no"/>
+                    <label for="fname">Número do veículo</label>
+                     <input type="text" id="fname" name="firstname" placeholder="Sua Número do veículo"/>
                      <br />
-                    <label for="fname">Plate</label>
-                     <input type="text" id="fname" name="firstname" placeholder="Your vehicle plate number"/>
+                    <label for="fname">Placa
+</label>
+                     <input type="text" id="fname" name="firstname" placeholder="Sua Número do Placa "/>
                      <br />
-                    <label for="fname">Brand</label>
-                     <input type="text" id="fname" name="firstname" placeholder="Your  vehicle brand"/>
+                    <label for="fname">Marca</label>
+                     <input type="text" id="fname" name="firstname" placeholder="Sua Marca "/>
                      <br />
-                    <label for="fname">Model</label>
-                     <input type="text" id="fname" name="firstname" placeholder="Your vehicle model"/>
+                    <label for="fname">Modelo</label>
+                     <input type="text" id="fname" name="firstname" placeholder="Seu veículo Modelo"/>
 
                         <br />
 
-                        <input class="registerbtn" type="submit" value="Submit"/>
+                        <input class="registerbtn" type="submit" value="Enviar"/>
                     </form>
                 </div>
             </section>

@@ -8,22 +8,22 @@ const StreetRegistration = () => {
                 <div className="form-wrapper">
 
                     <div className="form-heading">
-                        <h2>Street registration</h2>
+                        <h2>Cadastro de Rua</h2>
                     </div>
                     <form className='form-body' action="">
-                    <label for="fname">Name</label>
-                     <input type="text" id="fname" name="firstname" />
+                    <label for="fname">Rua</label>
+                     <input type="text" id="fname" name="Rua" />
                      <br />
-                    <label for="fname">CPF</label>
-                     <input type="text" id="fname" name="firstname" />
+                    <label for="fname">CEP</label>
+                     <input type="text" id="fname" name="CEP" />
                      <br />
-                    <label for="fname">Address</label>
-                     <input type="text" id="fname" name="firstname" />
+                    <label for="fname">bairro</label>
+                     <input type="text" id="fname" name="bairro" />
                      <br />
-                    <label for="fname">Reference</label>
-                     <input type="text" id="fname" name="firstname" />
+                    <label for="fname">cidade</label>
+                     <input type="text" id="fname" name="cidade" />
                      <br />
-                        <input class="registerbtn" type="submit" value="Submit"/>
+                        <input class="registerbtn" type="submit" value="Enviar"/>
                     </form>
                 </div>
             </section>

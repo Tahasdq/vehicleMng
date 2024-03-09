@@ -32,41 +32,43 @@ const ClosingOccurence = () => {
     },
   ];
   return (
-    <div>
-      <div className="container-fluid">
+    <div className='custom-container'>
+      <div className="container">
         <div className="Dashboard_heading">
-          <h3>Occurrences being Attended</h3>
+          <h3>Ocorrências atendidas
+</h3>
+          <hr />
         </div>
         <div className="row">
           <div className="col-md-12 col-sm-12 ">
             {Occurance_hold.map((v, i) => {
               return (
-                <div className="col-md-12 col-sm-12 occurance_holds row">
+                <div className="col-md-12 col-sm-12 my-3 occurance_holds row">
                   <div className="col-md-10 row">
                   
                   <div className="col-md-3 col-sm-12">
-                    <h6>Phone : {v.phone} </h6>
+                    <h6>Telefone : {v.phone} </h6>
                   </div>
                   <div className="col-md-3 col-sm-12">
-                    <h6>Applicant : {v.Applicant} </h6>
+                    <h6>Candidato : {v.Applicant} </h6>
                   </div>
                  
                   <div className="col-md-6  col-sm-12">
-                    <h6>Gu_leaving_the_scences : {v.Gu_leaving_the_scence} </h6>
+                    <h6>Garnição deixando a cena : {v.Gu_leaving_the_scence} </h6>
                   </div>
                   <div className="col-md-3 col-sm-12">
-                    <h6>Tram : {v.tram} </h6>
+                    <h6>Bonde : {v.tram} </h6>
                   </div>
                   <div className="col-md-3 col-sm-12">
-                    <h6>Address : {v.Address} </h6>
+                    <h6>Rua : {v.Address} </h6>
                   </div>
                   
                   <div
                     className="col-md-6 col-sm-12 gu_list"
                     style={{ display: "flex" }}
                   >
-                    <h6> Gu List : </h6>
-                    <ol type="1">
+                    <h6> Gu Lista : </h6>
+                    <ol className='attended' type="1">
                       <li>
                         {" "}
                         <a href="#" className="btn-1 ">

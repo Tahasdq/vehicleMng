@@ -7,22 +7,19 @@ const OccurenceCodeRegistration = () => {
                 <div className="form-wrapper">
 
                     <div className="form-heading">
-                        <h2>Occurence Code registration</h2>
+                        <h2>Cadastro de Código de Ocorrência</h2>
                     </div>
                     <form className='form-body' action="">
-                    <label for="fname">Name</label>
-                     <input type="text" id="fname" name="firstname" />
+                    <label for="fname">Código de registro</label>
+                     <input type="text" id="fname" name="Código de registro" />
                      <br />
-                    <label for="fname">CPF</label>
-                     <input type="text" id="fname" name="firstname" />
+                    <label for="fname">descrição</label>
+                     <input type="text" id="fname" name="descrição" />
                      <br />
-                    <label for="fname">Address</label>
-                     <input type="text" id="fname" name="firstname" />
+                    <label for="fname">OBS</label>
+                     <input type="text" id="fname" name="OBS" />
                      <br />
-                    <label for="fname">Reference</label>
-                     <input type="text" id="fname" name="firstname" />
-                     <br />
-                        <input class="registerbtn" type="submit" value="Submit"/>
+                        <input class="registerbtn" type="submit" value="Enviar"/>
                     </form>
                 </div>
             </section>
