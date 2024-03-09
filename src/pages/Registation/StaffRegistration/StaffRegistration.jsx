@@ -7,19 +7,21 @@ const StaffRegistration = () => {
                 <div className="form-wrapper">
 
                     <div className="form-heading">
-                        <h2>Staff registration</h2>
+                        <h2>Cadastro de pessoal</h2>
                     </div>
                     <form className='form-body' action="">
-                    <label for="fname">Name</label>
-                     <input type="text" id="fname" name="firstname" placeholder="Your Name"/>
+                    <label for="fname">Nome</label>
+                     <input type="text" id="fname" name="firstname" placeholder="Your Nome"/>
                      <br />
-                    <label for="fname">SurName</label>
-                     <input type="text" id="fname" name="firstname" placeholder="Your Surname"/>
+                    <label for="fname">Sobrenome
+</label>
+                     <input type="text" id="fname" name="firstname" placeholder="Your Sobrenome"/>
                      <br />
-                    <label for="fname">War Name</label>
-                     <input type="text" id="fname" name="firstname" placeholder="Your War Name"/>
+                    <label for="fname">Nome da Guerra
+</label>
+                     <input type="text" id="fname" name="firstname" placeholder="Your Nome da Guerra"/>
                      <br />
-                        <input class="registerbtn" type="submit" value="Submit"/>
+                        <input class="registerbtn" type="submit" value="Enviar"/>
                     </form>
                 </div>
             </section>

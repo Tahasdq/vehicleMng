@@ -6,14 +6,15 @@
 html, body {
     height: 100%;
 }
-li {
-    list-style: none;
-}
+   .attended li {
+        margin-left: 20px !important;
+        margin-top: 5px;
+    }
 
 
 .Dashboard_heading{
-    border-bottom: 1px solid #ccc;
-    box-shadow: 4px 4px 8px #ccc;
+    /* border-bottom: 1px solid #ccc; */
+    /* box-shadow: 4px 4px 8px #ccc; */
     padding: 20px;
 }
 .Dashboard_cards{
@@ -34,18 +35,18 @@ li {
     height: 200px;
     padding:100px;
 }
-
-
 .form_card {
     display: flex;
     justify-content: space-around;
     align-items: center;
-    border-bottom: 1px solid #ccc;
+    /* border: 1px solid #ccc; */
     box-shadow: 4px 4px 8px #ccc;
     border-radius: 15px;
     height: auto;
     padding:50px;
     flex-wrap: wrap;
+    background-color: #ffff;
+
 }
 .request_card{
     display: flex;
@@ -58,7 +59,7 @@ li {
     height: auto;
     padding:50px 0;
     flex-wrap: wrap;
-    
+    background-color: #ffff;
 
 }
 
@@ -72,20 +73,16 @@ li {
     padding: 40px 50px;
 }
 input{
-    box-shadow: 4px 4px 4px #ccc;
+    /* box-shadow: 4px 4px 4px #ccc; */
+    border-bottom: 1px solid #ccc;
+    border-left: none !important;
+    border-Right: none !important;
+    border-top: none !important;
 }
 
 .garison{
     display: flex;
-    /* flex-direction: column; */
-    /* justify-content: space-around; */
-    align-items: center;
-    border-bottom: 1px solid #ccc;
-    box-shadow: 4px 4px 8px #ccc;
-    border-radius: 15px;
-    height: auto;
-    padding:20px;
-    flex-wrap: wrap;
+    justify-content: center;  
 }
 
 .avalible_garison{
@@ -93,20 +90,31 @@ input{
     box-shadow: 4px 4px 8px #ccc;
     border-radius: 15px;
     height: auto;
-    padding:20px 0px;
+    padding:20px 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    background-color: #ffff;
 }
 .unavalible_garison{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
     border-bottom: 1px solid #ccc;
     box-shadow: 4px 4px 8px #ccc;
     border-radius: 15px;
     height: auto;
-    padding:20px 0px ;
+    padding:20px 10px ;
+    background-color: #ffff;
 }
 .list{
     display: flex;
     /* flex-direction: column; */
     justify-content: space-around;
     align-items: center;
+    background-color    : #ffff !important;
     border-bottom: 1px solid #ccc;
     box-shadow: 4px 4px 8px #ccc;
     border-radius: 15px;
@@ -133,6 +141,7 @@ input{
 } 
 
 .occurance_holds{
+    background-color: #ffff;
     border-bottom: 1px solid #ccc;
     box-shadow: 4px 4px 8px #ccc;
     border-radius: 15px;
@@ -145,9 +154,47 @@ input{
 }
 
 .Avaliable_gar{
+    background-color: #ffff;
     border-bottom: 1px solid #ccc;
     box-shadow: 4px 4px 8px #ccc;
     border-radius: 15px;
     height: 500px;
     padding:20px 0px;
+    display: flex;
+    /* justify-content: cen ter; */
+    align-items: center;
+    flex-direction: column;
 }
+    .custom-container{
+        background-color: #f5f5f5;
+    }
+
+
+    .cars{
+        border-bottom: 1px solid #ccc;
+        box-shadow: 4px 4px 8px #ccc;
+        border-radius: 15px;
+        height: auto;
+        padding:20px 10px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        background-color: #ffff;
+    }
+    .guards{
+        border-bottom: 1px solid #ccc;
+        box-shadow: 4px 4px 8px #ccc;
+        border-radius: 15px;
+        height: auto;
+        padding:20px 10px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        background-color: #ffff;
+    }
+    .guards-1{
+        display: none;
+    }
+     

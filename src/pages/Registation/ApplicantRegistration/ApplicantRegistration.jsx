@@ -7,23 +7,23 @@ const ApplicantRegistration= () => {
                 <div className="form-wrapper">
 
                     <div className="form-heading">
-                        <h2>Applicant registration</h2>
+                        <h2>Registro do candidato</h2>
                     </div>
                     <form className='form-body' action="">
-                    <label for="fname">Name</label>
-                     <input type="text" id="fname" name="firstname" />
+                    <label for="fname">Nome</label>
+                     <input type="text" id="fname" name="primeiro nome" />
                      <br />
                     <label for="fname">CPF</label>
-                     <input type="text" id="fname" name="firstname" />
+                     <input type="text" id="fname" name="CPF" />
                      <br />
-                    <label for="fname">Address</label>
-                     <input type="text" id="fname" name="firstname" />
+                    <label for="fname">Rua</label>
+                     <input type="text" id="fname" name="Rua" />
                      <br />
-                    <label for="fname">Reference</label>
+                    <label for="fname">Referencia</label>
                      <input type="text" id="fname" name="firstname" />
                      <br />
 
-                        <input class="registerbtn" type="submit" value="Submit"/>
+                        <input class="registerbtn" type="submit" value="Enviar"/>
                     </form>
                 </div>
             </section>

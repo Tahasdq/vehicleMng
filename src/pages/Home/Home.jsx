@@ -3,46 +3,47 @@ import React from 'react'
 const Home = () => {
   const data = [
     {
-        heading:'Occurance in Care',
+        heading:'celio Atendimento',
         data:'50'
     },
     {
-        heading:'Occurance in Care',
+        heading:'Ocorencia em aberto',
         data:'50'
     },
     {
-        heading:'Occurance in Care',
+        heading:'Registros de Funcionários',
         data:'50'
     },
     {
-        heading:'Occurance in Care',
+        heading:'Bondes disponíveis',
         data:'50'
     },
     {
-        heading:'Occurance in Care',
+        heading:'Equipe disponível',
         data:'50'
     },
     {
-        heading:'Occurance in Care',
+        heading:'Equipe Indisponível',
+        data:'50'
+    },
+    {
+        heading:'Ocorrências Atendidas Hoje',
         data:'50'
     }
     ,{
-        heading:'Occurance in Care',
+        heading:'Ocorrências Atendidas no Mês',
         data:'50'
     },
     {
-        heading:'Occurance in Care',
+        heading:'Ocorrências Atendidas no Ano',
         data:'50'
     },
-    {
-        heading:'Occurance in Care',
-        data:'50'
-    }
+    
 ]
   return (
     <div className='Container'>
             <div className='Dashboard_heading'>
-                <h3 >Dashboard</h3>
+                <h3 >Painel de Controle </h3>
             </div>
             <div className='Dashboard_cards'>
 
