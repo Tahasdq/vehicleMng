@@ -25,17 +25,19 @@ const ArrivalAtOccurence = () => {
               <div className="col-md-4 col-sm-12">
               <h6 >Candidato : {v.Applicant} </h6>
               </div>
-              <div className="col-md-4 col-sm-12">
-              <h6> Garnição deixando a cena: {v.Gu_leaving_the_scence} </h6>
-              
-              </div>
+             
               <div className="col-md-4 col-sm-12">
               <h6 >Bonde : {v.tram} </h6>
               
               </div>
               <div className="col-md-4 col-sm-12">
               <h6>Rua : {v.Address} </h6>
+
            </div>
+           <div className="col-md-6 col-sm-12">
+              <h6> Garnição deixando a cena: {v.Gu_leaving_the_scence} </h6>
+              
+              </div>
               </div>
           );
         })}

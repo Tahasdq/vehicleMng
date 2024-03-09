@@ -20,6 +20,7 @@ const ServiceList = () => {
 
 {list.map((v,i)=>{
 return(
+  <Link to="/service/listchild">
   <div className="col-md-8 col-sm-12">
       
       <div className="list mt-5">
@@ -27,11 +28,13 @@ return(
             <h4>Candidato : {v.Applicant} </h4>
         </div>
       </div>
+      </Link>
 )
 
 })}
 
 
+{/* <Outlet/> */}
 
       </div>
     </div>

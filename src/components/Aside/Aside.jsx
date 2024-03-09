@@ -5,8 +5,11 @@ import BoltIcon from '@mui/icons-material/Bolt';
 import EmojiObjectsIcon from '@mui/icons-material/EmojiObjects';
 import GroupIcon from '@mui/icons-material/Group';
 import SettingsIcon from '@mui/icons-material/Settings';
-
+import DirectionsCarIcon from '@mui/icons-material/DirectionsCar';
 import LibraryBooksIcon from '@mui/icons-material/LibraryBooks';
+import CodeIcon from '@mui/icons-material/Code';
+import PersonIcon from '@mui/icons-material/Person';
+import StreetviewIcon from '@mui/icons-material/Streetview';
 const Aside = () => {
     return (
         <div className='main-left'>
@@ -58,7 +61,7 @@ const Aside = () => {
                             <Link to="/staffregistration" > Equipe</Link>
                         </li>
                         <li>
-                            <SettingsIcon fontSize="small" />
+                            <DirectionsCarIcon fontSize="small" />
                             <Link to="/vehicleregistration" > Veículo</Link>
                         </li>
                         <li>
@@ -66,17 +69,17 @@ const Aside = () => {
                             <Link to="/guregistration" > Guarnição do Dia</Link>
                         </li>
                         <li>
-                            <SettingsIcon fontSize="small"/>
+                            <PersonIcon fontSize="small"/>
                             <Link to="/appilcantregistration" > Candidato</Link>
 
                         </li>
                         <li>
-                            <SettingsIcon fontSize="small"/>
+                            <StreetviewIcon fontSize="small"/>
                             <Link to="/streetregistration" > Endereço</Link>
 
                         </li>
                         <li>
-                            <SettingsIcon fontSize="small"/>
+                            <CodeIcon fontSize="small"/>
                             <Link to="/occurencecode" > occurence code</Link>
                         </li>
                     </ul>

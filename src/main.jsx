@@ -27,10 +27,10 @@ const router = createBrowserRouter(
       <Route path='service/' element={<Services />} >
         <Route path='newservice' element={< NewServices />} />
         <Route path='listservice/' element={< ListServices />}>
-        
-          <Route path='listchild'  element={<ListServiceChild />} >
-            </Route>
+          {/* <Route path='listchild'  element={<ListServiceChild />} >
+            </Route> */}
         </Route>
+        <Route path='listchild' element={<ListServiceChild  />} />
       </Route>
       <Route path='arrival' element={<ArrivalAtOccurence />} />
       <Route path='guoftheday' element={<Guoftheday />} />
@@ -41,6 +41,7 @@ const router = createBrowserRouter(
       <Route path='appilcantregistration' element={<ApplicantRegistration />} />
       <Route path='streetregistration' element={<StreetRegistration />} />
       <Route path='occurencecode' element={<OccurenceCodeRegistration />} />
+      {/* <Route path='services/listservice/listchild' element={<OccurenceCodeRegistration />} /> */}
 
 
     </Route>

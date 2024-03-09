@@ -2,9 +2,9 @@ import React from "react";
 
 const ServiceListChild = () => {
   return (
-    <div className="container_fluid">
-      <div className=" row garison">
-        <div className=" col-md-6 col-sm-12 Record_1">
+    <div className="container">
+      <div className=" row garison my-5">
+        <div className=" col-md-4 col-sm-12 Record_1">
          
           <ul>
             <li>
@@ -18,7 +18,7 @@ const ServiceListChild = () => {
             </li>
           </ul>
         </div>
-        <div className=" col-md-6 col-sm-12  Record_2">
+        <div className=" col-md-4 col-sm-12 ml-5  Record_2">
           <ul>
             <li>
               <h4> Adress:Herabad</h4>
@@ -37,7 +37,7 @@ const ServiceListChild = () => {
         </div>
       </div>
 
-      <div className=" row request_card py-5">
+      <div className=" row request_card py-5 my-5">
         <div class=" col-sm-12 col-md-12 input-group request-group mb-3 mt-3">
           <input
             type="text"
@@ -49,7 +49,7 @@ const ServiceListChild = () => {
         </div>
       </div>
 
-      <div className=" row request_card py-5">
+      <div className=" row request_card py-5 mb-5">
         <div class=" col-sm-12 col-md-12 input-group request-group mb-3 mt-3">
           <input
             type="text"
