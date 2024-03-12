@@ -14,11 +14,11 @@ const GuOfTheDay = () => {
     <div className="container">
       <div className="Dashboard_heading">
         <h3>Ocorrência aguardando atençãon</h3>
-        <hr className='my-5'/>
+        <hr className='my-4'/>
       </div>
 
       <div className="row">
-      <div className="col-md-8 col-sm-12 ">
+      <div className="col-md-8 col-sm-12 " style={{marginTop: "13px"}}>
         {Occurance_hold.map((v, i) => {
          return (
             <div className="col-md-12 colsm-12 my-3 occurance_holds">
@@ -43,7 +43,7 @@ const GuOfTheDay = () => {
           </div>
         
           <div className="button mt-3 text-center">
-          <a href="" className="btn btn-primary " style={{padding:"10px 120px"}}> Despatcho</a>
+          <a href="" className="btn btn-primary guofdybtn" style={{padding:"10px 120px"}}> Despatcho</a>
 
           </div>
 

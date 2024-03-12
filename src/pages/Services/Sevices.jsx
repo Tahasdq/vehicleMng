@@ -6,7 +6,7 @@ const Services = () => {
     <div className="custom-container">
       <div className="container mt-5">
       <h3 className=''>Servico</h3>
-      <hr className='my-5' />
+      <hr className='my-3' />
       <div className="button-group my-4 mx-3">
         <Link to="/service/newservice" class="btn btn-primary px-5 py-2">
           Novo

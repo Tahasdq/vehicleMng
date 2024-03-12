@@ -3,35 +3,35 @@ import React from "react";
 const ServiceListChild = () => {
   return (
     <div className="container">
-      <div className=" row garison my-5">
+      <div className=" row garison my-5 popa">
         <div className=" col-md-4 col-sm-12 Record_1">
          
           <ul>
             <li>
-              <h4> phone : 0987654</h4>
+              <h4> Phone: 0987654</h4>
             </li>
             <li>
               <h4> Applicant: hunain</h4>
             </li>
             <li>
-              <h4> Occurrance_Num:9898</h4>
+              <h4> Occurrance_Num: 9898</h4>
             </li>
           </ul>
         </div>
-        <div className=" col-md-4 col-sm-12 ml-5  Record_2">
+        <div className=" col-md-4 col-sm-12  Record_2">
           <ul>
             <li>
-              <h4> Adress:Herabad</h4>
+              <h4> Adress: Herabad</h4>
             </li>
             <li>
-              <h4> Neighborhood : jjjjjj</h4>
+              <h4> Neighborhood: jjjjjj</h4>
             </li>
             <li>
-              <h4> City : hyderabad,</h4>
+              <h4> City: hyderabad,</h4>
             </li>
 
             <li>
-              <h4> Refrence : huiasfgd</h4>
+              <h4> Refrence: huiasfgd</h4>
             </li>
           </ul>
         </div>
@@ -49,7 +49,9 @@ const ServiceListChild = () => {
         </div>
       </div>
 
-      <div className=" row request_card py-5 mb-5">
+      <div className="loki"></div>
+
+      <div className=" row request_card py-5 mb-5" style={{marginTop: "10px"}}>
         <div class=" col-sm-12 col-md-12 input-group request-group mb-3 mt-3">
           <input
             type="text"

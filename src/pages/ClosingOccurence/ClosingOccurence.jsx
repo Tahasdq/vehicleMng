@@ -40,10 +40,10 @@ const ClosingOccurence = () => {
           <hr />
         </div>
         <div className="row">
-          <div className="col-md-12 col-sm-12 ">
+          <div className="col-md-12 col-sm-12 " style={{marginRight: "10px", marginLeft: "-13px", marginTop: "15px"}}>
             {Occurance_hold.map((v, i) => {
               return (
-                <div className="col-md-12 col-sm-12 my-3 occurance_holds row">
+                <div className="col-md-12 col-sm-12 my-3 occurancea_holds row">
                   <div className="col-md-10 row">
                   
                   <div className="col-md-3 col-sm-12">
@@ -53,7 +53,7 @@ const ClosingOccurence = () => {
                     <h6>Candidato : {v.Applicant} </h6>
                   </div>
                  
-                  <div className="col-md-6  col-sm-12">
+                  <div className="col-md-3  col-sm-12">
                     <h6>Garnição deixando a cena : {v.Gu_leaving_the_scence} </h6>
                   </div>
                   <div className="col-md-3 col-sm-12">
@@ -72,33 +72,33 @@ const ClosingOccurence = () => {
                       <li>
                         {" "}
                         <a href="#" className="btn-1 ">
-                          Release
+                          Liberar
                         </a>
                       </li>
                       <li>
                         {" "}
                         <a href="#" className="btn-1 ">
-                          Release
+                          Liberar
                         </a>
                       </li>
                       <li>
                         {" "}
                         <a href="#" className="btn-1 ">
-                          Release
+                          Liberar
                         </a>
                       </li>
                       <li>
                         {" "}
                         <a href="#" className="btn-1 ">
-                          Release
+                          Liberar
                         </a>
                       </li>
                     </ol>
                   </div>
                   </div>
-                  <div className="col-md-2">
+                  <div className="col-md-2 deltbtn">
                     
-               <a href="#" className='btn btn-danger ' style={{padding:"50px 60px"}}><i class="fa-solid fa-trash" style={{fontSize:"25px"}}></i></a>
+               <a href="#" className='btn btn-danger ' style={{padding:"50px 60px", marginTop:"9vh"}}><i class="fa-solid fa-trash" style={{fontSize:"25px"}}></i></a>
                   </div>
                 </div>
               );

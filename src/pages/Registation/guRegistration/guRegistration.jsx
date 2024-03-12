@@ -44,7 +44,7 @@ const guRegistration = () => {
           </div>
         </div>
 
-        <div className="col-md-3 col-sm-12 ml-3 guards my-5">
+        <div className="col-md-3 col-sm-12 ml-3 guards coma my-5">
           <h3 className="text-center">Guardo</h3>
           <div>
             <input type="checkbox" id="vehicle1" name="vehicle" value="Bike" />
@@ -80,7 +80,7 @@ const guRegistration = () => {
           
         </div>
 
-        <div className="col-md-3 col-sm-12 guards my-5">
+        <div className="col-md-3 col-sm-12 guards loma my-5">
           <h3 className="text-center">Garnição Disponível</h3>
           
           <ul>
@@ -97,8 +97,8 @@ const guRegistration = () => {
           </ul>
         </div>
 
-<div>
-<a href="" className='btn btn-primary my-5 py-2 px-5 ml-3 '> Atribuir</a>
+<div className="gubtnnan" style={{width: "80vh"}}>
+<a href="" className='btn btn-primary my-5 py-2 px-5 ml-3 guregbtn'> Atribuir</a>
 </div>
        
         </div>

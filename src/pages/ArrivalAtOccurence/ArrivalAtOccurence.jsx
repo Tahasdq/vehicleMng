@@ -15,7 +15,7 @@ const ArrivalAtOccurence = () => {
         <hr />
       </div>
       <div className="row">
-      <div className="col-md-8 col-sm-12 ">
+      <div className="col-md-8 col-sm-12 " style={{marginTop: "13px", marginRight: "10px"}}>
         {Occurance_hold.map((v, i) => {
          return (
             <div className="col-md-12 col-sm-12 my-3 occurance_holds row">
@@ -57,7 +57,7 @@ const ArrivalAtOccurence = () => {
           </div>
         
           <div className="button mt-3 text-center">
-          <a href="" className="btn btn-primary " style={{padding:"10px 120px"}}> Despatcho</a>
+          <a href="" className="btn btn-primary tola" style={{padding:"10px 120px"}}> Despatcho</a>
 
           </div>
 

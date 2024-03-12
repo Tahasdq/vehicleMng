@@ -23,7 +23,7 @@ return(
   <Link to="/service/listchild">
   <div className="col-md-8 col-sm-12">
       
-      <div className="list mt-5">
+      <div className="list mt-5 pista">
             <h4>Telephono : {v.phone} </h4>
             <h4>Candidato : {v.Applicant} </h4>
         </div>
