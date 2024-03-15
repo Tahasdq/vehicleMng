@@ -30,7 +30,7 @@ const router = createBrowserRouter(
           {/* <Route path='listchild'  element={<ListServiceChild />} >
             </Route> */}
         </Route>
-        <Route path='listchild' element={<ListServiceChild  />} />
+        <Route path='listchild/:id' element={<ListServiceChild  />} />
       </Route>
       <Route path='arrival' element={<ArrivalAtOccurence />} />
       <Route path='guoftheday' element={<Guoftheday />} />

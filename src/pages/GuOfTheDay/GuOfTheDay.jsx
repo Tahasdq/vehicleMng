@@ -1,12 +1,27 @@
-import React from 'react'
+import React, { useEffect , useState} from 'react'
+import axios from 'axios'
+ const GuOfTheDay = () => {
+  
 
-const GuOfTheDay = () => {
-  const Occurance_hold = [
-    { phone: "123455", Applicant: "Mahad" },
-    { phone: "123455", Applicant: "Mahad" },
-    { phone: "123455", Applicant: "Mahad" },
-    { phone: "123455", Applicant: "Mahad" },
-  ];
+  const [Occurance_hold,SetOccurance_hold] = useState([])
+
+  useEffect(() => {
+    // Fetch data when the component mounts
+    axios
+      .get("http://localhost:3000/getnewoccuranceAllStatus")
+      .then((response) => {
+        // Set the fetched data in state
+        SetOccurance_hold(response.data);
+        console.log(response)
+      })
+      .catch((error) => {
+        // Handle errors, if any
+        console.error("Error fetching data:", error);
+      });
+  }, []);
+
+
+
   return (
 
     
@@ -24,6 +39,9 @@ const GuOfTheDay = () => {
             <div className="col-md-12 colsm-12 my-3 occurance_holds">
               <h4>Telefone : {v.phone} </h4>
               <h4>Candidato : {v.Applicant} </h4>
+              <h4>code : {v.occurance_Code} </h4>
+              <h4>Rua : {v.street} </h4>
+
               </div>
           );
         })}
