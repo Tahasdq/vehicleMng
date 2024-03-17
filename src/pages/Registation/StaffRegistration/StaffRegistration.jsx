@@ -17,7 +17,8 @@ const StaffRegistration = () => {
  
   const handleSubmit = (event) => {
     event.preventDefault();
-    axios.post('http://localhost:3000/postStaff', Post)
+    const postData = { ...Post, Status: true };
+    axios.post('http://localhost:3000/postStaff', postData)
       .then(response => {
         console.log(response);
         setSubmitStatus('success');

@@ -99,6 +99,9 @@ const OccurrenceCodeRegistration = () => {
 
   const [submitStatus, setSubmitStatus] = useState(null);
 
+  
+
+
   const handleInput = event => {
     setPost({ ...post, [event.target.name]: event.target.value });
   };
@@ -122,6 +125,12 @@ const OccurrenceCodeRegistration = () => {
         }, 1000);
         console.log(err);
       });
+
+
+
+
+
+
   };
 
   return (

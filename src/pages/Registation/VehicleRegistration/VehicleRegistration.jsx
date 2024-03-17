@@ -19,15 +19,16 @@ const VehicleRegistration = () => {
 
   const handleSubmit = (event) => {
     event.preventDefault();
+    const postData = { ...post, Status: true };
     axios
-      .post("http://localhost:3000/postVehicle", post) // Corrected endpoint URL
+      .post("http://localhost:3000/postVehicle", postData) // Corrected endpoint URL
       .then((response) => {
         console.log(response);
         setSubmitStatus('success');
         setTimeout(() => {
           setSubmitStatus(null);
         }, 1000);
-        setPost({ VehicleNumber: "", Plate: "", Brand: "", Model: "" }); // Clearing the fields
+        setPost({ VehicleNumber: "", Plate: "", Brand: "", Model: "",Status:""}); // Clearing the fields
       })
       .catch((err) => {
         console.log(err);

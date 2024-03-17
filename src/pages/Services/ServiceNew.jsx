@@ -7,6 +7,11 @@ const ServiceNew = () => {
   const [data, setData] = useState(0);
   const [countOcc, setcountOcc] = useState(0);
   const [hold, setHold] = useState(1);
+  const [Garrison,setNewGarrison ] = useState([]);
+  const [GarrisonId,setGarrsionId ] = useState(null);
+  const [GarrisonIdFalse,setGarrsionIdFalse ] = useState([]);
+  
+
 
 
   const [post, setPost] = useState({
@@ -21,7 +26,7 @@ const ServiceNew = () => {
     av_garison: "",
     occurance_Number: 0,
     occurance_Code: 0,
-    status: ''
+    status: '0'
   });
 
 
@@ -55,11 +60,52 @@ const ServiceNew = () => {
         // Handle errors, if any
         console.error("Error fetching data:", error);
       });
+
+      axios
+      .get("http://localhost:3000/getGarrison")
+      .then((response) => {
+        setNewGarrison(response.data)
+        console.log("Garrson",response.data)
+        // Set the fetched data in state
+       
+
+      })
+      .catch((error) => {
+        // Handle errors, if any
+        console.error("Error fetching data:", error);
+      });
+
+
+      axios
+      .get("http://localhost:3000/getGarrisonFalse")
+      .then((response) => {
+        setGarrsionIdFalse(response.data)
+        console.log("GarrsonFalse",response.data)
+        // Set the fetched data in state
+       
+
+      })
+      .catch((error) => {
+        // Handle errors, if any
+        console.error("Error fetching data:", error);
+      });
+
+
+
+
+
+
   }, []);
 
   const handleInput = (event) => {
+    const {id} = event.target;
+    setGarrsionId(id)
+    console.log("garrisonId",id)
     setPost({ ...post, [event.target.name]: event.target.value });
   };
+
+  console.log("Id",GarrisonId)
+
 
   // const handleSubmit = (event) => {
   //   event.preventDefault();
@@ -105,14 +151,29 @@ const ServiceNew = () => {
       ...prevState,
       [name]: value,
     }));
+
+    
+
+
+    // axios.put(`http://localhost:3000/updataGarrison/${GarrisonId}`)
+    //   .then((response)=>{
+    //       console.log(response);
+    //   })
+    //   .catch((error) => {
+    //     console.error('Error fetching vehicle data:', error);
+    //   });
+
+
   };
 
 
 
   const handleSubmit = (event) => {
     event.preventDefault();
+
+    const postData = { ...post, Status: "0" };
     axios
-      .post("http://localhost:3000/newOccurance", post)
+      .post("http://localhost:3000/newOccurance", postData)
       .then((response) => {
         console.log(response); // Check the entire response object to see what data it contains
 
@@ -133,7 +194,7 @@ const ServiceNew = () => {
           Reference: "",
           Description: "",
           Request: "",
-          av_garison: "",
+          av_garison: null,
           occurance_Number: "", // Clearing the fields
           occurance_Code: "",
         });
@@ -145,7 +206,48 @@ const ServiceNew = () => {
         }, 3000);
         console.log(err);
       });
-  };
+
+      axios.put(`http://localhost:3000/updataGarrison/${GarrisonId}`)
+      .then((response)=>{
+          console.log(response);
+      })
+      .catch((error) => {
+        console.error('Error fetching vehicle data:', error);
+      });
+
+      axios
+      .get("http://localhost:3000/getGarrison")
+      .then((response) => {
+        setNewGarrison(response.data)
+        console.log("Garrson",response.data)
+        // Set the fetched data in state
+       
+
+      })
+      .catch((error) => {
+        // Handle errors, if any
+        console.error("Error fetching data:", error);
+      });
+      axios
+      .get("http://localhost:3000/getGarrisonFalse")
+      .then((response) => {
+        setGarrsionIdFalse(response.data)
+        console.log("GarrsonFalse",response.data)
+        // Set the fetched data in state
+       
+
+      })
+      .catch((error) => {
+        // Handle errors, if any
+        console.error("Error fetching data:", error);
+      });
+
+  
+
+
+
+  
+    };
 
 
   return (
@@ -291,55 +393,37 @@ const ServiceNew = () => {
           <div className=" row garison my-5">
             <div className=" col-md-5 col-sm-12 avalible_garison ">
               <h3 className="text-center">Garnição Disponível</h3>
+              {Garrison.map((v,i)=>{              
+              return(
               <div>
                 <input
                   type="radio"
-                  id="vehicle1"
+                  id={v._id}
                   name="av_garison"
-                  value="Bike"
+                  value={v.StaffName + v.VehcleName}
                   onChange={handleInput}
                 />
                 <label for="vehicle1" className="ml-2">
-                  {" "}
-                  I have a bike
+                  {v.StaffName + v.VehcleName}
                 </label>
               </div>
-              <div>
-                <input
-                  type="radio"
-                  id="vehicle2"
-                  name="av_garison"
-                  value="Car"
-                  onChange={handleInput}
-                />
-                <label for="vehicle2" className="ml-2">
-                  {" "}
-                  I have a car
-                </label>
-              </div>
-
-              <div>
-                <input
-                  type="radio"
-                  id="vehicle3"
-                  name="av_garison"
-                  value="Boat"
-                  onChange={handleInput}
-                />
-                <label for="vehicle3" className="ml-2">
-                  {" "}
-                  I have a boat
-                </label>
-              </div>
+              )
+             })}
             </div>
 
             <div className=" col-md-5 col-sm-12 unavalible_garison ml-5">
               <h3 className="text-center">Garnição Indisponível</h3>
 
+
               <ul>
-                <li>WOrk</li>
-                <li>WOrk</li>
-                <li>WOrk</li>
+              {GarrisonIdFalse.map((v,i)=>{
+  return(
+    <>
+      <li>   {v.StaffName + v.VehcleName}</li>
+    </>
+    
+    )
+})}
               </ul>
             </div>
           </div>

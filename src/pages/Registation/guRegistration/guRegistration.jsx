@@ -8,11 +8,14 @@ const GuRegistration = () => {
   const [vehicle, setVehicle] = useState([]);
   const [garison, setGarison] = useState([]);
   const [vechicleId, setvehicleId] = useState()
+  const [staffIds, setStaffIds] = useState([])
+  
   
 
   const [post, setPost] = useState({
     StaffName: '',
     VehcleName: '',
+    Status:true
   });
 
   useEffect(() => {
@@ -31,12 +34,21 @@ const GuRegistration = () => {
       .catch((error) => {
         console.error('Error fetching vehicle data:', error);
       });
-     
+
+
+      axios.get('http://localhost:3000/newGarissonData')
+      .then((response) => {
+        setGarison(response.data);
+        console.log(response.data)
+      })
+      .catch((error) => {
+        console.error('Error fetching vehicle data:', error);
+      });
       
 
   }, []);
 
-  const handleChange = (event) => {
+  const vehicleHandleChange = (event) => {
     const { name, value ,id} = event.target;
     console.log(id)
     setvehicleId(id)
@@ -46,10 +58,57 @@ const GuRegistration = () => {
       
     }));
   };
+  // const staffHandleChange = (event) => {
+  //   // const { name, value ,id} = event.target;
+  //   const {id} = event.target;
+  //   // setStaffId(prevIds => [...prevIds, id]);
+  //   // console.log(staffId);
+
+  //   if (!staffId.includes(id)) {
+  //     // If not present, update the state array
+  //     setStaffId(prevIds => [...prevIds, id]);
+  // }
+  // console.log(staffId)
+
+  //   // setStaffId(...id)
+  //   // setPost((prevState) => ({
+  //   //   ...prevState,
+  //   //   [name]: value,
+      
+  //   // }));
+  // };
+
+  const staffHandleChange = (event) => {
+
+    const { id, checked,name,value } = event.target;
+    
+    setPost((prevState) => ({
+      ...prevState,
+      [name]: value,
+      
+    }));
+
+
+
+    if (checked && !staffIds.includes(id)) {
+        // If checkbox is checked and ID is not already in staffId, add it
+        setStaffIds(prevIds => [...prevIds, id]);
+        
+    } else if (!checked && staffIds.includes(id)) {
+        // If checkbox is unchecked and ID is in staffId, remove it
+        setStaffIds(prevIds => prevIds.filter(item => item !== id));
+        
+    }
+};
+
+console.log(staffIds)
+
 
   const handleSubmit = (event) => {
+
     event.preventDefault();
-    axios.post('http://localhost:3000/newGarisson', post)
+    const postData = { ...post, Status: true };
+    axios.post('http://localhost:3000/newGarisson', postData)
       .then((response) => {
         console.log(response);
       })
@@ -67,16 +126,49 @@ const GuRegistration = () => {
       });
       
 
-      const IdVehcle = vechicleId 
-      console.log("ve",IdVehcle)
+      // const IdVehcle = vechicleId 
+      // console.log("ve",IdVehcle)
       
-      axios.put(`http://localhost:3000/getVehicle/${IdVehcle}}`)
+      axios.put(`http://localhost:3000/updateVehicle/${vechicleId}`)
       .then((response)=>{
           console.log(response);
+          
       })
       .catch((error) => {
         console.error('Error fetching vehicle data:', error);
       });
+
+      axios.put(`http://localhost:3000/updateStaff` , {dataArray: staffIds})
+      .then((response)=>{
+          console.log(response);
+          
+      })
+      .catch((error) => {
+        console.error('Error fetching vehicle data:', error);
+      });
+
+
+
+      axios.get('http://localhost:3000/getVehcleStatus')
+      .then((response) => {
+        setVehicle(response.data);
+        console.log(dispatch, response.data)
+      })
+      .catch((error) => {
+        console.error('Error fetching vehicle data:', error);
+      });
+
+
+      axios.get('http://localhost:3000/getStaffStatus')
+      .then((response) => {
+        setStaff(response.data);
+        console.log(dispatch, response.data)
+      })
+      .catch((error) => {
+        console.error('Error fetching vehicle data:', error);
+      });
+
+
   };
 
   return (
@@ -92,8 +184,8 @@ const GuRegistration = () => {
               <h3 className="text-center">Carro</h3>
               {vehicle.map((v, i) => (
                 <div key={i}>
-                  <input type="radio" id={v._id} name="VehcleName" value={v.Model} onChange={handleChange}
-                  onClick={(e) =>{console.log(e.target)}}
+                  <input type="radio" id={v._id} name="VehcleName" value={v.Model} onChange={vehicleHandleChange}
+                  // onClick={(e) =>{console.log(e.target)}}
                   />
                   <label htmlFor={`vehcle${i}`} className="ml-2">{v.Brand} {v.Model}</label>
                 </div>
@@ -104,7 +196,7 @@ const GuRegistration = () => {
               <h3 className="text-center">Guarda</h3>
               {staff.map((s, i) => (
                 <div key={i}>
-                  <input type="checkbox" id={`staff${i}`} name="StaffName" value={s.Name} onChange={handleChange} />
+                  <input type="checkbox" id={s._id}  name="StaffName" value={s.Name} onChange={staffHandleChange} />
                   <label htmlFor={`staff${i}`} className="ml-2">{s.Name}</label>
                 </div>
               ))}
