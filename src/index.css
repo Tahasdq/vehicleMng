@@ -201,3 +201,9 @@ input{
         display: none;
     }
      
+    
+
+    body{
+        background-color: red;
+        color:red
+    }
