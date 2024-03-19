@@ -7,10 +7,10 @@ const ServiceNew = () => {
   const [data, setData] = useState(0);
   const [countOcc, setcountOcc] = useState(0);
   const [hold, setHold] = useState(1);
-  const [Garrison,setNewGarrison ] = useState([]);
-  const [GarrisonId,setGarrsionId ] = useState(null);
-  const [GarrisonIdFalse,setGarrsionIdFalse ] = useState([]);
-  
+  const [Garrison, setNewGarrison] = useState([]);
+  const [GarrisonId, setGarrsionId] = useState(null);
+  const [GarrisonIdFalse, setGarrsionIdFalse] = useState([]);
+
 
 
 
@@ -26,7 +26,8 @@ const ServiceNew = () => {
     av_garison: "",
     occurance_Number: 0,
     occurance_Code: 0,
-    status: '0'
+    Status: "0",
+    Garisson: null
   });
 
 
@@ -61,13 +62,13 @@ const ServiceNew = () => {
         console.error("Error fetching data:", error);
       });
 
-      axios
+    axios
       .get("http://localhost:3000/getGarrison")
       .then((response) => {
         setNewGarrison(response.data)
-        console.log("Garrson",response.data)
+        console.log("Garrson", response.data)
         // Set the fetched data in state
-       
+
 
       })
       .catch((error) => {
@@ -76,13 +77,13 @@ const ServiceNew = () => {
       });
 
 
-      axios
+    axios
       .get("http://localhost:3000/getGarrisonFalse")
       .then((response) => {
         setGarrsionIdFalse(response.data)
-        console.log("GarrsonFalse",response.data)
+        console.log("GarrsonFalse", response.data)
         // Set the fetched data in state
-       
+
 
       })
       .catch((error) => {
@@ -98,13 +99,14 @@ const ServiceNew = () => {
   }, []);
 
   const handleInput = (event) => {
-    const {id} = event.target;
+    const { id, checked } = event.target;
     setGarrsionId(id)
-    console.log("garrisonId",id)
+    console.log("garrisonId", id)
     setPost({ ...post, [event.target.name]: event.target.value });
   };
 
-  console.log("Id",GarrisonId)
+  console.log([post])
+  // console.log("Id",GarrisonId)
 
 
   // const handleSubmit = (event) => {
@@ -152,7 +154,7 @@ const ServiceNew = () => {
       [name]: value,
     }));
 
-    
+
 
 
     // axios.put(`http://localhost:3000/updataGarrison/${GarrisonId}`)
@@ -171,9 +173,9 @@ const ServiceNew = () => {
   const handleSubmit = (event) => {
     event.preventDefault();
 
-    const postData = { ...post, Status: "0" };
+    // const postData = { ...post, Status: "0" };
     axios
-      .post("http://localhost:3000/newOccurance", postData)
+      .post("http://localhost:3000/newOccurance", post)
       .then((response) => {
         console.log(response); // Check the entire response object to see what data it contains
 
@@ -207,34 +209,34 @@ const ServiceNew = () => {
         console.log(err);
       });
 
-      axios.put(`http://localhost:3000/updataGarrison/${GarrisonId}`)
-      .then((response)=>{
-          console.log(response);
+    axios.put(`http://localhost:3000/updataGarrison/${GarrisonId}`)
+      .then((response) => {
+        console.log(response);
       })
       .catch((error) => {
         console.error('Error fetching vehicle data:', error);
       });
 
-      axios
+    axios
       .get("http://localhost:3000/getGarrison")
       .then((response) => {
         setNewGarrison(response.data)
-        console.log("Garrson",response.data)
+        console.log("Garrson", response.data)
         // Set the fetched data in state
-       
+
 
       })
       .catch((error) => {
         // Handle errors, if any
         console.error("Error fetching data:", error);
       });
-      axios
+    axios
       .get("http://localhost:3000/getGarrisonFalse")
       .then((response) => {
         setGarrsionIdFalse(response.data)
-        console.log("GarrsonFalse",response.data)
+        console.log("GarrsonFalse", response.data)
         // Set the fetched data in state
-       
+
 
       })
       .catch((error) => {
@@ -242,12 +244,12 @@ const ServiceNew = () => {
         console.error("Error fetching data:", error);
       });
 
-  
 
 
 
-  
-    };
+
+
+  };
 
 
   return (
@@ -350,15 +352,15 @@ const ServiceNew = () => {
 
 
               <select
-  className="btn border dropdown-toggle dropdown"
-  role="button"
-  name="occurance_Number"
-  value={post.occurance_Number}
-  onChange={handleChange}
->
-  <option value="">Numero de Ocorrência</option>
-  <option value={countOcc}>{countOcc}</option>
-</select>
+                className="btn border dropdown-toggle dropdown"
+                role="button"
+                name="occurance_Number"
+                value={post.occurance_Number}
+                onChange={handleChange}
+              >
+                <option value="">Numero de Ocorrência</option>
+                <option value={countOcc}>{countOcc}</option>
+              </select>
 
             </div>
             <div class="input-group request-group mb-3 mt-3">
@@ -393,22 +395,22 @@ const ServiceNew = () => {
           <div className=" row garison my-5">
             <div className=" col-md-5 col-sm-12 avalible_garison ">
               <h3 className="text-center">Garnição Disponível</h3>
-              {Garrison.map((v,i)=>{              
-              return(
-              <div>
-                <input
-                  type="radio"
-                  id={v._id}
-                  name="av_garison"
-                  value={v.StaffName + v.VehcleName}
-                  onChange={handleInput}
-                />
-                <label for="vehicle1" className="ml-2">
-                  {v.StaffName + v.VehcleName}
-                </label>
-              </div>
-              )
-             })}
+              {Garrison.map((v, i) => {
+                return (
+                  <div>
+                    <input
+                      type="radio"
+                      id={v._id}
+                      name="av_garison"
+                      value={v.StaffName + v.VehcleName}
+                      onChange={handleInput}
+                    />
+                    <label for="vehicle1" className="ml-2">
+                      {v.StaffName + v.VehcleName}
+                    </label>
+                  </div>
+                )
+              })}
             </div>
 
             <div className=" col-md-5 col-sm-12 unavalible_garison ml-5">
@@ -416,14 +418,14 @@ const ServiceNew = () => {
 
 
               <ul>
-              {GarrisonIdFalse.map((v,i)=>{
-  return(
-    <>
-      <li>   {v.StaffName + v.VehcleName}</li>
-    </>
-    
-    )
-})}
+                {GarrisonIdFalse.map((v, i) => {
+                  return (
+                    <>
+                      <li>   {v.StaffName + v.VehcleName}</li>
+                    </>
+
+                  )
+                })}
               </ul>
             </div>
           </div>
@@ -431,7 +433,7 @@ const ServiceNew = () => {
 
           <div>
             <input
-              type="checkbox"
+              type="radio"
               id="vehicle3"
               name="Status"
               value="1"

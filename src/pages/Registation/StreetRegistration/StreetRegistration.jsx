@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import "../StylingFile/Style.scss";
 import axios from "axios";
+import SearchBar from "../../../components/Searchbar/SearchBar";
 
 const StreetRegistration = () => {
   const [Post, setPost] = useState({
@@ -52,6 +53,8 @@ const StreetRegistration = () => {
       <section id="form">
         <div className="form-wrapper">
           <div className="form-heading">
+          <SearchBar/>
+
             <h2>Cadastro de Rua</h2>
           </div>
           <form className="form-body" onSubmit={handleSubmit} action="">

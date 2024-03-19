@@ -89,6 +89,7 @@
 import React, { useState } from 'react';
 import '../StylingFile/Style.scss';
 import axios from 'axios';
+import SearchBar from '../../../components/Searchbar/SearchBar';
 
 const OccurrenceCodeRegistration = () => {
   const [post, setPost] = useState({
@@ -148,6 +149,8 @@ const OccurrenceCodeRegistration = () => {
       <section id="form">
         <div className="form-wrapper">
           <div className="form-heading">
+          <SearchBar/>
+
             <h2>Cadastro de Código de Ocorrência</h2>
           </div>
           <form className="form-body" onSubmit={handleSubmit}>

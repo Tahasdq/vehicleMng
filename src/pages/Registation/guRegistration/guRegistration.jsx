@@ -9,12 +9,15 @@ const GuRegistration = () => {
   const [garison, setGarison] = useState([]);
   const [vechicleId, setvehicleId] = useState()
   const [staffIds, setStaffIds] = useState([])
+   const [avGarrison , setAvGarssion] = useState([])
+
   
   
 
   const [post, setPost] = useState({
     StaffName: '',
     VehcleName: '',
+    Av_garison:"",
     Status:true
   });
 
@@ -57,7 +60,15 @@ const GuRegistration = () => {
       [name]: value,
       
     }));
+
+    setAvGarssion((prevState) => [...prevState, value]);
+
+   
+
   };
+
+
+  
   // const staffHandleChange = (event) => {
   //   // const { name, value ,id} = event.target;
   //   const {id} = event.target;
@@ -87,6 +98,7 @@ const GuRegistration = () => {
       [name]: value,
       
     }));
+    setAvGarssion((prevState) => [...prevState, value]);
 
 
 
@@ -106,8 +118,14 @@ console.log(staffIds)
 
   const handleSubmit = (event) => {
 
+    let Array= avGarrison
+    let ToString = Array[0]+ Array[1]
+    console.log("Type of " , typeof ToString );
+// 
+    // console.log("av_garsoin is " , Array[0]+ Array[1])
+
     event.preventDefault();
-    const postData = { ...post, Status: true };
+    const postData = { ...post, Status: true , Av_garison :ToString };
     axios.post('http://localhost:3000/newGarisson', postData)
       .then((response) => {
         console.log(response);
@@ -168,7 +186,9 @@ console.log(staffIds)
         console.error('Error fetching vehicle data:', error);
       });
 
-
+      var av1 =  vehicle.toString() +staff.toString();
+      setAvGarssion(av1)
+      console.log("data is" , avGarrison);
   };
 
   return (
@@ -184,7 +204,7 @@ console.log(staffIds)
               <h3 className="text-center">Carro</h3>
               {vehicle.map((v, i) => (
                 <div key={i}>
-                  <input type="radio" id={v._id} name="VehcleName" value={v.Model} onChange={vehicleHandleChange}
+                  <input type="radio" id={v._id} name="VehcleName" value={v.Model}  onChange={vehicleHandleChange}
                   // onClick={(e) =>{console.log(e.target)}}
                   />
                   <label htmlFor={`vehcle${i}`} className="ml-2">{v.Brand} {v.Model}</label>

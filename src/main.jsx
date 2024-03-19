@@ -18,6 +18,7 @@ import StreetRegistration from './pages/Registation/StreetRegistration/StreetReg
 import NewServices from './pages/Services/ServiceNew.jsx'
 import ListServices from "./pages/Services/ServiceList.jsx"
 import ListServiceChild from './pages/Services/ServiceListChild.jsx'
+import SearchData from './pages/SearchData/SearchData.jsx'
 
 
 const router = createBrowserRouter(
@@ -41,6 +42,7 @@ const router = createBrowserRouter(
       <Route path='appilcantregistration' element={<ApplicantRegistration />} />
       <Route path='streetregistration' element={<StreetRegistration />} />
       <Route path='occurencecode' element={<OccurenceCodeRegistration />} />
+      <Route path='search/:id' element={<SearchData/>} />
       {/* <Route path='services/listservice/listchild' element={<OccurenceCodeRegistration />} /> */}
 
 

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import SearchBar from '../../../components/Searchbar/SearchBar';
 
 const ApplicantRegistration = () => {
   const [submitStatus, setSubmitStatus] = useState(null);
@@ -51,6 +52,7 @@ const ApplicantRegistration = () => {
       <section id="form">
         <div className="form-wrapper">
           <div className="form-heading">
+            <SearchBar/>
             <h2>Registro do candidato</h2>
           </div>
           <form className="form-body" onSubmit={handleSubmit}>
