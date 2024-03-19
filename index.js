@@ -30,7 +30,9 @@ const NewOccurance = new mongoose.Schema({
     av_garison:String,
     occurance_Number : Number,
     occurance_Code : Number,
-    Status:String
+    Status:String,
+    Time:String,
+    Arrivaltime:String
 }
 )
 
@@ -285,7 +287,7 @@ app.put("/updateVehicle/:id",(req,res) =>{
     // Assuming you want to update specific fields in the Staff model
      const updateFields = {Status:false};
 
-    VechcleModel.findByIdAndUpdate(id, updateFields, { new: true })
+    VechcleModel.findByIdAndUpdate(id, updateFields, { new: true }) //cherkhani
     .then((vehicle) => {
       if (!vehicle) {
         return res.status(404).json({ error: 'vehicle not found' });
@@ -338,7 +340,7 @@ app.put("/updataGarrison/:id",(req,res) =>{
     // Assuming you want to update specific fields in the Staff model
      const updateFields = {Status:false};
 
-    NewGarissonModel.findByIdAndUpdate(id, updateFields, { new: true })
+    NewGarissonModel.findByIdAndUpdate(id, updateFields, { Status: true })
     .then((NewGarisson) => {
       if (!NewGarisson) {
         return res.status(404).json({ error: 'vehicle not found' });
@@ -378,10 +380,248 @@ app.put("/occuranceDispatch/:id",(req,res) =>{
     });
 });
 
+app.put("/occuranceDispatchGarison",async(req,res) =>{
+    const dataArray = req.body.dataArray;
+    console.log('Array of IDs:', dataArray);
+    const id = dataArray[0];
+    const updateFields = {av_garison : dataArray[1]};
+
+
+    // console.log("av_garison is " , av_garison);
+    
+    // Assuming you want to update specific fields in the Staff model
+    
+
+    
+
+
+    NewOccuranceModel.findByIdAndUpdate(id, updateFields ,{av_garison:""})
+    .then((NewOccurance) => {
+      if (!NewOccurance) {
+        return res.status(404).json({ error: 'vehicle not found' });
+      }
+      res.json(NewOccurance);
+    })
+    .catch((err) => {
+      console.log(err);
+      res.status(500).json({ error: 'Internal Server Error' });
+    });
+});
+
+
+app.get("/getGarrison",(req,res) =>{
+    NewGarissonModel.find({Status:true}).then(function(NewGarisson){
+            res.json(NewGarisson)
+    }).catch(function(err){
+        console.log(err)
+    })
+})
+
+app.get("/getnewoccuranceAllStatus/:id",(req,res) =>{
+    const id = req.params.id
+    NewOccuranceModel.find({ _id: id })
+    .then(function (garrison) {
+        if (!garrison) {
+            return res.status(404).json({ error: 'Garrison not found' });
+        }
+        // Assuming "aversion_garrion" is a key in the garrison object
+        // console.log("garssion is " , garrison)
+        const aversion_garrion = garrison[0].av_garison;
+        console.log(aversion_garrion)
+        res.json(aversion_garrion );
+    })
+    .catch(function (err) {
+        console.log(err);
+        res.status(500).json({ error: 'Internal Server Error' });
+    });
+})
+
+
+
+app.get("/getnewoccuranceAllStatusWithZero",(req,res) =>{
+
+    NewOccuranceModel.find({ Status: "0" })
+    .then(function (NewOccurance) {
+      res.json(NewOccurance);
+    })
+    .catch(function (err) {
+      console.log(err);
+      res.status(500).json({ error: 'Internal Server Error' });
+    });
+})
+
+
+app.put("/occuranceDispatcharrive/:id",(req,res) =>{
+    const id = req.params.id;
+    console.log("id is " , id);
+    // Assuming you want to update specific fields in the Staff model
+     const updateFields = {Status:'2'};
+
+    NewOccuranceModel.findByIdAndUpdate(id, updateFields, { new: '0' })
+    .then((NewOccurance) => {
+      if (!NewOccurance) {
+        return res.status(404).json({ error: 'vehicle not found' });
+      }
+      res.json(NewOccurance);
+    })
+    .catch((err) => {
+      console.log(err);
+      res.status(500).json({ error: 'Internal Server Error' });
+    });
+});
 
 
 
 
+app.put("/occuranceclosed/:id",(req,res) =>{
+    const id = req.params.id;
+    console.log("id is " , id);
+    // Assuming you want to update specific fields in the Staff model
+     const updateFields = {Status:'3'};
+
+    NewOccuranceModel.findByIdAndUpdate(id, updateFields, { Status: '0' })
+    .then((NewOccurance) => {
+      if (!NewOccurance) {
+        return res.status(404).json({ error: 'vehicle not found' });
+      }
+      res.json(NewOccurance);
+    })
+    .catch((err) => {
+      console.log(err);
+      res.status(500).json({ error: 'Internal Server Error' });
+    });
+});
 
 
 
+///closing occurence and making garission available
+
+app.put("/updataGarrisonToTrue/:id",(req,res) =>{
+    const id = req.params.id;
+    console.log("id is " , id);
+    // Assuming you want to update specific fields in the Staff model
+     const updateFields = {Status:true};
+     
+    NewGarissonModel.findByIdAndUpdate(id, updateFields, { Status: false })
+    .then((NewGarisson) => {
+      if (!NewGarisson) {
+        return res.status(404).json({ error: 'vehicle not found' });
+      }
+      res.json(NewGarisson);
+    })
+    .catch((err) => {
+      console.log(err);
+      res.status(500).json({ error: 'Internal Server Error' });
+    });
+});
+
+//gettinng all garissons
+
+app.get("/getGarrisonAll",(req,res) =>{
+    NewGarissonModel.find().then(function(NewGarisson){
+            res.json(NewGarisson)
+    }).catch(function(err){
+        console.log(err)
+    })
+})
+
+
+//SearchBar Api
+
+app.get("/SearchedOccurences/:id",(req,res) =>{
+
+    const data =req.params.id.toString()
+
+    NewOccuranceModel.find({ Applicant:data  })
+    .then(function (NewOccurance) {
+      res.json(NewOccurance);
+    })
+    .catch(function (err) {
+      console.log(err);
+      res.status(500).json({ error: 'Internal Server Error' });
+    });
+})
+
+
+
+
+//Time setted
+
+app.put("/occuranceDispatchTime/:id",(req,res) =>{
+    const id = req.params.id;
+    console.log("id is " , id);
+    // Assuming you want to update specific fields in the Staff model
+    
+
+     const dateNow = new Date();
+  
+     // Extract hours and minutes
+    //  const hours = dateNow.getHours().toString().padStart(2, '0');
+    //  const minutes = dateNow.getMinutes().toString().padStart(2, '0');
+   
+     // Construct the time string in HH:mm format
+    //  const formattedTime = `${hours}:${minutes}`;
+     const isoDateTime = dateNow.toISOString();
+
+     const updateFields = { Time: isoDateTime };
+
+
+
+
+    NewOccuranceModel.findByIdAndUpdate(id, updateFields, { new: true })
+    .then((updated) => {
+      if (!updated) {
+        return res.status(404).json({ error: 'vehicle not found' });
+      }
+      res.json(updated);
+    })
+    .catch((err) => {
+      console.log(err);
+      res.status(500).json({ error: 'Internal Server Error' });
+    });
+});
+
+
+
+app.put("/getnewoccuranceAllStatusWithZero/:id",(req,res) =>{
+    const id = req.params.id;
+    console.log("api hitted for arrival time")
+    const dateNow = new Date();
+  
+    const isoDateTime = dateNow.toISOString();
+
+    const updateFields = { Arrivaltime: isoDateTime };
+
+
+    NewOccuranceModel.findByIdAndUpdate( id,updateFields, { new: true })
+    .then(function (NewOccurance) {
+      res.json(NewOccurance);
+    })
+    .catch(function (err) {
+      console.log(err);
+      res.status(500).json({ error: 'Internal Server Error' });
+    });
+})
+
+
+
+
+app.put("/updataGarrisonStat",(req,res) =>{
+    const {VehcleName} = req.body;
+
+    console.log("VehcleName is " , VehcleName);
+    // Assuming you want to update specific fields in the Staff model
+     const updateFields = {Status:true};
+
+     NewGarissonModel.findOneAndUpdate(VehcleName, updateFields, { new: false })
+    .then((NewGarisson) => {
+      if (!NewGarisson) {
+        return res.status(404).json({ error: 'av_garison not found' });
+      }
+      res.json(NewGarisson);
+    })
+    .catch((err) => {
+      console.log(err);
+      res.status(500).json({ error: 'Internal Server Error' });
+    });
+});
