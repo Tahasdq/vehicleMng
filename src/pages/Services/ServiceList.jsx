@@ -43,7 +43,7 @@ return(
       <div className="list mt-5"> 
 
             <h4>Telephono : {v.phone} </h4>
-            <h4>Candidato : {v.Applicant} </h4>
+            <h4>Solicitante : {v.Applicant} </h4>
             <h4>Rua : {v.Street}</h4>
             <h4>Occurance Code : {v.occurance_Code}</h4>
         </div>

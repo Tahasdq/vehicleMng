@@ -76,39 +76,39 @@ const Home = () => {
     const data = [
         {
             heading: 'celio Atendimento',
-            data: '50'
+            data: '24'
         },
         {
             heading: 'Ocorencia em aberto',
-            data: '50'
+            data: '32'
         },
         {
             heading: 'Registros de Funcionários',
-            data: '50'
+            data: '12'
         },
         {
             heading: 'Bondes disponíveis',
-            data: '50'
+            data: '24'
         },
         {
             heading: 'Equipe disponível',
-            data: '50'
+            data: '31'
         },
         {
             heading: 'Equipe Indisponível',
-            data: '50'
+            data: '22'
         },
         {
             heading: 'Ocorrências Atendidas Hoje',
-            data: '50'
+            data: '11'
         }
         , {
             heading: 'Ocorrências Atendidas no Mês',
-            data: '50'
+            data: '31'
         },
         {
             heading: 'Ocorrências Atendidas no Ano',
-            data: '50'
+            data: '32'
         },
 
     ]

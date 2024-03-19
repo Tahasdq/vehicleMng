@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import './Aside.scss'
 import { Link } from 'react-router-dom'
 import BoltIcon from '@mui/icons-material/Bolt';
@@ -10,14 +10,27 @@ import LibraryBooksIcon from '@mui/icons-material/LibraryBooks';
 import CodeIcon from '@mui/icons-material/Code';
 import PersonIcon from '@mui/icons-material/Person';
 import StreetviewIcon from '@mui/icons-material/Streetview';
-const Aside = () => {
+import CloseIcon from '@mui/icons-material/Close';
+const Aside = ({sendDataToParent}) => {
+
+  const handleTrigger = () => {
+    sendDataToParent(false);   
+};
+
+//   const sendData =()=>{
+//         sendDatatoparent(isOpen)
+//   }
     return (
-        <div className='main-left'>
-            <div className="logo">
+        <div className={`main-left `}>
+            <div className="logoandmenuicon">
 
                 <Link to="/">
                     LOGO
                 </Link>
+                <div className="menu-icon" onClick={handleTrigger} >
+                    <CloseIcon />
+                </div>
+
             </div>
             <div className="main-left-wrapper">
 
@@ -27,64 +40,64 @@ const Aside = () => {
                     <h5>Operações</h5>
                     <ul>
 
-                        <li>
-                            <BoltIcon fontSize="small"  />
+                        <li onClick={handleTrigger}>
+                            <BoltIcon fontSize="small" />
                             <Link to="/service" >Serviço</Link>
                         </li>
 
-                        <li>
+                        <li onClick={handleTrigger}>
                             <EmojiObjectsIcon fontSize="small" />
                             <Link to="/guoftheday" >Despacho da Guarnição</Link>
                         </li>
 
 
 
-                        <li>
-                            <GroupIcon  fontSize="small"/>
+                        <li onClick={handleTrigger}>
+                            <GroupIcon fontSize="small" />
                             <Link to="/arrival" >Chegada à Ocorrência</Link>
 
                         </li>
 
 
-                        <li>
+                        <li onClick={handleTrigger}>
                             <LibraryBooksIcon fontSize="small" />
                             <Link to="/closing" >Encerramento da Ocorrência</Link>
                         </li>
                     </ul>
 
-                <div className="registration">
-                    <h5>Registros</h5>
-                    <ul>
-                        <li>
-                            <EmojiObjectsIcon  fontSize="small"/>
-                            <Link to="/staffregistration" > Equipe</Link>
-                        </li>
-                        <li>
-                            <DirectionsCarIcon fontSize="small" />
-                            <Link to="/vehicleregistration" > Veículo</Link>
-                        </li>
-                        <li>
-                            <SettingsIcon fontSize="small" />
-                            <Link to="/guregistration" > Guarnição do Dia</Link>
-                        </li>
-                        <li>
-                            <PersonIcon fontSize="small"/>
-                            <Link to="/appilcantregistration" > Candidato</Link>
+                    <div className="registration">
+                        <h5>Registros</h5>
+                        <ul>
+                        <li onClick={handleTrigger}>
+                                <EmojiObjectsIcon fontSize="small" />
+                                <Link to="/staffregistration" > Equipe</Link>
+                            </li>
+                            <li onClick={handleTrigger}>
+                                <DirectionsCarIcon fontSize="small" />
+                                <Link to="/vehicleregistration" > Veículo</Link>
+                            </li >
+                            <li onClick={handleTrigger}>
+                                <SettingsIcon fontSize="small" />
+                                <Link to="/guregistration" > Guarnição do Dia</Link>
+                            </li>
+                            <li onClick={handleTrigger}>
+                                <PersonIcon fontSize="small" />
+                                <Link to="/appilcantregistration" > Candidato</Link>
 
-                        </li>
-                        <li>
-                            <StreetviewIcon fontSize="small"/>
-                            <Link to="/streetregistration" > Endereço</Link>
+                            </li>
+                            <li onClick={handleTrigger}>
+                                <StreetviewIcon fontSize="small" />
+                                <Link to="/streetregistration" > Endereço</Link>
 
-                        </li>
-                        <li>
-                            <CodeIcon fontSize="small"/>
-                            <Link to="/occurencecode" > occurence code</Link>
-                        </li>
-                    </ul>
+                            </li>
+                            <li onClick={handleTrigger}>
+                                <CodeIcon fontSize="small" />
+                                <Link to="/occurencecode" > occurence code</Link>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
             </div>
-        </div>
         </div>
     )
 }

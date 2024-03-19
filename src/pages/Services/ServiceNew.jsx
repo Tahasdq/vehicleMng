@@ -27,6 +27,8 @@ const ServiceNew = () => {
     occurance_Number: 0,
     occurance_Code: 0,
     Status: "0",
+    Time:"",
+    ArrivalTime:"",
     Garisson: null
   });
 
@@ -274,7 +276,7 @@ const ServiceNew = () => {
               <input
                 type="text"
                 class="form-control"
-                placeholder="Candidato"
+                placeholder="Solicitante"
                 value={post.Applicant}
                 onChange={handleInput}
                 name="Applicant"
@@ -341,7 +343,7 @@ const ServiceNew = () => {
                 value={post.occurance_Code}
                 onChange={handleChange}
               >
-                <option value="">Código de Ocorrência</option>
+                <option value="">Cód. Atendimento</option>
                 {data &&
                   data.map((v, i) => (
                     <option key={i} value={v.Code}>
@@ -391,6 +393,23 @@ const ServiceNew = () => {
               />
             </div>
           </div>
+                    
+          <div  style={{fontSize:"1.5rem" , fontWeight:"700", color:"red"}}>
+            <input
+              type="radio"
+              id="vehicle3"
+              name="Status"
+              value="1"
+              onChange={handleInput}
+              
+            />
+            <label for="vehicle3" className="ml-2">
+              {" "}
+              Em Espera
+            </label>
+          </div>
+
+
 
           <div className=" row garison my-5">
             <div className=" col-md-5 col-sm-12 avalible_garison ">
@@ -431,21 +450,13 @@ const ServiceNew = () => {
           </div>
 
 
-          <div>
-            <input
-              type="radio"
-              id="vehicle3"
-              name="Status"
-              value="1"
-              onChange={handleInput}
-            />
-            <label for="vehicle3" className="ml-2">
-              {" "}
-              onHold
-            </label>
-          </div>
+                
+                <div>
 
-          <input class="btn btn-primary" type="submit" />
+
+          <input class="btn btn-primary w-50 text-center"  type="submit"  />
+
+                </div>
         </form>
       </div>
     </div>

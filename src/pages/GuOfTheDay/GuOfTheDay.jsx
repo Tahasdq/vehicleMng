@@ -110,12 +110,12 @@ import axios from 'axios'
     <div className="custom-container">
     <div className="container">
       <div className="Dashboard_heading">
-        <h3>Ocorrência aguardando atençãon</h3>
-        <hr className='my-5'/>
+        <h3>Ocorrência aguardando atendimento</h3>
+        <hr className='my-4'/>
       </div>
 
       <div className="row">
-      <div className="col-md-8 col-sm-12 ">
+      <div className="col-md-8 col-sm-12 " style={{marginTop: "13px"}}>
         {Occurance_hold.map((v, i) => {
 
           
@@ -123,8 +123,8 @@ import axios from 'axios'
             <div className="col-md-12 colsm-12 my-3 occurance_holds" style={{display:"flex" ,justifyContent:"space-around", alignItems:'center'}}>
             <input type="radio" name='11' id={v._id} onChange={handleInput}/>
               <h4>Telefone : {v.phone} </h4>
-              <h4>Candidato : {v.Applicant} </h4>
-              <h4>code : {v.occurance_Code} </h4>
+              <h4>Solicitante : {v.Applicant} </h4>
+              <h4>Cód. Atendimento : {v.occurance_Code} </h4>
               <h4>Rua : {v.street} </h4>  
               </div>
           );

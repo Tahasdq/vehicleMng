@@ -12,7 +12,7 @@ setValue(e.target.value)
     <>
     <div className="search-bar-container">
       <div className="input-group">
-        <input type="text"  value ={value} onChange={handleChange} className="form-control" placeholder="Search occurences here" />
+        <input type="text" style={{}} value ={value} onChange={handleChange} className="form-control" placeholder="Search occurences here" />
         <div className="input-group-append">
             <Link to={`/search/${value}`} >
           <button className="btn btn-secondary" type="button">

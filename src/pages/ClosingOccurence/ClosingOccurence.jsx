@@ -135,7 +135,7 @@ const ClosingOccurence = () => {
                               const formattedTime = `${dateTime.getHours().toString().padStart(2, '0')}:${dateTime.getMinutes().toString().padStart(2, '0')}`;
               
               return (
-                <div className="col-md-12 col-sm-12 my-3 occurance_holds row">
+                <div className="col-md-12 col-sm-12 my-3 occurancea_holds row">
                   <div className="col-md-10 row">
                   
                   <div className="col-md-3 col-sm-12">
@@ -145,8 +145,8 @@ const ClosingOccurence = () => {
                     <h6>Candidato : {v.Applicant} </h6>
                   </div>
                  
-                  <div className="col-md-6  col-sm-12">
-                    <h6>Garnição deixando a cena :{v.Neighbourhood} </h6>
+                  <div className="col-md-3  col-sm-12">
+                    <h6>Garnição deixando a cena : {v.Gu_leaving_the_scence} </h6>
                   </div>
                   <div className="col-md-3 col-sm-12">
                     <h6>Bonde : {v.Street} </h6>
@@ -172,7 +172,7 @@ const ClosingOccurence = () => {
                  
                   </div>
                   </div>
-                  <div className="col-md-2">
+                  <div className="col-md-2 deltbtn">
                     
                   <a href="#" av_garison= {v.av_garison} onClick={handleDeleteClick} id={v._id} className='btn btn-danger' style={{ padding: "50px 60px" }}>
                   <i onClick={(e) => e.currentTarget.parentNode.click()} className="fa-solid fa-trash" style={{ fontSize: "25px" }}></i>

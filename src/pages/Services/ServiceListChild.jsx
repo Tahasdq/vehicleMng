@@ -28,43 +28,48 @@ const [data,setData] = useState([])
 
   return (
     <div className="container">
-      <div className=" row garison my-5">
+      <div className=" row garison my-5 popa">
         <div className=" col-md-4 col-sm-12 Record_1">
 
       
           <ul>
             <li>
-              <h4> phone : {data.phone}</h4>
+              <h4> Telephono : {data.phone}</h4>
             </li>
             <li>
-              <h4> Applicant: {data.Applicant}</h4>
+              <h4> Solicitante: {data.Applicant}</h4>
             </li>
             <li>
-              <h4> Occurrance_Num:{data.Occurrance_Num}</h4>
+              <h4> Numero de Ocorrência:{data.Occurrance_Num}</h4>
             </li>
           </ul>
         </div>
-        <div className=" col-md-4 col-sm-12 ml-5  Record_2">
+        <div className=" col-md-4 col-sm-12  Record_2">
           <ul>
             <li>
               <h4> Rua:{data.Street}</h4>
             </li>
             <li>
-              <h4> Neighborhood : {data.Neighbourhood}</h4>
+              <h4>Bairro : {data.Neighbourhood}</h4>
             </li>
             <li>
-              <h4> City : {data.City}</h4>
+              <h4> Cidade : {data.City}</h4>
             </li>
 
             <li>
-              <h4> Refrence : {data.Reference}</h4>
+              <h4> Referência : {data.Reference}</h4>
             </li>
           </ul>
         </div>
       </div>
 
       <div className=" row request_card py-5 my-5">
+      <label for="vehicle3" className="ml-2 font-weight-bold">
+              {" "}
+              Solicitação
+            </label>
         <div class=" col-sm-12 col-md-12 input-group request-group mb-3 mt-3">
+          
           <input
             type="text"
             class="form-control"
@@ -76,7 +81,13 @@ const [data,setData] = useState([])
         </div>
       </div>
 
-      <div className=" row request_card py-5 mb-5">
+      <div className="loki"></div>
+
+      <div className=" row request_card py-5 mb-5" style={{marginTop: "10px"}}>
+      <label for="vehicle3" className="ml-2 font-weight-bold" >
+              {" "}
+              Descrição
+            </label>
         <div class=" col-sm-12 col-md-12 input-group request-group mb-3 mt-3">
           <input
             type="text"
