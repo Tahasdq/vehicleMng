@@ -32,7 +32,8 @@ const NewOccurance = new mongoose.Schema({
     occurance_Code : Number,
     Status:String,
     Time:String,
-    Arrivaltime:String
+    Arrivaltime:String,
+    registrationDate: { type: Date, default: Date.now } 
 }
 )
 
@@ -40,6 +41,7 @@ const NewOccurance = new mongoose.Schema({
 const NewGarisson = new mongoose.Schema({
    StaffName : String,
    VehcleName : String,
+   Av_garison:String, 
    Status:Boolean
 }
 )
@@ -49,8 +51,7 @@ const StaffSchema = new mongoose.Schema({
     SurName:String,
     WarName:String,
     Status:Boolean
-}
-)
+})
 
 const VechcleSchema = new mongoose.Schema({
     VehicleNumber:Number,
@@ -58,8 +59,7 @@ const VechcleSchema = new mongoose.Schema({
     Brand:String,
 	Model:Number,    
     Status:Boolean
-}
-)           
+})           
 
 const ApplicantSchema= new mongoose.Schema({
     Name:String,
@@ -244,6 +244,7 @@ app.get("/getApplicants",(req,res) =>{
     })
 })
 
+// used in dashboard 
 app.get("/getVehcle",(req,res) =>{
     VechcleModel.find({}).then(function(vehcle){
             res.json(vehcle)
@@ -324,15 +325,24 @@ app.put("/updateStaff", async (req, res) => {
 
 
 
-// Garrson
-
-app.get("/getGarrison",(req,res) =>{
+// Garrson used in dashboard
+app.get("/getGarrisonTrue",(req,res) =>{
     NewGarissonModel.find({Status:true}).then(function(NewGarisson){
             res.json(NewGarisson)
     }).catch(function(err){
         console.log(err)
     })
 })
+
+app.get("/getGarrisonFalse",(req,res) =>{
+    NewGarissonModel.find({Status:false}).then(function(NewGarisson){
+            res.json(NewGarisson)
+    }).catch(function(err){
+        console.log(err)
+    })
+})
+
+
 
 app.put("/updataGarrison/:id",(req,res) =>{
     const id = req.params.id;
@@ -417,6 +427,7 @@ app.get("/getGarrison",(req,res) =>{
     })
 })
 
+
 app.get("/getnewoccuranceAllStatus/:id",(req,res) =>{
     const id = req.params.id
     NewOccuranceModel.find({ _id: id })
@@ -438,17 +449,70 @@ app.get("/getnewoccuranceAllStatus/:id",(req,res) =>{
 
 
 
-app.get("/getnewoccuranceAllStatusWithZero",(req,res) =>{
-
-    NewOccuranceModel.find({ Status: "0" })
-    .then(function (NewOccurance) {
-      res.json(NewOccurance);
-    })
-    .catch(function (err) {
-      console.log(err);
-      res.status(500).json({ error: 'Internal Server Error' });
-    });
+app.get("/getnewoccuranceOpenCases",(req,res) =>{
+    const statusValues = ["0", "1" ,"2"]; // Array containing status values 0 ,1, 2
+  
+    NewOccuranceModel.find({ Status: { $in: statusValues } })
+      .then(function (NewOccurance) {
+        res.json(NewOccurance);
+      })
+      .catch(function (err) {
+        console.log(err);
+        res.status(500).json({ error: 'Internal Server Error' });
+      });
 })
+
+//used in Dashboard and closing
+app.get("/getnewoccuranceAllStatusWithZeroAndTwo", (req, res) => {
+    const statusValues = ["0", "2"]; // Array containing status values 0 and 2
+  
+    NewOccuranceModel.find({ Status: { $in: statusValues } })
+      .then(function (NewOccurance) {
+        res.json(NewOccurance);
+      })
+      .catch(function (err) {
+        console.log(err);
+        res.status(500).json({ error: 'Internal Server Error' });
+      });
+  });
+app.get("/getnewoccuranceAllStatusWithZero", (req, res) => {
+    const statusValues = ["0"]; // Array containing status values 0 and 2
+  
+    NewOccuranceModel.find({ Status: { $in: statusValues } })
+      .then(function (NewOccurance) {
+        res.json(NewOccurance);
+      })
+      .catch(function (err) {
+        console.log(err);
+        res.status(500).json({ error: 'Internal Server Error' });
+      });
+  });
+  
+
+
+
+
+
+//get all staff true or false
+app.get("/getAllStaff",(req,res) =>{
+    StaffModel.find().then(function(staffs){
+            res.json(staffs)
+    }).catch(function(err){
+        console.log(err)
+    })
+})
+
+
+
+
+
+
+
+
+
+
+
+ 
 
 
 app.put("/occuranceDispatcharrive/:id",(req,res) =>{
@@ -498,21 +562,44 @@ app.put("/occuranceclosed/:id",(req,res) =>{
 
 app.put("/updataGarrisonToTrue/:id",(req,res) =>{
     const id = req.params.id;
-    console.log("id is " , id);
+    console.log("id is " , id); //new oocurences id
     // Assuming you want to update specific fields in the Staff model
-     const updateFields = {Status:true};
-     
-    NewGarissonModel.findByIdAndUpdate(id, updateFields, { Status: false })
-    .then((NewGarisson) => {
-      if (!NewGarisson) {
-        return res.status(404).json({ error: 'vehicle not found' });
-      }
-      res.json(NewGarisson);
+    NewOccuranceModel.findById(id).then((doc)=>{
+        if(!doc){
+            return res.status(404).json({ error: 'occurence not found' });
+        }
+        const updateFields = {Status:true};
+        NewGarissonModel.findOneAndUpdate({ Av_garison: doc.av_garison }, updateFields, { new: false })
+        .then((NewGarisson) => {
+          if (!NewGarisson) {
+            return res.status(404).json({ error: 'data is updated' });
+          }
+          res.json(NewGarisson);
+        })
+        
+    
     })
-    .catch((err) => {
-      console.log(err);
-      res.status(500).json({ error: 'Internal Server Error' });
-    });
+
+
+
+
+     
+
+
+
+
+     
+    // NewGarissonModel.findByIdAndUpdate(av_, updateFields, { Status: false })
+    // .then((NewGarisson) => {
+    //   if (!NewGarisson) {
+    //     return res.status(404).json({ error: 'vehicle not found' });
+    //   }
+    //   res.json(NewGarisson);
+    // })
+    // .catch((err) => {
+    //   console.log(err);
+    //   res.status(500).json({ error: 'Internal Server Error' });
+    // });
 });
 
 //gettinng all garissons
@@ -625,3 +712,55 @@ app.put("/updataGarrisonStat",(req,res) =>{
       res.status(500).json({ error: 'Internal Server Error' });
     });
 });
+
+
+
+
+
+
+
+
+
+
+//Dashboard backend for total occurencnes in a day ,month and yearn
+
+
+// Get occurrence count for today
+app.get('/occurrences/today', async (req, res) => {
+    try {
+      const today = new Date();
+      const startOfDay = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+      const endOfDay = new Date(today.getFullYear(), today.getMonth(), today.getDate() + 1);
+      const count = await NewOccuranceModel.countDocuments({ registrationDate: { $gte: startOfDay, $lt: endOfDay } });
+      res.json({ count });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: 'Server Error' });
+    }
+  });
+  
+  // Get occurrence count for this month
+ app.get('/occurrences/month', async (req, res) => {
+    try {
+      const startOfMonth = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
+      const endOfMonth = new Date(new Date().getFullYear(), new Date().getMonth() + 1, 1);
+      const count = await NewOccuranceModel.countDocuments({ registrationDate: { $gte: startOfMonth, $lt: endOfMonth } });
+      res.json({ count });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: 'Server Error' });
+    }
+  });
+  
+  // Get occurrence count for this year
+  app.get('/occurrences/year', async (req, res) => {
+    try {
+      const startOfYear = new Date(new Date().getFullYear(), 0, 1);
+      const endOfYear = new Date(new Date().getFullYear() + 1, 0, 1);
+      const count = await NewOccuranceModel.countDocuments({ registrationDate: { $gte: startOfYear, $lt: endOfYear } });
+      res.json({ count });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: 'Server Error' });
+    }
+  });
