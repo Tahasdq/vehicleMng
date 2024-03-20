@@ -113,7 +113,7 @@ const Home = () => {
 
     ]
     return (
-        <div className="custom-container">
+        <div className="custom-container text-center">
 
 
             <div className='container'>

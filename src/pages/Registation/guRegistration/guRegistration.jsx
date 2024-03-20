@@ -9,16 +9,19 @@ const GuRegistration = () => {
   const [garison, setGarison] = useState([]);
   const [vechicleId, setvehicleId] = useState()
   const [staffIds, setStaffIds] = useState([])
-   const [avGarrison , setAvGarssion] = useState([])
+  const [avGarrison, setAvGarssion] = useState([])
+  const [selectedVehicle, setSelectedVehicle] = useState(null);
+  const [selectedStaff, setSelectedStaff] = useState('');
 
-  
-  
+
+
+
 
   const [post, setPost] = useState({
     StaffName: '',
     VehcleName: '',
-    Av_garison:"",
-    Status:true
+    Av_garison: "",
+    Status: true
   });
 
   useEffect(() => {
@@ -39,7 +42,7 @@ const GuRegistration = () => {
       });
 
 
-      axios.get('http://localhost:3000/newGarissonData')
+    axios.get('http://localhost:3000/newGarissonData')
       .then((response) => {
         setGarison(response.data);
         console.log(response.data)
@@ -47,28 +50,28 @@ const GuRegistration = () => {
       .catch((error) => {
         console.error('Error fetching vehicle data:', error);
       });
-      
+
 
   }, []);
 
   const vehicleHandleChange = (event) => {
-    const { name, value ,id} = event.target;
+    const { name, value, id } = event.target;
     console.log(id)
     setvehicleId(id)
+    setSelectedVehicle(value);
     setPost((prevState) => ({
       ...prevState,
       [name]: value,
-      
+
     }));
 
     setAvGarssion((prevState) => [...prevState, value]);
 
-   
 
   };
 
 
-  
+
   // const staffHandleChange = (event) => {
   //   // const { name, value ,id} = event.target;
   //   const {id} = event.target;
@@ -85,56 +88,90 @@ const GuRegistration = () => {
   //   // setPost((prevState) => ({
   //   //   ...prevState,
   //   //   [name]: value,
-      
+
   //   // }));
   // };
 
   const staffHandleChange = (event) => {
 
-    const { id, checked,name,value } = event.target;
-    
+    const { id, checked, name, value } = event.target;
+
     setPost((prevState) => ({
       ...prevState,
       [name]: value,
-      
+
     }));
     setAvGarssion((prevState) => [...prevState, value]);
 
 
 
     if (checked && !staffIds.includes(id)) {
-        // If checkbox is checked and ID is not already in staffId, add it
-        setStaffIds(prevIds => [...prevIds, id]);
-        
+      // If checkbox is checked and ID is not already in staffId, add it
+      setStaffIds(prevIds => [...prevIds, id]);
+
     } else if (!checked && staffIds.includes(id)) {
-        // If checkbox is unchecked and ID is in staffId, remove it
-        setStaffIds(prevIds => prevIds.filter(item => item !== id));
-        
+      // If checkbox is unchecked and ID is in staffId, remove it
+      setStaffIds(prevIds => prevIds.filter(item => item !== id));
+
     }
-};
 
-console.log(staffIds)
+    setSelectedStaff(checked ? value : '');
+  };
+
+  const handleDelete = (e) => {
+    e.preventDefault()
+    e.stopPropagation()
+    console.log(e.isPropagationStopped());
+    console.log("delete clicked")
+    if (garison.length > 0) {
 
 
-  const handleSubmit = (event) => {
+      axios.delete('http://localhost:3000/deleteGarrisonStatus')
+        .then((response) => {
+          console.log(response);
+        })
+        .catch((err) => {
+          console.error('Error submitting data:', err);
+        });
 
-    let Array= avGarrison
-    let ToString = Array[0]+ Array[1]
-    console.log("Type of " , typeof ToString );
-// 
-    // console.log("av_garsoin is " , Array[0]+ Array[1])
 
-    event.preventDefault();
-    const postData = { ...post, Status: true , Av_garison :ToString };
-    axios.post('http://localhost:3000/newGarisson', postData)
+      axios.put('http://localhost:3000/statustrueStaff')
+        .then((response) => {
+          // console.log(dispatch, response.data)
+        })
+        .catch((error) => {
+          console.error('Error fetching vehicle data:', error);
+        });
+
+      axios.put('http://localhost:3000/statustrueVehcle')
+        .then((response) => {
+          // console.log(dispatch, response.data)
+        })
+        .catch((error) => {
+          console.error('Error fetching vehicle data:', error);
+        });
+
+
+        //rendering
+
+        axios.get('http://localhost:3000/getStaffStatus')
       .then((response) => {
-        console.log(response);
+        setStaff(response.data);
       })
-      .catch((err) => {
-        console.error('Error submitting data:', err);
+      .catch((error) => {
+        console.error('Error fetching staff data:', error);
       });
 
-      axios.get('http://localhost:3000/newGarissonData')
+    axios.get('http://localhost:3000/getVehcleStatus')
+      .then((response) => {
+        setVehicle(response.data);
+      })
+      .catch((error) => {
+        console.error('Error fetching vehicle data:', error);
+      });
+
+
+    axios.get('http://localhost:3000/newGarissonData')
       .then((response) => {
         setGarison(response.data);
         console.log(response.data)
@@ -142,24 +179,76 @@ console.log(staffIds)
       .catch((error) => {
         console.error('Error fetching vehicle data:', error);
       });
-      
 
-      // const IdVehcle = vechicleId 
-      // console.log("ve",IdVehcle)
-      
-      axios.put(`http://localhost:3000/updateVehicle/${vechicleId}`)
-      .then((response)=>{
-          console.log(response);
-          
+
+
+
+    }
+
+  }
+
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    console.log("submit clicked")
+
+
+    let Array = avGarrison
+    let ToString = Array[0] + Array[1]
+    // 
+    // console.log("av_garsoin is " , Array[0]+ Array[1])
+    if (!selectedVehicle) {
+      alert('Please select a vehicle.');
+      return;
+    }
+
+    if (!selectedStaff) {
+      alert('Please select a staff member.');
+      return;
+    }
+
+
+    const postData = { ...post, Status: true, Av_garison: ToString };
+    axios.post('http://localhost:3000/newGarisson', postData)
+      .then((response) => {
+        console.log(response);
+        setPost({
+          StaffName: '',
+          VehcleName: '',
+          Av_garison: "",
+          Status: null
+        })
+      })
+      .catch((err) => {
+        console.error('Error submitting data:', err);
+      });
+
+    axios.get('http://localhost:3000/newGarissonData')
+      .then((response) => {
+        setGarison(response.data);
+        console.log(response.data)
       })
       .catch((error) => {
         console.error('Error fetching vehicle data:', error);
       });
 
-      axios.put(`http://localhost:3000/updateStaff` , {dataArray: staffIds})
-      .then((response)=>{
-          console.log(response);
-          
+
+    // const IdVehcle = vechicleId 
+    // console.log("ve",IdVehcle)
+
+    axios.put(`http://localhost:3000/updateVehicle/${vechicleId}`)
+      .then((response) => {
+        console.log(response);
+
+      })
+      .catch((error) => {
+        console.error('Error fetching vehicle data:', error);
+      });
+
+    axios.put(`http://localhost:3000/updateStaff`, { dataArray: staffIds })
+      .then((response) => {
+        console.log(response);
+
       })
       .catch((error) => {
         console.error('Error fetching vehicle data:', error);
@@ -167,28 +256,61 @@ console.log(staffIds)
 
 
 
-      axios.get('http://localhost:3000/getVehcleStatus')
+
+    axios.get('http://localhost:3000/getVehcleStatus')
       .then((response) => {
         setVehicle(response.data);
-        console.log(dispatch, response.data)
       })
       .catch((error) => {
         console.error('Error fetching vehicle data:', error);
       });
 
 
-      axios.get('http://localhost:3000/getStaffStatus')
+    axios.get('http://localhost:3000/getStaffStatus')
       .then((response) => {
         setStaff(response.data);
-        console.log(dispatch, response.data)
       })
       .catch((error) => {
         console.error('Error fetching vehicle data:', error);
       });
 
-      var av1 =  vehicle.toString() +staff.toString();
-      setAvGarssion(av1)
-      console.log("data is" , avGarrison);
+    axios.get('http://localhost:3000/newGarissonData')
+      .then((response) => {
+        setGarison(response.data);
+        console.log(response.data)
+      })
+      .catch((error) => {
+        console.error('Error fetching vehicle data:', error);
+      });
+
+
+  setSelectedVehicle(null);
+  setStaffIds([]);
+
+  setPost({ // Clear post data
+    StaffName: '',
+    VehcleName: '',
+    Av_garison: "",
+    Status: null
+  });
+
+
+//onyl for check : 
+
+const [updatedGarison, updatedStaff, updatedVehicle] = await Promise.all([
+  axios.get('http://localhost:3000/newGarissonData'),
+  axios.get('http://localhost:3000/getStaffStatus'),
+  axios.get('http://localhost:3000/getVehcleStatus')
+]);
+
+setGarison(updatedGarison.data);
+setStaff(updatedStaff.data);
+setVehicle(updatedVehicle.data);
+
+console.log('Form submitted successfully.');
+
+
+
   };
 
   return (
@@ -200,23 +322,23 @@ console.log(staffIds)
         </div>
         <form onSubmit={handleSubmit}>
           <div className="row">
-            <div className="col-md-3 col-sm-12 cars my-5">
-              <h3 className="text-center">Carro</h3>
+            <div className="col-md-3 col-sm-12 cars my-5  ">
+              <h3 className="">Carro</h3>
               {vehicle.map((v, i) => (
-                <div key={i}>
-                  <input type="radio" id={v._id} name="VehcleName" value={v.Model}  onChange={vehicleHandleChange}
+                <div className='d-flex justify-content-start' key={i} >
+                  <input type="radio" id={v._id} name="VehcleName" value={v.Model} onChange={vehicleHandleChange}
                   // onClick={(e) =>{console.log(e.target)}}
                   />
-                  <label htmlFor={`vehcle${i}`} className="ml-2">{v.Brand} {v.Model}</label>
+                  <label htmlFor={`vehcle${i}`} className="ml-2">{v.Brand}&nbsp; {v.Model}</label>
                 </div>
               ))}
             </div>
 
-            <div className="col-md-3 col-sm-12 ml-3 guards my-5">
+            <div className="col-md-3 col-sm-12 pl-3 guards my-5">
               <h3 className="text-center">Guarda</h3>
               {staff.map((s, i) => (
                 <div key={i}>
-                  <input type="checkbox" id={s._id}  name="StaffName" value={s.Name} onChange={staffHandleChange} />
+                  <input type="checkbox" id={s._id} name="StaffName" value={s.Name} onChange={staffHandleChange} />
                   <label htmlFor={`staff${i}`} className="ml-2">{s.Name}</label>
                 </div>
               ))}
@@ -229,16 +351,23 @@ console.log(staffIds)
             <div className="col-md-3 col-sm-12 guards my-5">
               <h3 className="text-center">Guarnição Disponível</h3>
               <ul>
-              {garison.map((v,i)=>{
-                return(
-                <li>{v.StaffName}{v.VehcleName}</li>                
-              
-              )})}
+                {garison.length > 0 && garison.map((v, i) => {
+                  return (
+                    <>
+                      <li>
+
+                        {v.StaffName}{v.VehcleName}
+                      </li>
+                    </>
+
+                  )
+                })}
               </ul>
             </div>
 
             <div>
               <button type="submit" className="btn btn-primary my-5 py-2 px-5 ml-3">Atribuir</button>
+              <button type="submit" className="btn btn-primary my-5 py-2 px-5 ml-3" onClick={(e) => handleDelete(e)}>Delete All</button>
             </div>
           </div>
         </form>

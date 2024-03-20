@@ -130,10 +130,26 @@ const ClosingOccurence = () => {
         <div className="row">
           <div className="col-md-12 col-sm-12 ">
             {closingOccurences.map((v, i) => {
-                              const dateTime = new Date(v.Arrivaltime);
 
-                              const formattedTime = `${dateTime.getHours().toString().padStart(2, '0')}:${dateTime.getMinutes().toString().padStart(2, '0')}`;
+
+                              const dateTimeArrival = new Date(v.Arrivaltime);
+
+                              const formattedTimeArrival = `${dateTimeArrival.getHours().toString().padStart(2, '0')}:${dateTimeArrival.getMinutes().toString().padStart(2, '0')}`;
               
+                              const dateTimeDispatch = new Date(v.Time);
+
+                              const formattedTimeDispatch = `${dateTimeDispatch.getHours().toString().padStart(2, '0')}:${dateTimeDispatch.getMinutes().toString().padStart(2, '0')}`;
+              
+                              const Diiference_Total_Millisencond = (dateTimeArrival - dateTimeDispatch)/1000
+
+
+                              var hours = Math.floor(Diiference_Total_Millisencond / 3600);
+                              var remainingSeconds = Diiference_Total_Millisencond % 3600;
+                              var minutes = Math.floor(remainingSeconds / 60);
+                              var TimeDifference = hours+":"+minutes 
+
+
+
               return (
                 <div className="col-md-12 col-sm-12 my-3 occurancea_holds row">
                   <div className="col-md-10 row">
@@ -142,41 +158,51 @@ const ClosingOccurence = () => {
                     <h6>Telefone : {v.phone} </h6>
                   </div>
                   <div className="col-md-3 col-sm-12">
-                    <h6>Candidato : {v.Applicant} </h6>
+                    <h6>Solicitante : {v.Applicant} </h6>
                   </div>
                  
-                  <div className="col-md-3  col-sm-12">
-                    <h6>Garnição deixando a cena : {v.Gu_leaving_the_scence} </h6>
-                  </div>
-                  <div className="col-md-3 col-sm-12">
-                    <h6>Bonde : {v.Street} </h6>
-                  </div>
+                  {/* <div className="col-md-3  col-sm-12">
+                    <h6>Garnição deixando a cena: {v.Gu_leaving_the_scence} </h6>
+                  </div> */}
                   <div className="col-md-3 col-sm-12">
                     <h6>Rua : {v.Street} </h6>
                   </div>
                   <div className="col-md-3 col-sm-12">
-                    <h6>Arrival time : {formattedTime} </h6>
+                    <h6>tempo de chegada : {formattedTimeArrival} </h6>
+                  </div>
+                  <div className="col-md-3 col-sm-12">
+                    <h6>Garnição deixando a cena: {formattedTimeDispatch} </h6>
+                  </div>
+                  <div className="col-md-3 col-sm-12">
+                    <h6>Tempo total gasto: {TimeDifference} </h6>
                   </div>
                   
-                  <div className="col-md-6 col-sm-12 gu_list">
+                  <span className="col-md-6 col-sm-12 gu_list">
                     <h6> Gu Lista : </h6>
 
-                      <span>
+                      
                         
-                         <strong>
+                         
                           
-                          {v.av_garison}
-                          </strong> 
+                          <strong>
+                            {v.av_garison}
+                            
+                            </strong>
+                         
                      
-                      </span>
+                    
                  
-                  </div>
+                  </span>
+
+
+
                   </div>
                   <div className="col-md-2 deltbtn">
                     
                   <a href="#" av_garison= {v.av_garison} onClick={handleDeleteClick} id={v._id} className='btn btn-danger' style={{ padding: "50px 60px" }}>
                   <i onClick={(e) => e.currentTarget.parentNode.click()} className="fa-solid fa-trash" style={{ fontSize: "25px" }}></i>
-                   </a>     </div>
+                   </a>    
+                    </div>
                 </div>
               );
             })}

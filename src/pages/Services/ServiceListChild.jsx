@@ -40,7 +40,10 @@ const [data,setData] = useState([])
               <h4> Solicitante: {data.Applicant}</h4>
             </li>
             <li>
-              <h4> Numero de Ocorrência:{data.Occurrance_Num}</h4>
+              <h4> Cód. Atendimento : {data.occurance_Code}</h4>
+            </li>
+            <li>
+              <h4> Numero de Ocorrência: {data.occurance_Number}</h4>
             </li>
           </ul>
         </div>

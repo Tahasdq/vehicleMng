@@ -29,7 +29,7 @@ const ServiceNew = () => {
     Status: "0",
     Time:"",
     ArrivalTime:"",
-    Garisson: null
+    // Garisson: null
   });
 
 
@@ -101,10 +101,21 @@ const ServiceNew = () => {
   }, []);
 
   const handleInput = (event) => {
-    const { id, checked } = event.target;
+    const { id, checked ,name } = event.target;
+
+    if (id === "vehicle3" && checked) {
+      // Disable Garrison radio buttons
+      setNewGarrison(Garrison.map(item => ({ ...item, disabled: true })));
+    } else if (name === "av_garison") {
+      // If a Garrison radio button is checked
+      // Enable all Garrison radio buttons
+      setNewGarrison(Garrison.map(item => ({ ...item, disabled: false })));
+    }
     setGarrsionId(id)
-    console.log("garrisonId", id)
+    // console.log("garrisonId", id)
     setPost({ ...post, [event.target.name]: event.target.value });
+
+
   };
 
   console.log([post])
@@ -175,6 +186,9 @@ const ServiceNew = () => {
   const handleSubmit = (event) => {
     event.preventDefault();
 
+
+    
+  
     // const postData = { ...post, Status: "0" };
     axios
       .post("http://localhost:3000/newOccurance", post)
@@ -423,6 +437,7 @@ const ServiceNew = () => {
                       name="av_garison"
                       value={v.StaffName + v.VehcleName}
                       onChange={handleInput}
+                      disabled={v.disabled}
                     />
                     <label for="vehicle1" className="ml-2">
                       {v.StaffName + v.VehcleName}
@@ -451,10 +466,10 @@ const ServiceNew = () => {
 
 
                 
-                <div>
+                <div className="d-flex justify-content-center ">
 
 
-          <input class="btn btn-primary w-50 text-center"  type="submit"  />
+                       <input class="btn btn-primary px-5 py-2 w-50 text-center"  value="Enviar" type="submit"  />
 
                 </div>
         </form>

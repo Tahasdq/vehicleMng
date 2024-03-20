@@ -12,6 +12,7 @@ const VehicleRegistration = () => {
   });
 
   const [submitStatus, setSubmitStatus] = useState(null);
+  const [errors, setErrors] = useState({});
 
   const handleInput = (event) => {
     setPost({ ...post, [event.target.name]: event.target.value });
@@ -19,24 +20,54 @@ const VehicleRegistration = () => {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    const postData = { ...post, Status: true };
-    axios
-      .post("http://localhost:3000/postVehicle", postData) // Corrected endpoint URL
-      .then((response) => {
-        console.log(response);
-        setSubmitStatus('success');
-        setTimeout(() => {
-          setSubmitStatus(null);
-        }, 1000);
-        setPost({ VehicleNumber: "", Plate: "", Brand: "", Model: "",Status:""}); // Clearing the fields
-      })
-      .catch((err) => {
-        console.log(err);
-        setSubmitStatus('error');
-        setTimeout(() => {
-          setSubmitStatus(null);
-        }, 1000);
-      });
+    if (validateForm()) {
+      const postData = { ...post, Status: true };
+      axios
+        .post("http://localhost:3000/postVehicle", postData)
+        .then((response) => {
+          console.log(response);
+          setSubmitStatus('success');
+          setTimeout(() => {
+            setSubmitStatus(null);
+          }, 1000);
+          setPost({ VehicleNumber: "", Plate: "", Brand: "", Model: "",Status:"" }); // Clearing the fields
+        })
+        .catch((err) => {
+          console.log(err);
+          setSubmitStatus('error');
+          setTimeout(() => {
+            setSubmitStatus(null);
+          }, 1000);
+        });
+    }
+  };
+
+  const validateForm = () => {
+    let isValid = true;
+    let errors = {};
+
+    if (!post.VehicleNumber.trim()) {
+      errors.VehicleNumber = 'VehicleNumber is required';
+      isValid = false;
+    }
+
+    if (!post.Plate.trim()) {
+      errors.Plate = 'Plate is required';
+      isValid = false;
+    }
+
+    if (!post.Brand.trim()) {
+      errors.Brand = 'Brand is required';
+      isValid = false;
+    }
+
+    if (!post.Model.trim()) {
+      errors.Model = 'Model is required';
+      isValid = false;
+    }
+
+    setErrors(errors);
+    return isValid;
   };
 
   return (
@@ -66,26 +97,29 @@ const VehicleRegistration = () => {
               onChange={handleInput}
               value={post.VehicleNumber}
             />
+            {errors.VehicleNumber && <div style={{ color: "red", fontWeight: 600 }} className="error">{errors.VehicleNumber}</div>}
             <br />
             <label htmlFor="plate">Placa</label>
             <input
               type="text"
               id="plate"
               name="Plate"
-              placeholder="Sua Número do Placa "
+              placeholder="Sua Número do Placa"
               onChange={handleInput}
               value={post.Plate}
             />
+            {errors.Plate && <div style={{ color: "red", fontWeight: 600 }} className="error">{errors.Plate}</div>}
             <br />
             <label htmlFor="brand">Marca</label>
             <input
               type="text"
               id="brand"
               name="Brand"
-              placeholder="Sua Marca "
+              placeholder="Sua Marca"
               onChange={handleInput}
               value={post.Brand}
             />
+            {errors.Brand && <div style={{ color: "red", fontWeight: 600 }} className="error">{errors.Brand}</div>}
             <br />
             <label htmlFor="model">Modelo</label>
             <input
@@ -96,6 +130,7 @@ const VehicleRegistration = () => {
               onChange={handleInput}
               value={post.Model}
             />
+            {errors.Model && <div style={{ color: "red", fontWeight: 600 }} className="error">{errors.Model}</div>}
             <br />
             <input className="registerbtn" type="submit" value="Enviar" />
           </form>

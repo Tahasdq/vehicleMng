@@ -229,7 +229,7 @@ input{
         align-items: center;
         flex-direction: column;
         background-color: #ffff;
-        margin-left: -10vh;
+        /* margin-left: -10vh; */
     }
     .guards-1{
         display: none;
@@ -311,9 +311,9 @@ input{
         margin: 0;
     }
 
-    .custom-container .container .row{
+    /* .custom-container .container .row{
         margin-left: 1vh;
-    }
+    } */
 
     .container .row .cars{
         margin-right: 8vh;
@@ -456,6 +456,7 @@ input{
     .deltbtn{
         position: absolute;
         left: 470px;
+        top:200px
     }
 
     .guofdybtn{
@@ -526,9 +527,18 @@ input{
     .deltbtn{
         position: absolute;
         left: 470px;
+        top: 200px;
     }
 
     .Avaliable_gar h3{
         font-size: 2vh;
     }
+    
+}
+
+
+@media(max-width:786px){
+.search-bar-container{
+    margin-top: 50px;
+}
 }
