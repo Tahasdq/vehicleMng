@@ -26,10 +26,10 @@ const NewOccurance = new mongoose.Schema({
     City:String,
     Reference:String,
     Description:String,
-    Request:String,
+    Request:String,  
     av_garison:String,
     occurance_Number : Number,
-    occurance_Code : Number,
+    occurance_Code : String,
     Status:String,
     Time:String,
     Arrivaltime:String,
@@ -54,10 +54,10 @@ const StaffSchema = new mongoose.Schema({
 })
 
 const VechcleSchema = new mongoose.Schema({
-    VehicleNumber:Number,
+    VehicleNumber:String,
     Plate:String,
     Brand:String,
-	Model:Number,    
+	  Model:String,    
     Status:Boolean
 })           
 
@@ -107,13 +107,21 @@ app.post("/newGarisson", async(req,res) =>{
 })
 
 
-app.post("/newOccurance", async(req,res) =>{
-    const data = await NewOccuranceModel.create(req.body)
-    res.json("Saved")
+app.post("/newOccurance", async (req, res) => {
+  // Check if req.body.time is empty
+  if (!req.body.Time) {
+      // Add current time in ISO format to req.body.time
+      req.body.Time = new Date().toISOString();
+  }
 
-    // console.log(req.body)
-    // res.send(req.body)
-})
+  try {
+      const data = await NewOccuranceModel.create(req.body);
+      res.json("Saved");
+  } catch (error) {
+      console.error("Error saving data:", error);
+      res.status(500).json({ error: "An error occurred while saving data" });
+  }
+});
 
 app.post("/postoccurance", async(req,res) =>{
     const data = await occuranceModel.create(req.body)
@@ -158,7 +166,7 @@ app.post("/postVehicle", async(req,res  ) =>{
 // For Get
 
 app.get("/newGarissonData",(req,res) =>{
-    NewGarissonModel.find({}).then(function(NewGarisson){
+    NewGarissonModel.find().then(function(NewGarisson){
             console.log(res.json(NewGarisson))
             
     }).catch(function(err){
@@ -350,7 +358,7 @@ app.put("/updataGarrison/:id",(req,res) =>{
     // Assuming you want to update specific fields in the Staff model
      const updateFields = {Status:false};
 
-    NewGarissonModel.findByIdAndUpdate(id, updateFields, { Status: true })
+    NewGarissonModel.findByIdAndUpdate(id, updateFields, { new: true })
     .then((NewGarisson) => {
       if (!NewGarisson) {
         return res.status(404).json({ error: 'vehicle not found' });
@@ -632,7 +640,7 @@ app.get("/SearchedOccurences/:id",(req,res) =>{
 
 
 
-//Time setted
+//Time setted 
 
 app.put("/occuranceDispatchTime/:id",(req,res) =>{
     const id = req.params.id;
@@ -654,7 +662,6 @@ app.put("/occuranceDispatchTime/:id",(req,res) =>{
 
 
 
-
     NewOccuranceModel.findByIdAndUpdate(id, updateFields, { new: true })
     .then((updated) => {
       if (!updated) {
@@ -667,6 +674,28 @@ app.put("/occuranceDispatchTime/:id",(req,res) =>{
       res.status(500).json({ error: 'Internal Server Error' });
     });
 });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -764,3 +793,54 @@ app.get('/occurrences/today', async (req, res) => {
       res.status(500).json({ message: 'Server Error' });
     }
   });
+
+
+
+  app.delete("/deleteGarrisonStatus",(req,res) =>{
+    NewGarissonModel.deleteMany()
+       .then((result) => {
+         res.json({ deletedCount: result.deletedCount });
+       })
+       .catch((err) => {
+         console.error(err);
+         res.status(500).json({ error: 'Internal Server Error' });
+       });
+   })
+   
+   
+   
+   app.put("/statustrueStaff",(req,res) =>{
+      
+       // Assuming you want to update specific fields in the Staff model
+        const updateFields = {Status:true};
+        
+       StaffModel.updateMany( { Status: false },updateFields)
+       .then((NewGarisson) => {
+         if (!NewGarisson) {
+           return res.status(404).json({ error: 'vehicle not found' });
+         }
+         res.json(NewGarisson);
+       })
+       .catch((err) => {
+         console.log(err);
+         res.status(500).json({ error: 'Internal Server Error' });
+       });
+   });
+   
+   app.put("/statustrueVehcle",(req,res) =>{
+      
+       // Assuming you want to update specific fields in the Staff model
+        const updateFields = {Status:true};
+        
+       VechcleModel.updateMany({ Status: false },updateFields)
+       .then((NewGarisson) => {
+         if (!NewGarisson) {
+           return res.status(404).json({ error: 'vehicle not found' });
+         }
+         res.json(NewGarisson);
+       })
+       .catch((err) => {
+         console.log(err);
+         res.status(500).json({ error: 'Internal Server Error' });
+       });
+   });
