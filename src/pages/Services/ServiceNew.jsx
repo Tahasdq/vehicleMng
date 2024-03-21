@@ -119,46 +119,7 @@ const ServiceNew = () => {
   };
 
   console.log([post])
-  // console.log("Id",GarrisonId)
-
-
-  // const handleSubmit = (event) => {
-  //   event.preventDefault();
-  //   axios
-  //     .post("http://localhost:3000/newOccurance", post)
-  //     .then((response) => {
-  //       console.log(response.occurance_Code)
-  //       console.log(response.occurance_Number)
-
-  //       setSubmitStatus("success");
-  //       setTimeout(() => {
-  //         setSubmitStatus(null);
-  //       }, 1000);
-  //       setPost({
-  //         phone: "",
-  //         Applicant: "",
-  //         Street: "",
-  //         Neighbourhood: "",
-  //         City: "",
-  //         Reference: "",
-  //         Description: "",
-  //         Request: "",
-  //         av_garison: "",
-  //         occurance_Number:"",
-  //         occurance_Code:""
-  //       }); // Clearing the fields
-  //       console.log(response);
-
-
-  //     })
-  //     .catch((err) => {
-  //       setSubmitStatus("error");
-  //       setTimeout(() => {
-  //         setSubmitStatus(null);
-  //       }, 3000);
-  //       console.log(err);
-  //     });
-  // };
+ 
 
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -182,90 +143,54 @@ const ServiceNew = () => {
   };
 
 
-
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
-
-
-    
   
-    // const postData = { ...post, Status: "0" };
-    axios
-      .post("http://localhost:3000/newOccurance", post)
-      .then((response) => {
-        console.log(response); // Check the entire response object to see what data it contains
-
-        // Assuming the response contains the updated post object
-        console.log("Code", post.occurance_Code);
-        console.log("Number", post.occurance_Number);
-
-        setSubmitStatus("success");
-        setTimeout(() => {
-          setSubmitStatus(null);
-        }, 1000);
-        setPost({
-          phone: "",
-          Applicant: "",
-          Street: "",
-          Neighbourhood: "",
-          City: "",
-          Reference: "",
-          Description: "",
-          Request: "",
-          av_garison: null,
-          occurance_Number: "", // Clearing the fields
-          occurance_Code: "",
-        });
-      })
-      .catch((err) => {
-        setSubmitStatus("error");
-        setTimeout(() => {
-          setSubmitStatus(null);
-        }, 3000);
-        console.log(err);
+    try {
+      const responsePost = await axios.post("http://localhost:3000/newOccurance", post);
+      console.log(responsePost);
+  
+      // Assuming the response contains the updated post object
+      console.log("Code", post.occurance_Code);
+      console.log("Number", post.occurance_Number);
+  
+      setSubmitStatus("success");
+      setTimeout(() => {
+        setSubmitStatus(null);
+      }, 1000);
+      setPost({
+        phone: "",
+        Applicant: "",
+        Street: "",
+        Neighbourhood: "",
+        City: "",
+        Reference: "",
+        Description: "",
+        Request: "",
+        av_garison: null,
+        occurance_Number: "", // Clearing the fields
+        occurance_Code: "",
       });
-
-    axios.put(`http://localhost:3000/updataGarrison/${GarrisonId}`)
-      .then((response) => {
-        console.log(response);
-      })
-      .catch((error) => {
-        console.error('Error fetching vehicle data:', error);
-      });
-
-    axios
-      .get("http://localhost:3000/getGarrison")
-      .then((response) => {
-        setNewGarrison(response.data)
-        console.log("Garrson", response.data)
-        // Set the fetched data in state
-
-
-      })
-      .catch((error) => {
-        // Handle errors, if any
-        console.error("Error fetching data:", error);
-      });
-    axios
-      .get("http://localhost:3000/getGarrisonFalse")
-      .then((response) => {
-        setGarrsionIdFalse(response.data)
-        console.log("GarrsonFalse", response.data)
-        // Set the fetched data in state
-
-
-      })
-      .catch((error) => {
-        // Handle errors, if any
-        console.error("Error fetching data:", error);
-      });
-
-
-
-
-
-
+  
+      const responsePut = await axios.put(`http://localhost:3000/updataGarrison/${GarrisonId}`);
+      console.log(responsePut);
+  
+      const responseGetGarrison = await axios.get("http://localhost:3000/getGarrison");
+      setNewGarrison(responseGetGarrison.data);
+      console.log("Garrison", responseGetGarrison.data);
+  
+      const responseGetGarrisonFalse = await axios.get("http://localhost:3000/getGarrisonFalse");
+      setGarrsionIdFalse(responseGetGarrisonFalse.data);
+      console.log("GarrisonFalse", responseGetGarrisonFalse.data);
+    } catch (error) {
+      setSubmitStatus("error");
+      setTimeout(() => {
+        setSubmitStatus(null);
+      }, 3000);
+      console.error("Error:", error);
+    }
   };
+  
 
 
   return (

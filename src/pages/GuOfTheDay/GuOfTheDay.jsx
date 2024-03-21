@@ -120,12 +120,22 @@ import axios from 'axios'
 
           
          return (
-            <div className="col-md-12 col-sm-12 my-3 occurance_holds" style={{display:"flex" ,}}>
+            <div className="col-md-12 col-sm-12 my-3  row occurance_holds d-flex" >
+             
+
             <input type="radio" name='11' id={v._id} onChange={handleInput}/>
+            <div className="col-md-4 col-sm-12">
               <h4>Telefone : {v.phone} </h4>
+              </div>
+              <div className="col-md-4 col-sm-12">
               <h4 className='ml-sm-2'>Solicitante : {v.Applicant} </h4>
+              </div>
+              <div className="col-md-4 col-sm-12">
               <h4 className='ml-sm-2'>Cód. Atendimento : {v.occurance_Code} </h4>
+              </div>
+              <div className="col-md-4 col-sm-12">
               <h4 className='ml-sm-2'>Rua : {v.Street} </h4>  
+              </div>
               </div>
           );
         })}

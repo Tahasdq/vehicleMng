@@ -190,128 +190,100 @@ const GuRegistration = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    console.log("submit clicked")
-
-
-    let Array = avGarrison
-    let ToString = Array[0] + Array[1]
-    // 
-    // console.log("av_garsoin is " , Array[0]+ Array[1])
+    console.log("submit clicked");
+  
+    let ToString = avGarrison[0] + avGarrison[1];
+  
     if (!selectedVehicle) {
       alert('Please select a vehicle.');
       return;
     }
-
+  
     if (!selectedStaff) {
       alert('Please select a staff member.');
       return;
     }
-
-
-    const postData = { ...post, Status: true, Av_garison: ToString };
-    axios.post('http://localhost:3000/newGarisson', postData)
-      .then((response) => {
-        console.log(response);
-        setPost({
-          StaffName: '',
-          VehcleName: '',
-          Av_garison: "",
-          Status: null
-        })
-      })
-      .catch((err) => {
-        console.error('Error submitting data:', err);
+  
+    try {
+      // Submit new garisson data
+      const postData = { ...post, Status: true, Av_garison: ToString };
+      await axios.post('http://localhost:3000/newGarisson', postData);
+      console.log("post api working");
+  
+      setSelectedVehicle(null);
+    setSelectedStaff('');
+    setStaffIds([]);
+  
+      // Clear post data after submission
+      setPost({
+        StaffName: '',
+        VehcleName: '',
+        Av_garison: '',
+        Status: null
       });
+      console.log("post data cleared");
+  
+      // Clear radio button selection
+    const radioButtons = document.querySelectorAll('input[type="radio"]');
+    radioButtons.forEach(button => {
+      button.checked = false;
+    });
 
-    axios.get('http://localhost:3000/newGarissonData')
-      .then((response) => {
-        setGarison(response.data);
-        console.log(response.data)
-      })
-      .catch((error) => {
-        console.error('Error fetching vehicle data:', error);
-      });
+    // Clear checkbox selection
+    const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+    checkboxes.forEach(checkbox => {
+      checkbox.checked = false;
+    });
+  
+      // Update vehicle and staff data
+      const updateVehicleResponse = await axios.put(`http://localhost:3000/updateVehicle/${vechicleId}`);
+      console.log(updateVehicleResponse);
+      console.log("update vehicle api working");
+  
+      const updateStaffResponse = await axios.put('http://localhost:3000/updateStaff', { dataArray: staffIds });
+      console.log(updateStaffResponse);
+      console.log("update staff api working");
+  
+      // Fetch updated garisson data
+      const garissonResponse = await axios.get('http://localhost:3000/newGarissonData');
+      setGarison(garissonResponse.data);
+      console.log("New garission data api working");
 
+      // Fetch updated vehicle and staff status
+      const vehicleResponse = await axios.get('http://localhost:3000/getVehcleStatus');
+      setVehicle(vehicleResponse.data);
+      console.log("getVehicle stats api working");
+  
+      const staffResponse = await axios.get('http://localhost:3000/getStaffStatus');
+      setStaff(staffResponse.data);
+      console.log("getstaff stats api working");
+  
+      // Fetch updated garisson data again
+      const updatedGarissonResponse = await axios.get('http://localhost:3000/newGarissonData');
+      setGarison(updatedGarissonResponse.data);
+      console.log("getnewgarssiondata stats api working");
+  
+      console.log('All API calls completed successfully.');
+    } catch (error) {
+      console.error('Error:', error);
+      // Handle errors as needed
+    }
 
-    // const IdVehcle = vechicleId 
-    // console.log("ve",IdVehcle)
-
-    axios.put(`http://localhost:3000/updateVehicle/${vechicleId}`)
-      .then((response) => {
-        console.log(response);
-
-      })
-      .catch((error) => {
-        console.error('Error fetching vehicle data:', error);
-      });
-
-    axios.put(`http://localhost:3000/updateStaff`, { dataArray: staffIds })
-      .then((response) => {
-        console.log(response);
-
-      })
-      .catch((error) => {
-        console.error('Error fetching vehicle data:', error);
-      });
-
-
-
-
-    axios.get('http://localhost:3000/getVehcleStatus')
-      .then((response) => {
-        setVehicle(response.data);
-      })
-      .catch((error) => {
-        console.error('Error fetching vehicle data:', error);
-      });
-
-
-    axios.get('http://localhost:3000/getStaffStatus')
-      .then((response) => {
-        setStaff(response.data);
-      })
-      .catch((error) => {
-        console.error('Error fetching vehicle data:', error);
-      });
-
-    axios.get('http://localhost:3000/newGarissonData')
-      .then((response) => {
-        setGarison(response.data);
-        console.log(response.data)
-      })
-      .catch((error) => {
-        console.error('Error fetching vehicle data:', error);
-      });
-
-
-  setSelectedVehicle(null);
-  setStaffIds([]);
-
-  setPost({ // Clear post data
-    StaffName: '',
-    VehcleName: '',
-    Av_garison: "",
-    Status: null
-  });
-
+    setPost({
+      StaffName: '',
+      VehcleName: '',
+      Av_garison: '',
+      Status: null
+    });
+  };
+  
 
 //onyl for check : 
 
-const [updatedGarison, updatedStaff, updatedVehicle] = await Promise.all([
-  axios.get('http://localhost:3000/newGarissonData'),
-  axios.get('http://localhost:3000/getStaffStatus'),
-  axios.get('http://localhost:3000/getVehcleStatus')
-]);
-
-setGarison(updatedGarison.data);
-setStaff(updatedStaff.data);
-setVehicle(updatedVehicle.data);
-
-console.log('Form submitted successfully.');
 
 
 
-  };
+
 
   return (
     <div className="custom-container">

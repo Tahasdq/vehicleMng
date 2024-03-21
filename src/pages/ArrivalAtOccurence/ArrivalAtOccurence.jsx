@@ -100,9 +100,11 @@ const ArrivalAtOccurence = () => {
 
                 <div className="col-md-12 col-sm-12 my-3 occurance_holds row  d-flex  ">
                 
+                  
 
 
                 <input type="radio" name='11' id={v._id} onChange={handleInput} /> 
+
 
                 <div className="col-md-4 col-sm-12">
                     <h6 >Telefone : {v.phone} </h6>
