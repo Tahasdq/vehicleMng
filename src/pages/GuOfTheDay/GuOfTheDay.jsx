@@ -1,10 +1,15 @@
 import React, { useEffect , useState} from 'react'
 import axios from 'axios'
+import { jwtDecode } from 'jwt-decode'
  const GuOfTheDay = () => {
   
 
   const [Occurance_hold,SetOccurance_hold] = useState([])
   const [GarisonFalse , setGarisonFalse] = useState([])
+  const [occuranceId , setoccuranceId] = useState(null)
+  const [garisonId , setGarisonId] = useState(null)
+  const [av_garison , setav_garison] = useState([])
+
 
   useEffect(() => {
     // Fetch data when the component mounts
@@ -25,7 +30,7 @@ import axios from 'axios'
       .get("http://localhost:3000/getGarrison")
       .then((response) => {
         setGarisonFalse(response.data)
-        console.log("Garrson",response.data)
+        console.log("Garrson finded are",response.data)
         // Set the fetched data in state
        
 
@@ -39,26 +44,63 @@ import axios from 'axios'
 
 
   const handleInput = (event) =>{
+    event.preventDefault();
 
     const { id } = event.target;
-    
     console.log("d",id)
-
+    setoccuranceId(id);
   } 
 
-  const handleData =() =>{
+  const handleInputGarison = (event) =>{
+    event.preventDefault();
+    const { id , value} = event.target;
+    console.log("Garison",id)
+    setGarisonId(id);
+    console.log("Value",value);
+    setav_garison(  [occuranceId ,value] )
+  } 
 
-    // axios.put(`http://localhost:3000/occuranceDispatch/:id/${}`)
-    //   .then((response)=>{
-    //       console.log(response);
+
+  console.log('id' , garisonId)
+
+  const handleData =(e) =>{
+    e.preventDefault();
+    const token = localStorage.getItem("token")
+       const DispatchBy = jwtDecode(token).username
+    axios.put(`http://localhost:3000/occuranceDispatch/${occuranceId}` , {DispatchBy})
+      .then((response)=>{
+          console.log("data is "  , response);
           
-    //   })
-    //   .catch((error) => {
-    //     console.error('Error fetching vehicle data:', error);
-    //   });
+      })
+      .catch((error) => {
+        console.error('Error fetching vehicle data:', error);
+      });
 
-    alert('good')
+      //Time
+      axios.put(`http://localhost:3000/occuranceDispatchTime/${occuranceId}`)
+      .then((response)=>{
+          console.log("data is "  , response.data);
+          
+      })
+      .catch((error) => {
+        console.error('Error fetching vehicle data:', error);
+      });
 
+      axios.put(`http://localhost:3000/updataGarrison/${garisonId}`)
+      .then((response)=>{
+          console.log(response);  
+      })
+      .catch((error) => {
+        console.error('Error fetching vehicle data:', error);
+      });
+
+       axios.put(`http://localhost:3000/occuranceDispatchGarison` , {dataArray : av_garison})
+      .then((response)=>{
+          console.log(response);  
+      })
+      .catch((error) => {
+        console.error('Error fetching vehicle data:', error);
+      });
   }
 
 
@@ -71,20 +113,32 @@ import axios from 'axios'
     <div className="custom-container">
     <div className="container">
       <div className="Dashboard_heading">
-        <h3>Ocorrência aguardando atençãon</h3>
-        <hr className='my-5'/>
+        <h3>Ocorrência aguardando atendimento</h3>
+        <hr className='my-4'/>
       </div>
 
       <div className="row">
-      <div className="col-md-8 col-sm-12 ">
+      <div className="col-md-8 col-sm-12 " style={{marginTop: "13px"}}>
         {Occurance_hold.map((v, i) => {
+
+          
          return (
-            <div className="col-md-12 colsm-12 my-3 occurance_holds" style={{display:"flex" ,justifyContent:"space-around", alignItems:'center'}}>
-            <input type="radio" name='11'/>
+            <div className="col-md-12 col-sm-12 my-3  row occurance_holds d-flex" >
+             
+
+            <input type="radio" name='11' id={v._id} onChange={handleInput}/>
+            <div className="col-md-4 col-sm-12">
               <h4>Telefone : {v.phone} </h4>
-              <h4>Candidato : {v.Applicant} </h4>
-              <h4>code : {v.occurance_Code} </h4>
-              <h4>Rua : {v.street} </h4>  
+              </div>
+              <div className="col-md-4 col-sm-12">
+              <h4 className='ml-sm-2'>Solicitante : {v.Applicant} </h4>
+              </div>
+              <div className="col-md-4 col-sm-12">
+              <h4 className='ml-sm-2'>Cód. Atendimento : {v.occurance_Code} </h4>
+              </div>
+              <div className="col-md-4 col-sm-12">
+              <h4 className='ml-sm-2'>Rua : {v.Street} </h4>  
+              </div>
               </div>
           );
         })}
@@ -103,7 +157,7 @@ import axios from 'axios'
                   id={v._id}
                   name="av_garison"
                   value={v.StaffName + v.VehcleName}
-                  onChange={handleInput}
+                  onChange={handleInputGarison}
                 />
                 <label for="vehicle1" className="ml-2">
                   {v.StaffName + v.VehcleName}
@@ -117,7 +171,7 @@ import axios from 'axios'
           </div>
         
           <div className="button mt-3 text-center">
-          <a href="" className="btn btn-primary " onClick={handleData} style={{padding:"10px 120px"}}> Despatcho</a>
+          <a href="" className="btn btn-primary " onClick={(e)=>handleData(e)} style={{padding:"10px 120px"}}> Despatcho</a>
           </div>
 
 

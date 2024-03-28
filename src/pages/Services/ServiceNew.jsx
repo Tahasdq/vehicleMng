@@ -1,36 +1,54 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
+import { jwtDecode } from 'jwt-decode'
+
+
 
 const ServiceNew = () => {
   const [submitStatus, setSubmitStatus] = useState(null);
   const [data, setData] = useState(0);
   const [countOcc, setcountOcc] = useState(0);
   const [hold, setHold] = useState(1);
-  const [Garrison,setNewGarrison ] = useState([]);
-  const [GarrisonId,setGarrsionId ] = useState(null);
-  const [GarrisonIdFalse,setGarrsionIdFalse ] = useState([]);
+  const [Garrison, setNewGarrison] = useState([]);
+  const [GarrisonId, setGarrsionId] = useState(null);
+  const [GarrisonIdFalse, setGarrsionIdFalse] = useState([]);
+
+
+  function getformValues(){
+    const storedValue =localStorage.getItem("data");    
+    if(!storedValue) return{
+      phone: "",
+      Applicant: "",
+      Street: "",
+      Neighbourhood: "",
+      City: "",
+      Reference: "",
+      Description: "",
+      Request: "",
+      av_garison: "",
+      occurance_Number: 0,
+      occurance_Code: 0,
+      Time:"",
+      ArrivalTime:"",
+      MadeBy:""
+    }
+    return JSON.parse(storedValue)
+  }
+
+
+  const [post, setPost] = useState(getformValues);
+
+useEffect(()=>{
+  localStorage.setItem("data" , JSON.stringify(post))
+},[post])
+
+
   
 
 
-
-  const [post, setPost] = useState({
-    phone: "",
-    Applicant: "",
-    Street: "",
-    Neighbourhood: "",
-    City: "",
-    Reference: "",
-    Description: "",
-    Request: "",
-    av_garison: "",
-    occurance_Number: 0,
-    occurance_Code: 0,
-    status: '0'
-  });
-
-
-
+  // let storedData = JSON.parse(localStorage.get)
+  
 
 
 
@@ -61,13 +79,13 @@ const ServiceNew = () => {
         console.error("Error fetching data:", error);
       });
 
-      axios
+    axios
       .get("http://localhost:3000/getGarrison")
       .then((response) => {
         setNewGarrison(response.data)
-        console.log("Garrson",response.data)
+        console.log("Garrson", response.data)
         // Set the fetched data in state
-       
+
 
       })
       .catch((error) => {
@@ -76,13 +94,13 @@ const ServiceNew = () => {
       });
 
 
-      axios
+    axios
       .get("http://localhost:3000/getGarrisonFalse")
       .then((response) => {
         setGarrsionIdFalse(response.data)
-        console.log("GarrsonFalse",response.data)
+        console.log("GarrsonFalse", response.data)
         // Set the fetched data in state
-       
+
 
       })
       .catch((error) => {
@@ -97,62 +115,45 @@ const ServiceNew = () => {
 
   }, []);
 
+
+
+
   const handleInput = (event) => {
-    const {id} = event.target;
+    const { id, checked ,name } = event.target;
+
+    if (id === "vehicle3" && checked) {
+      // Disable Garrison radio buttons
+      setNewGarrison(Garrison.map(item => ({ ...item, disabled: true })));
+    } else if (name === "av_garison") {
+      // If a Garrison radio button is checked
+      // Enable all Garrison radio buttons
+      setNewGarrison(Garrison.map(item => ({ ...item, disabled: false })));
+    }
     setGarrsionId(id)
-    console.log("garrisonId",id)
+    // console.log("garrisonId", id)
     setPost({ ...post, [event.target.name]: event.target.value });
+
+
   };
 
-  console.log("Id",GarrisonId)
+  console.log([post])
 
 
-  // const handleSubmit = (event) => {
-  //   event.preventDefault();
-  //   axios
-  //     .post("http://localhost:3000/newOccurance", post)
-  //     .then((response) => {
-  //       console.log(response.occurance_Code)
-  //       console.log(response.occurance_Number)
-
-  //       setSubmitStatus("success");
-  //       setTimeout(() => {
-  //         setSubmitStatus(null);
-  //       }, 1000);
-  //       setPost({
-  //         phone: "",
-  //         Applicant: "",
-  //         Street: "",
-  //         Neighbourhood: "",
-  //         City: "",
-  //         Reference: "",
-  //         Description: "",
-  //         Request: "",
-  //         av_garison: "",
-  //         occurance_Number:"",
-  //         occurance_Code:""
-  //       }); // Clearing the fields
-  //       console.log(response);
-
-
-  //     })
-  //     .catch((err) => {
-  //       setSubmitStatus("error");
-  //       setTimeout(() => {
-  //         setSubmitStatus(null);
-  //       }, 3000);
-  //       console.log(err);
-  //     });
-  // };
 
   const handleChange = (event) => {
     const { name, value } = event.target;
+    
+
     setPost((prevState) => ({
       ...prevState,
       [name]: value,
     }));
 
-    
+  const saved = localStorage.getItem("data");
+  
+  const initialValue = JSON.parse(saved);
+  console.log(initialValue);
+  return initialValue || "";
 
 
     // axios.put(`http://localhost:3000/updataGarrison/${GarrisonId}`)
@@ -166,88 +167,60 @@ const ServiceNew = () => {
 
   };
 
+  
 
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
-
-    const postData = { ...post, Status: "0" };
-    axios
-      .post("http://localhost:3000/newOccurance", postData)
-      .then((response) => {
-        console.log(response); // Check the entire response object to see what data it contains
-
-        // Assuming the response contains the updated post object
-        console.log("Code", post.occurance_Code);
-        console.log("Number", post.occurance_Number);
-
-        setSubmitStatus("success");
-        setTimeout(() => {
-          setSubmitStatus(null);
-        }, 1000);
-        setPost({
-          phone: "",
-          Applicant: "",
-          Street: "",
-          Neighbourhood: "",
-          City: "",
-          Reference: "",
-          Description: "",
-          Request: "",
-          av_garison: null,
-          occurance_Number: "", // Clearing the fields
-          occurance_Code: "",
-        });
-      })
-      .catch((err) => {
-        setSubmitStatus("error");
-        setTimeout(() => {
-          setSubmitStatus(null);
-        }, 3000);
-        console.log(err);
-      });
-
-      axios.put(`http://localhost:3000/updataGarrison/${GarrisonId}`)
-      .then((response)=>{
-          console.log(response);
-      })
-      .catch((error) => {
-        console.error('Error fetching vehicle data:', error);
-      });
-
-      axios
-      .get("http://localhost:3000/getGarrison")
-      .then((response) => {
-        setNewGarrison(response.data)
-        console.log("Garrson",response.data)
-        // Set the fetched data in state
-       
-
-      })
-      .catch((error) => {
-        // Handle errors, if any
-        console.error("Error fetching data:", error);
-      });
-      axios
-      .get("http://localhost:3000/getGarrisonFalse")
-      .then((response) => {
-        setGarrsionIdFalse(response.data)
-        console.log("GarrsonFalse",response.data)
-        // Set the fetched data in state
-       
-
-      })
-      .catch((error) => {
-        // Handle errors, if any
-        console.error("Error fetching data:", error);
-      });
-
   
+    try {
+      const token = localStorage.getItem("token")
+       const MadeBy = jwtDecode(token).username
 
-
-
+      const responsePost = await axios.post("http://localhost:3000/newOccurance", {...post , MadeBy ,Status: "0"});
+      console.log(responsePost);
   
-    };
+      // Assuming the response contains the updated post object
+      console.log("Code", post.occurance_Code);
+      console.log("Number", post.occurance_Number);
+  
+      setSubmitStatus("success");
+      setTimeout(() => {
+        setSubmitStatus(null);
+      }, 1000);
+      setPost({
+        phone: "",
+        Applicant: "",
+        Street: "",
+        Neighbourhood: "",
+        City: "",
+        Reference: "",
+        Description: "",
+        Request: "",
+        av_garison: null,
+        occurance_Number: "", // Clearing the fields
+        occurance_Code: "",
+      });
+  
+      const responsePut = await axios.put(`http://localhost:3000/updataGarrison/${GarrisonId}`);
+      console.log(responsePut);
+  
+      const responseGetGarrison = await axios.get("http://localhost:3000/getGarrison");
+      setNewGarrison(responseGetGarrison.data);
+      console.log("Garrison", responseGetGarrison.data);
+  
+      const responseGetGarrisonFalse = await axios.get("http://localhost:3000/getGarrisonFalse");
+      setGarrsionIdFalse(responseGetGarrisonFalse.data);
+      console.log("GarrisonFalse", responseGetGarrisonFalse.data);
+    } catch (error) {
+      setSubmitStatus("error");
+      setTimeout(() => {
+        setSubmitStatus(null);
+      }, 3000);
+      console.error("Error:", error);
+    }
+  };
+  
 
 
   return (
@@ -272,7 +245,7 @@ const ServiceNew = () => {
               <input
                 type="text"
                 class="form-control"
-                placeholder="Candidato"
+                placeholder="Solicitante"
                 value={post.Applicant}
                 onChange={handleInput}
                 name="Applicant"
@@ -339,7 +312,7 @@ const ServiceNew = () => {
                 value={post.occurance_Code}
                 onChange={handleChange}
               >
-                <option value="">Código de Ocorrência</option>
+                <option value="">Cód. Atendimento</option>
                 {data &&
                   data.map((v, i) => (
                     <option key={i} value={v.Code}>
@@ -350,15 +323,15 @@ const ServiceNew = () => {
 
 
               <select
-  className="btn border dropdown-toggle dropdown"
-  role="button"
-  name="occurance_Number"
-  value={post.occurance_Number}
-  onChange={handleChange}
->
-  <option value="">Numero de Ocorrência</option>
-  <option value={countOcc}>{countOcc}</option>
-</select>
+                className="btn border dropdown-toggle dropdown"
+                role="button"
+                name="occurance_Number"
+                value={post.occurance_Number}
+                onChange={handleChange}
+              >
+                <option value="">Numero de Ocorrência</option>
+                <option value={countOcc}>{countOcc}</option>
+              </select>
 
             </div>
             <div class="input-group request-group mb-3 mt-3">
@@ -389,26 +362,44 @@ const ServiceNew = () => {
               />
             </div>
           </div>
+                    
+          <div  style={{fontSize:"1.5rem" , fontWeight:"700", color:"red"}}>
+            <input
+              type="radio"
+              id="vehicle3"
+              name="Status"
+              value="1"
+              onChange={handleInput}
+              
+            />
+            <label for="vehicle3" className="ml-2">
+              {" "}
+              Em Espera
+            </label>
+          </div>
+
+
 
           <div className=" row garison my-5">
             <div className=" col-md-5 col-sm-12 avalible_garison ">
               <h3 className="text-center">Garnição Disponível</h3>
-              {Garrison.map((v,i)=>{              
-              return(
-              <div>
-                <input
-                  type="radio"
-                  id={v._id}
-                  name="av_garison"
-                  value={v.StaffName + v.VehcleName}
-                  onChange={handleInput}
-                />
-                <label for="vehicle1" className="ml-2">
-                  {v.StaffName + v.VehcleName}
-                </label>
-              </div>
-              )
-             })}
+              {Garrison.map((v, i) => {
+                return (
+                  <div>
+                    <input
+                      type="radio"
+                      id={v._id}
+                      name="av_garison"
+                      value={v.StaffName + v.VehcleName}
+                      onChange={handleInput}
+                      disabled={v.disabled}
+                    />
+                    <label for="vehicle1" className="ml-2">
+                      {v.StaffName + v.VehcleName}
+                    </label>
+                  </div>
+                )
+              })}
             </div>
 
             <div className=" col-md-5 col-sm-12 unavalible_garison ml-5">
@@ -416,34 +407,26 @@ const ServiceNew = () => {
 
 
               <ul>
-              {GarrisonIdFalse.map((v,i)=>{
-  return(
-    <>
-      <li>   {v.StaffName + v.VehcleName}</li>
-    </>
-    
-    )
-})}
+                {GarrisonIdFalse.map((v, i) => {
+                  return (
+                    <>
+                      <li>   {v.StaffName + v.VehcleName}</li>
+                    </>
+
+                  )
+                })}
               </ul>
             </div>
           </div>
 
 
-          <div>
-            <input
-              type="checkbox"
-              id="vehicle3"
-              name="Status"
-              value="1"
-              onChange={handleInput}
-            />
-            <label for="vehicle3" className="ml-2">
-              {" "}
-              onHold
-            </label>
-          </div>
+                
+                <div className="d-flex justify-content-center ">
 
-          <input class="btn btn-primary" type="submit" />
+
+                       <input class="btn btn-primary px-5 py-2 w-50 text-center"  value="Enviar" type="submit"  />
+
+                </div>
         </form>
       </div>
     </div>

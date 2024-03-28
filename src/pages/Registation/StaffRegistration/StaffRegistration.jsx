@@ -10,30 +10,56 @@ const StaffRegistration = () => {
     Status:true
   });
   const [submitStatus, setSubmitStatus] = useState(null);
+  const [errors, setErrors] = useState({});
 
   const handleInput = (event) => {
     setPost({...Post, [event.target.name]: event.target.value});
   };
- 
+
   const handleSubmit = (event) => {
     event.preventDefault();
-    const postData = { ...Post, Status: true };
-    axios.post('http://localhost:3000/postStaff', postData)
-      .then(response => {
-        console.log(response);
-        setSubmitStatus('success');
-        setTimeout(() => {
-          setSubmitStatus(null);
-        }, 1000);
-        setPost({ Name:'', SurName: '', WarName:'' }); // Clearing the fields
-      })
-      .catch(err => {
-        console.log(err);
-        setSubmitStatus('error');
-        setTimeout(() => {
-          setSubmitStatus(null);
-        }, 1000);
-      });
+    if (validateForm()) {
+      const postData = { ...Post, Status: true };
+      axios.post('http://localhost:3000/postStaff', postData)
+        .then(response => {
+          console.log(response);
+          setSubmitStatus('success');
+          setTimeout(() => {
+            setSubmitStatus(null);
+          }, 1000);
+          setPost({ Name:'', SurName: '', WarName:'' }); // Clearing the fields
+        })
+        .catch(err => {
+          console.log(err);
+          setSubmitStatus('error');
+          setTimeout(() => {
+            setSubmitStatus(null);
+          }, 1000);
+        });
+    }
+  };
+
+  const validateForm = () => {
+    let isValid = true;
+    let errors = {};
+
+    if (!Post.Name.trim()) {
+      errors.Name = 'Name is required';
+      isValid = false;
+    }
+
+    if (!Post.SurName.trim()) {
+      errors.SurName = 'Surname is required';
+      isValid = false;
+    }
+
+    if (!Post.WarName.trim()) {
+      errors.WarName = 'War Name is required';
+      isValid = false;
+    }
+
+    setErrors(errors);
+    return isValid;
   };
 
   return (
@@ -63,6 +89,7 @@ const StaffRegistration = () => {
               onChange={handleInput}
               value={Post.Name}
             />
+            {errors.Name && <div style={{color:"red" , fontWeight:600}} className="error">{errors.Name}</div>}
             <br />
             <label htmlFor="lname">Sobrenome</label>
             <input
@@ -71,8 +98,9 @@ const StaffRegistration = () => {
               name="SurName"
               onChange={handleInput}
               placeholder="Your Sobrenome"
-              value={Post.SureName}
+              value={Post.SurName}
             />
+            {errors.SurName && <div style={{color:"red" , fontWeight:600} }className="error">{errors.SurName}</div>}
             <br />
             <label htmlFor="wname">Nome da Guerra</label>
             <input
@@ -83,6 +111,7 @@ const StaffRegistration = () => {
               placeholder="Your Nome da Guerra"
               value={Post.WarName}
             />
+            {errors.WarName && <div style={{color:"red" , fontWeight:600}} className="error">{errors.WarName}</div>}
             <br />
             <input className="registerbtn" type="submit" value="Enviar"/>
           </form>
