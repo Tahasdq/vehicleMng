@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { jwtDecode } from 'jwt-decode';
 import React, { useEffect, useState } from 'react'
 
 const ArrivalAtOccurence = () => {
@@ -15,8 +16,6 @@ const ArrivalAtOccurence = () => {
         setOccurance_hold(response.data)
         console.log("Garrson is ", response.data)
         // Set the fetched data in state
-
-
       })
       .catch((error) => {
         // Handle errors, if any
@@ -53,8 +52,10 @@ const ArrivalAtOccurence = () => {
   }
 
   const handleStatus = () => {
-
-    axios.put(`http://localhost:3000/occuranceDispatcharrive/${arriveId}`)
+    // e.preventDefault();
+    const token = localStorage.getItem("token")
+    const InformedOfArrivalBy = jwtDecode(token).username
+    axios.put(`http://localhost:3000/occuranceDispatcharrive/${arriveId}` ,{InformedOfArrivalBy})
       .then((response) => {
         console.log("data is ", response);
 

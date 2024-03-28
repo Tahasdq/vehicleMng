@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import './Aside.scss'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import BoltIcon from '@mui/icons-material/Bolt';
 import EmojiObjectsIcon from '@mui/icons-material/EmojiObjects';
 import GroupIcon from '@mui/icons-material/Group';
@@ -11,11 +11,22 @@ import CodeIcon from '@mui/icons-material/Code';
 import PersonIcon from '@mui/icons-material/Person';
 import StreetviewIcon from '@mui/icons-material/Streetview';
 import CloseIcon from '@mui/icons-material/Close';
-const Aside = ({sendDataToParent}) => {
+import LogoutIcon from '@mui/icons-material/Logout';
+const Aside = ({sendDataToParent ,onLogout}) => {
+    
+   const navigate =  useNavigate()
 
   const handleTrigger = () => {
     sendDataToParent(false);   
 };
+
+const handleLogout=()=>{
+    localStorage.removeItem("token")
+    localStorage.removeItem("isLoggedIn")
+    navigate('/login', { replace: true });
+    onLogout()
+
+}
 
 //   const sendData =()=>{
 //         sendDatatoparent(isOpen)
@@ -96,6 +107,12 @@ const Aside = ({sendDataToParent}) => {
                             </li>
                         </ul>
                     </div>
+                </div>
+                <div onClick={handleLogout}>
+                    <LogoutIcon
+                    sx={{ fontSize: 40}}
+                    style={{color:"red" ,width:"100%" , cursor:"pointer"}}
+                    /> 
                 </div>
             </div>
         </div>

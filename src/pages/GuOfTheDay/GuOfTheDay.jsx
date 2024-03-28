@@ -1,5 +1,6 @@
 import React, { useEffect , useState} from 'react'
 import axios from 'axios'
+import { jwtDecode } from 'jwt-decode'
  const GuOfTheDay = () => {
   
 
@@ -62,9 +63,11 @@ import axios from 'axios'
 
   console.log('id' , garisonId)
 
-  const handleData =() =>{
-
-    axios.put(`http://localhost:3000/occuranceDispatch/${occuranceId}`)
+  const handleData =(e) =>{
+    e.preventDefault();
+    const token = localStorage.getItem("token")
+       const DispatchBy = jwtDecode(token).username
+    axios.put(`http://localhost:3000/occuranceDispatch/${occuranceId}` , {DispatchBy})
       .then((response)=>{
           console.log("data is "  , response);
           
@@ -168,7 +171,7 @@ import axios from 'axios'
           </div>
         
           <div className="button mt-3 text-center">
-          <a href="" className="btn btn-primary " onClick={handleData} style={{padding:"10px 120px"}}> Despatcho</a>
+          <a href="" className="btn btn-primary " onClick={(e)=>handleData(e)} style={{padding:"10px 120px"}}> Despatcho</a>
           </div>
 
 

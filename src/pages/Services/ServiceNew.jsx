@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
+import { jwtDecode } from 'jwt-decode'
+
+
 
 const ServiceNew = () => {
   const [submitStatus, setSubmitStatus] = useState(null);
@@ -12,28 +15,40 @@ const ServiceNew = () => {
   const [GarrisonIdFalse, setGarrsionIdFalse] = useState([]);
 
 
+  function getformValues(){
+    const storedValue =localStorage.getItem("data");    
+    if(!storedValue) return{
+      phone: "",
+      Applicant: "",
+      Street: "",
+      Neighbourhood: "",
+      City: "",
+      Reference: "",
+      Description: "",
+      Request: "",
+      av_garison: "",
+      occurance_Number: 0,
+      occurance_Code: 0,
+      Time:"",
+      ArrivalTime:"",
+      MadeBy:""
+    }
+    return JSON.parse(storedValue)
+  }
 
 
-  const [post, setPost] = useState({
-    phone: "",
-    Applicant: "",
-    Street: "",
-    Neighbourhood: "",
-    City: "",
-    Reference: "",
-    Description: "",
-    Request: "",
-    av_garison: "",
-    occurance_Number: 0,
-    occurance_Code: 0,
-    Status: "0",
-    Time:"",
-    ArrivalTime:"",
-    // Garisson: null
-  });
+  const [post, setPost] = useState(getformValues);
+
+useEffect(()=>{
+  localStorage.setItem("data" , JSON.stringify(post))
+},[post])
 
 
+  
 
+
+  // let storedData = JSON.parse(localStorage.get)
+  
 
 
 
@@ -100,6 +115,9 @@ const ServiceNew = () => {
 
   }, []);
 
+
+
+
   const handleInput = (event) => {
     const { id, checked ,name } = event.target;
 
@@ -119,16 +137,23 @@ const ServiceNew = () => {
   };
 
   console.log([post])
- 
+
+
 
   const handleChange = (event) => {
     const { name, value } = event.target;
+    
+
     setPost((prevState) => ({
       ...prevState,
       [name]: value,
     }));
 
-
+  const saved = localStorage.getItem("data");
+  
+  const initialValue = JSON.parse(saved);
+  console.log(initialValue);
+  return initialValue || "";
 
 
     // axios.put(`http://localhost:3000/updataGarrison/${GarrisonId}`)
@@ -142,12 +167,17 @@ const ServiceNew = () => {
 
   };
 
+  
+
 
   const handleSubmit = async (event) => {
     event.preventDefault();
   
     try {
-      const responsePost = await axios.post("http://localhost:3000/newOccurance", post);
+      const token = localStorage.getItem("token")
+       const MadeBy = jwtDecode(token).username
+
+      const responsePost = await axios.post("http://localhost:3000/newOccurance", {...post , MadeBy ,Status: "0"});
       console.log(responsePost);
   
       // Assuming the response contains the updated post object
