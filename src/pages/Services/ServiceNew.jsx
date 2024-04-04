@@ -1,16 +1,17 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
-
+import { v4 as uuidv4 } from 'uuid';
 const ServiceNew = () => {
   const [submitStatus, setSubmitStatus] = useState(null);
   const [data, setData] = useState(0);
   const [countOcc, setcountOcc] = useState(0);
   const [hold, setHold] = useState(1);
   const [Garrison, setNewGarrison] = useState([]);
-  const [GarrisonId, setGarrsionId] = useState(null);
+  const [GarrisonId, setGarrsionId] = useState('');
+  const [GarrisonValue, setGarrsionValue] = useState([]);
   const [GarrisonIdFalse, setGarrsionIdFalse] = useState([]);
-
+  const [StaffIds, setStaffIds] = useState([]);
 
 
 
@@ -23,12 +24,12 @@ const ServiceNew = () => {
     Reference: "",
     Description: "",
     Request: "",
-    av_garison: "",
+    av_garison: [],
     occurance_Number: 0,
     occurance_Code: 0,
     Status: "0",
-    Time:"",
-    ArrivalTime:"",
+    Time: "",
+    ArrivalTime: "",
     // Garisson: null
   });
 
@@ -101,7 +102,60 @@ const ServiceNew = () => {
   }, []);
 
   const handleInput = (event) => {
-    const { id, checked ,name } = event.target;
+
+    
+    const { id, checked, name, value } = event.target;
+
+    // Update GarrisonId based on the checked checkbox
+
+    if (checked && !StaffIds.includes(id)) {
+      // If checkbox is checked and ID is not already in staffId, add it
+      setStaffIds(prevIds => [...prevIds, id]);
+
+    } else if (!checked && StaffIds.includes(id)) {
+      // If checkbox is unchecked and ID is in staffId, remove it
+      setStaffIds(prevIds => prevIds.filter(item => item !== id));
+    }
+
+    if (checked) {
+      setGarrsionId(id);
+    } else if (id === GarrisonId) {
+      setGarrsionId(''); // Unset GarrisonId if the checkbox is unchecked
+    }
+
+
+    if (checked && name=="Status") {
+                  
+    }
+    // Update GarrisonValue based on checked checkboxes
+    if (checked && name !=="Status") {
+        console.log("name is " , name);
+      let obj={ 
+        id: uuidv4(),
+        "garissonName":value,
+        DispachTime:new Date(),
+        ArrivalTime:"Notarrived",
+        disabled:false
+      }
+      setGarrsionValue((prevValues) => [...prevValues, obj]);
+      // setGarrsionValue((prevValues) => [...prevValues, value]);
+    } else {
+      setGarrsionValue((prevValues) => prevValues.filter((item) => item.garissonName !== value));
+    }
+
+    // Update the post state with the latest values
+    setPost((prevState) => ({
+      ...prevState,
+      [name]: value,
+      // av_garison: checked ? [...GarrisonValue] : GarrisonValue.filter((item) => item.garissonName === value),
+      av_garison: checked && name !=="Status"  ? [...GarrisonValue, { id: uuidv4(), garissonName: value, DispachTime: new Date() , ArrivalTime:"Notarrived", disabled:false}] 
+                       : GarrisonValue.filter((item) => item.garissonName !== value)
+    }));
+   
+
+
+
+
 
     if (id === "vehicle3" && checked) {
       // Disable Garrison radio buttons
@@ -111,15 +165,20 @@ const ServiceNew = () => {
       // Enable all Garrison radio buttons
       setNewGarrison(Garrison.map(item => ({ ...item, disabled: false })));
     }
-    setGarrsionId(id)
+
+    // setGarrsionValue([...GarrisonValue, value])
+    // console.log(GarrisonValue)
     // console.log("garrisonId", id)
-    setPost({ ...post, [event.target.name]: event.target.value });
+    // setPost({ ...post, [event.target.name]: event.target.value , av_garison:GarrisonValue});
+
 
 
   };
 
-  console.log([post])
- 
+
+  console.log("valueGarisoin is " , GarrisonValue)
+  console.log("post value is " , post  )
+
 
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -145,15 +204,21 @@ const ServiceNew = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-  
+
     try {
       const responsePost = await axios.post("http://localhost:3000/newOccurance", post);
       console.log(responsePost);
-  
+
+      if (StaffIds.length!==0) {
+        console.log("Callled");
+      const updateStaffResponse = await axios.put('http://localhost:3000/updateGarrisoninServiceNew', { dataArray: StaffIds });
+      console.log("update staff api working", updateStaffResponse);
+      console.log("update staff api working");
+
       // Assuming the response contains the updated post object
       console.log("Code", post.occurance_Code);
       console.log("Number", post.occurance_Number);
-  
+      setGarrsionValue([]);
       setSubmitStatus("success");
       setTimeout(() => {
         setSubmitStatus(null);
@@ -167,18 +232,20 @@ const ServiceNew = () => {
         Reference: "",
         Description: "",
         Request: "",
-        av_garison: null,
+        av_garison: [null],
         occurance_Number: "", // Clearing the fields
         occurance_Code: "",
       });
-  
-      const responsePut = await axios.put(`http://localhost:3000/updataGarrison/${GarrisonId}`);
-      console.log(responsePut);
-  
+    }
+    
+
+      // const responsePut = await axios.put(`http://localhost:3000/updataGarrison/${GarrisonId}`);
+      // console.log(responsePut);
+
       const responseGetGarrison = await axios.get("http://localhost:3000/getGarrison");
       setNewGarrison(responseGetGarrison.data);
       console.log("Garrison", responseGetGarrison.data);
-  
+
       const responseGetGarrisonFalse = await axios.get("http://localhost:3000/getGarrisonFalse");
       setGarrsionIdFalse(responseGetGarrisonFalse.data);
       console.log("GarrisonFalse", responseGetGarrisonFalse.data);
@@ -189,8 +256,27 @@ const ServiceNew = () => {
       }, 3000);
       console.error("Error:", error);
     }
+
+    setGarrsionValue([]);
+      setSubmitStatus("success");
+      setTimeout(() => {
+        setSubmitStatus(null);
+      }, 1000);
+      setPost({
+        phone: "",
+        Applicant: "",
+        Street: "",
+        Neighbourhood: "",
+        City: "",
+        Reference: "",
+        Description: "",
+        Request: "",
+        av_garison: [null],
+        occurance_Number: "", // Clearing the fields
+        occurance_Code: "",
+      });
   };
-  
+
 
 
   return (
@@ -332,15 +418,15 @@ const ServiceNew = () => {
               />
             </div>
           </div>
-                    
-          <div  style={{fontSize:"1.5rem" , fontWeight:"700", color:"red"}}>
+
+          <div style={{ fontSize: "1.5rem", fontWeight: "700", color: "red" }}>
             <input
               type="radio"
               id="vehicle3"
               name="Status"
               value="1"
               onChange={handleInput}
-              
+
             />
             <label for="vehicle3" className="ml-2">
               {" "}
@@ -357,15 +443,16 @@ const ServiceNew = () => {
                 return (
                   <div>
                     <input
-                      type="radio"
+                      type="checkbox"
                       id={v._id}
                       name="av_garison"
-                      value={v.StaffName + v.VehcleName}
+                      // value={v.VehcleName + v.StaffName} //changes
+                      value={v.Av_garison}
                       onChange={handleInput}
-                      disabled={v.disabled}
+                    // disabled={v.disabled}
                     />
                     <label for="vehicle1" className="ml-2">
-                      {v.StaffName + v.VehcleName}
+                    { v.VehcleName + v.StaffName }
                     </label>
                   </div>
                 )
@@ -390,13 +477,13 @@ const ServiceNew = () => {
           </div>
 
 
-                
-                <div className="d-flex justify-content-center ">
+
+          <div className="d-flex justify-content-center ">
 
 
-                       <input class="btn btn-primary px-5 py-2 w-50 text-center"  value="Enviar" type="submit"  />
+            <input class="btn btn-primary px-5 py-2 w-50 text-center" value="Enviar" type="submit" />
 
-                </div>
+          </div>
         </form>
       </div>
     </div>

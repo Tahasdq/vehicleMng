@@ -55,6 +55,7 @@ const GuRegistration = () => {
   }, []);
 
   const vehicleHandleChange = (event) => {
+
     const { name, value, id } = event.target;
     console.log(id)
     setvehicleId(id)
@@ -99,9 +100,8 @@ const GuRegistration = () => {
     setPost((prevState) => ({
       ...prevState,
       [name]: value,
-
     }));
-    setAvGarssion((prevState) => [...prevState, value]);
+    setAvGarssion((prevState) => [...prevState, checked ? value : '']);
 
 
 
@@ -112,7 +112,6 @@ const GuRegistration = () => {
     } else if (!checked && staffIds.includes(id)) {
       // If checkbox is unchecked and ID is in staffId, remove it
       setStaffIds(prevIds => prevIds.filter(item => item !== id));
-
     }
 
     setSelectedStaff(checked ? value : '');
@@ -191,21 +190,22 @@ const GuRegistration = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
     console.log("submit clicked");
-  
-    let ToString = avGarrison[0] + avGarrison[1];
-  
+    let GarisonLastelementIndex = avGarrison.length-1
+    let ToString = avGarrison[0] + avGarrison[GarisonLastelementIndex]
+    console.log("avgarison is " ,ToString );
     if (!selectedVehicle) {
-      alert('Please select a vehicle.');
+      // alert('Please select a vehicle.');
       return;
     }
   
     if (!selectedStaff) {
-      alert('Please select a staff member.');
+      // alert('Please select a staff member.');
       return;
     }
   
     try {
       // Submit new garisson data
+
       const postData = { ...post, Status: true, Av_garison: ToString };
       await axios.post('http://localhost:3000/newGarisson', postData);
       console.log("post api working");
@@ -245,9 +245,9 @@ const GuRegistration = () => {
       console.log("update staff api working");
   
       // Fetch updated garisson data
-      const garissonResponse = await axios.get('http://localhost:3000/newGarissonData');
-      setGarison(garissonResponse.data);
-      console.log("New garission data api working");
+      // const garissonResponse = await axios.get('http://localhost:3000/newGarissonData');
+      // setGarison(garissonResponse.data);
+      // console.log("New garission data api working");
 
       // Fetch updated vehicle and staff status
       const vehicleResponse = await axios.get('http://localhost:3000/getVehcleStatus');
@@ -276,6 +276,30 @@ const GuRegistration = () => {
       Status: null
     });
   };
+
+
+  const onActive = (id) =>{
+    console.log("Active Id", id)
+
+     axios.put(`http://localhost:3000/newGarisonActive/${id}`).then((response)=>console.log(response))
+
+     axios.get('http://localhost:3000/newGarissonData').then((response)=>{
+     setGarison(response.data);
+     })
+    //  console.log("getnewgarssiondata stats api working");
+
+
+}
+const onInActive =  (id) =>{
+
+   // Update vehicle and staff data
+   axios.put(`http://localhost:3000/newGarisonInActive/${id}`).then((response)=>console.log(response))
+   axios.get('http://localhost:3000/newGarissonData').then((response)=>{
+    setGarison(response.data);
+    })
+
+}
+
   
 
 //onyl for check : 
@@ -325,13 +349,26 @@ const GuRegistration = () => {
               <ul>
                 {garison.length > 0 && garison.map((v, i) => {
                   return (
-                    <>
-                      <li>
-
-                        {v.StaffName}{v.VehcleName}
-                      </li>
-                    </>
-
+                  
+ <>
+                    
+ {
+  v.Status == true ?
+  <li style={{color : 'green'}}>
+    {/* {v.StaffName}{v.VehcleName} */}
+    { v.VehcleName + v.StaffName }
+    <button class="btn btn=primary" onClick={()=>{onActive(v._id)}}><i class="fa-solid fa-circle-check"></i></button>
+    <button class="btn btn=primary" onClick={()=>{onInActive(v._id)}}><i class="fa-solid fa-circle-xmark"></i></button>
+  </li> 
+  :
+  <li style={{color : 'red'}}>
+    {/* {v.StaffName}{v.VehcleName} */}
+    { v.VehcleName + v.StaffName }
+    <button class="btn btn=primary" onClick={()=>{onActive(v._id)}}><i class="fa-solid fa-circle-check"></i></button>
+    <button class="btn btn=primary" onClick={()=>{onInActive(v._id)}}><i class="fa-solid fa-circle-xmark"></i></button>
+  </li>
+ }
+</>
                   )
                 })}
               </ul>

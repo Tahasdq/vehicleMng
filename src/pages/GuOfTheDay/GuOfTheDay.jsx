@@ -1,5 +1,7 @@
 import React, { useEffect , useState} from 'react'
 import axios from 'axios'
+import { v4 as uuidv4 } from 'uuid';
+
  const GuOfTheDay = () => {
   
 
@@ -8,6 +10,8 @@ import axios from 'axios'
   const [occuranceId , setoccuranceId] = useState(null)
   const [garisonId , setGarisonId] = useState(null)
   const [av_garison , setav_garison] = useState([])
+  const [bunchId , setBunchId] = useState([])
+  const [bunchValue , setBunchValue] = useState([])
 
 
   useEffect(() => {
@@ -43,7 +47,6 @@ import axios from 'axios'
 
 
   const handleInput = (event) =>{
-    event.preventDefault();
 
     const { id } = event.target;
     console.log("d",id)
@@ -51,16 +54,69 @@ import axios from 'axios'
   } 
 
   const handleInputGarison = (event) =>{
-    event.preventDefault();
-    const { id , value} = event.target;
+    // event.preventDefault();
+    const { id , value,checked} = event.target;
+
     console.log("Garison",id)
     setGarisonId(id);
     console.log("Value",value);
-    setav_garison(  [occuranceId ,value] )
+
+
+    if (checked && !bunchId.includes(id)) {
+      // If checkbox is checked and ID is not already in staffId, add it
+      setBunchId(prevIds => [...prevIds, id]);
+
+    } else if (!checked && bunchId.includes(id)) {
+      // If checkbox is unchecked and ID is in staffId, remove it
+      setBunchId(prevIds => prevIds.filter(item => item !== id));
+    }
+
+    if (checked) {
+      setGarisonId(id);
+    } else if (id === garisonId) {
+      setGarisonId(''); // Unset GarrisonId if the checkbox is unchecked
+    }
+
+
+    // if (checked) {
+    //   setBunchValue((prevValues) => [...prevValues, value]);
+    // } else {
+    //   setBunchValue((prevValues) => prevValues.filter((item) => item !== value));
+    // }  
+
+
+    // setav_garison( [occuranceId ,bunchValue] )
+
+    if (checked) {
+
+      let obj={
+        id: uuidv4(),
+        "garissonName":value,
+        DispachTime:new Date(),
+        ArrivalTime:"Notarrived",
+        disabled:false
+      }
+      // setGarrsionValue((prevValues) => [...prevValues, obj]);
+      setav_garison((prevValues) => [...prevValues, obj]); 
+    } else {
+      setav_garison((prevValues) => prevValues.filter((item) => item.garissonName !== value));
+    }
+
+    setBunchValue((prevValues) => {
+      const updatedBunchValue = checked
+        ? [...prevValues, value] // If checked, add the value to the bunchValue array
+        : prevValues.filter((item) => item !== value); // If unchecked, remove the value from the bunchValue array
+        // console.log("updated bunvh value is " , updatedBunchValue);
+
+      // setav_garison([occuranceId, updatedBunchValue]); // Update av_garison with the updated bunchValue
+      return updatedBunchValue; // Return the updated bunchValue
+    });
   } 
 
-
-  console.log('id' , garisonId)
+  // console.log("BunchId" , bunchId)
+  // console.log('id' , garisonId)
+  // console.log("BunchValue" , bunchValue)
+  console.log("Av_garison",av_garison )
 
   const handleData =() =>{
 
@@ -73,7 +129,7 @@ import axios from 'axios'
         console.error('Error fetching vehicle data:', error);
       });
 
-      //Time
+      // dispatch time added 
       axios.put(`http://localhost:3000/occuranceDispatchTime/${occuranceId}`)
       .then((response)=>{
           console.log("data is "  , response.data);
@@ -83,7 +139,7 @@ import axios from 'axios'
         console.error('Error fetching vehicle data:', error);
       });
 
-      axios.put(`http://localhost:3000/updataGarrison/${garisonId}`)
+      axios.put(`http://localhost:3000/updataGarrison`, { dataArray: bunchId } )
       .then((response)=>{
           console.log(response);  
       })
@@ -91,7 +147,7 @@ import axios from 'axios'
         console.error('Error fetching vehicle data:', error);
       });
 
-       axios.put(`http://localhost:3000/occuranceDispatchGarison` , {dataArray : av_garison})
+       axios.put(`http://localhost:3000/occuranceDispatchGarison/${occuranceId}` , {dataArray : av_garison})
       .then((response)=>{
           console.log(response);  
       })
@@ -149,12 +205,13 @@ import axios from 'axios'
               {GarisonFalse.map((v,i)=>{              
               return(
               <div>
+                
                 <input
-                  type="radio"
+                  type="checkbox"
                   id={v._id}
                   name="av_garison"
                   value={v.StaffName + v.VehcleName}
-                  onChange={handleInputGarison}
+                  onChange={(e)=>handleInputGarison(e)}
                 />
                 <label for="vehicle1" className="ml-2">
                   {v.StaffName + v.VehcleName}
