@@ -29,6 +29,7 @@ app.listen(3000, () => {
 });
 
 
+
 // const mongoose = require('mongoose');
 // const express = require('express');
 // const app = express();
@@ -127,7 +128,19 @@ const ResigisterNormalUserSchemaModel = mongoose.model(
   ResigisterNormalUserSchema
 );
 
+app.get("/", async (req, res) => {
+  
+  res.json("helloword");
+
+  // console.log(req.body)
+  // res.send(req.body)
+});
+
+
+
+
 // For Post
+
 
 
 
