@@ -25,7 +25,7 @@ const GuRegistration = () => {
   });
 
   useEffect(() => {
-    axios.get('https://vehicle-mng.vercel.app/getStaffStatus')
+    axios.get('http://localhost:3000/getStaffStatus')
       .then((response) => {
         setStaff(response.data);
       })
@@ -33,7 +33,7 @@ const GuRegistration = () => {
         console.error('Error fetching staff data:', error);
       });
 
-    axios.get('https://vehicle-mng.vercel.app/getVehcleStatus')
+    axios.get('http://localhost:3000/getVehcleStatus')
       .then((response) => {
         setVehicle(response.data);
       })
@@ -42,7 +42,7 @@ const GuRegistration = () => {
       });
 
 
-    axios.get('https://vehicle-mng.vercel.app/newGarissonData')
+    axios.get('http://localhost:3000/newGarissonData')
       .then((response) => {
         setGarison(response.data);
         console.log(response.data)
@@ -125,7 +125,7 @@ const GuRegistration = () => {
     if (garison.length > 0) {
 
 
-      axios.delete('https://vehicle-mng.vercel.app/deleteGarrisonStatus')
+      axios.delete('http://localhost:3000/deleteGarrisonStatus')
         .then((response) => {
           console.log(response);
         })
@@ -134,7 +134,7 @@ const GuRegistration = () => {
         });
 
 
-      axios.put('https://vehicle-mng.vercel.app/statustrueStaff')
+      axios.put('http://localhost:3000/statustrueStaff')
         .then((response) => {
           // console.log(dispatch, response.data)
         })
@@ -142,7 +142,7 @@ const GuRegistration = () => {
           console.error('Error fetching vehicle data:', error);
         });
 
-      axios.put('https://vehicle-mng.vercel.app/statustrueVehcle')
+      axios.put('http://localhost:3000/statustrueVehcle')
         .then((response) => {
           // console.log(dispatch, response.data)
         })
@@ -153,7 +153,7 @@ const GuRegistration = () => {
 
       //rendering
 
-      axios.get('https://vehicle-mng.vercel.app/getStaffStatus')
+      axios.get('http://localhost:3000/getStaffStatus')
         .then((response) => {
           setStaff(response.data);
         })
@@ -161,7 +161,7 @@ const GuRegistration = () => {
           console.error('Error fetching staff data:', error);
         });
 
-      axios.get('https://vehicle-mng.vercel.app/getVehcleStatus')
+      axios.get('http://localhost:3000/getVehcleStatus')
         .then((response) => {
           setVehicle(response.data);
         })
@@ -170,7 +170,7 @@ const GuRegistration = () => {
         });
 
 
-      axios.get('https://vehicle-mng.vercel.app/newGarissonData')
+      axios.get('http://localhost:3000/newGarissonData')
         .then((response) => {
           setGarison(response.data);
           console.log(response.data)
@@ -207,7 +207,7 @@ const GuRegistration = () => {
       // Submit new garisson data
 
       const postData = { ...post, Status: true, Av_garison: ToString };
-      await axios.post('https://vehicle-mng.vercel.app/newGarisson', postData);
+      await axios.post('http://localhost:3000/newGarisson', postData);
       console.log("post api working");
 
       setSelectedVehicle(null);
@@ -236,30 +236,30 @@ const GuRegistration = () => {
       });
 
       // Update vehicle and staff data
-      const updateVehicleResponse = await axios.put(`https://vehicle-mng.vercel.app/updateVehicle/${vechicleId}`);
+      const updateVehicleResponse = await axios.put(`http://localhost:3000/updateVehicle/${vechicleId}`);
       console.log(updateVehicleResponse);
       console.log("update vehicle api working");
 
-      const updateStaffResponse = await axios.put('https://vehicle-mng.vercel.app/updateStaff', { dataArray: staffIds });
+      const updateStaffResponse = await axios.put('http://localhost:3000/updateStaff', { dataArray: staffIds });
       console.log(updateStaffResponse);
       console.log("update staff api working");
 
       // Fetch updated garisson data
-      // const garissonResponse = await axios.get('https://vehicle-mng.vercel.app/newGarissonData');
+      // const garissonResponse = await axios.get('http://localhost:3000/newGarissonData');
       // setGarison(garissonResponse.data);
       // console.log("New garission data api working");
 
       // Fetch updated vehicle and staff status
-      const vehicleResponse = await axios.get('https://vehicle-mng.vercel.app/getVehcleStatus');
+      const vehicleResponse = await axios.get('http://localhost:3000/getVehcleStatus');
       setVehicle(vehicleResponse.data);
       console.log("getVehicle stats api working");
 
-      const staffResponse = await axios.get('https://vehicle-mng.vercel.app/getStaffStatus');
+      const staffResponse = await axios.get('http://localhost:3000/getStaffStatus');
       setStaff(staffResponse.data);
       console.log("getstaff stats api working");
 
       // Fetch updated garisson data again
-      const updatedGarissonResponse = await axios.get('https://vehicle-mng.vercel.app/newGarissonData');
+      const updatedGarissonResponse = await axios.get('http://localhost:3000/newGarissonData');
       setGarison(updatedGarissonResponse.data);
       console.log("getnewgarssiondata stats api working");
 
@@ -281,9 +281,9 @@ const GuRegistration = () => {
   const onActive = (id) => {
     console.log("Active Id", id)
 
-    axios.put(`https://vehicle-mng.vercel.app/newGarisonActive/${id}`).then((response) => console.log(response))
+    axios.put(`http://localhost:3000/newGarisonActive/${id}`).then((response) => console.log(response))
 
-    axios.get('https://vehicle-mng.vercel.app/newGarissonData').then((response) => {
+    axios.get('http://localhost:3000/newGarissonData').then((response) => {
       setGarison(response.data);
     })
     //  console.log("getnewgarssiondata stats api working");
@@ -293,8 +293,8 @@ const GuRegistration = () => {
   const onInActive = (id) => {
 
     // Update vehicle and staff data
-    axios.put(`https://vehicle-mng.vercel.app/newGarisonInActive/${id}`).then((response) => console.log(response))
-    axios.get('https://vehicle-mng.vercel.app/newGarissonData').then((response) => {
+    axios.put(`http://localhost:3000/newGarisonInActive/${id}`).then((response) => console.log(response))
+    axios.get('http://localhost:3000/newGarissonData').then((response) => {
       setGarison(response.data);
     })
 

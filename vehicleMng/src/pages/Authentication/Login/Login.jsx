@@ -59,7 +59,7 @@ const Login = ({ onLoginSuccess }) => {
     console.log("admin called", e.target.name);
     if (validation()) {
       axios
-        .post("https://vehicle-mng.vercel.app/userLogin", { username, password, isAdmin: e.target.name === 'admin' })
+        .post("http://localhost:3000/userLogin", { username, password, isAdmin: e.target.name === 'admin' })
         .then((res) => {
           console.log("res.user is ", res.data.user);
           if (res.data.user) {

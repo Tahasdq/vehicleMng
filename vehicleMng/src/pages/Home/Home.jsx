@@ -19,55 +19,55 @@ const Home = () => {
 
     useEffect(() => {
         setLoading(true);
-        axios.get("https://vehicle-mng.vercel.app/getnewoccuranceAllStatusWithZeroAndTwo")
+        axios.get("http://localhost:3000/getnewoccuranceAllStatusWithZeroAndTwo")
             .then((response) => {
                 let data = response.data
                 // console.log(data.length)
                 setoccurenceInCareLength(data.length)
         })
-        axios.get("https://vehicle-mng.vercel.app/getnewoccuranceOpenCases")
+        axios.get("http://localhost:3000/getnewoccuranceOpenCases")
             .then((response) => {
                 let data = response.data
                 // console.log(data.length)
                 setopenCasesLength(data.length)
         })
-        axios.get("https://vehicle-mng.vercel.app/getAllStaff")
+        axios.get("http://localhost:3000/getAllStaff")
             .then((response) => {
                 let data = response.data
                 // console.log(data.length)
                 setStaffRegistrationsLength(data.length)
         })
-        axios.get("https://vehicle-mng.vercel.app/getVehcle")
+        axios.get("http://localhost:3000/getVehcle")
             .then((response) => {
                 let data = response.data
                 // console.log(data.length)
                 setvehicleRegistrationsLength(data.length)
         })
-        axios.get("https://vehicle-mng.vercel.app/getGarrisonTrue")
+        axios.get("http://localhost:3000/getGarrisonTrue")
             .then((response) => {
                 let data = response.data
                 // console.log(data.length)
                 setguAvailableLength(data.length)
         })
-        axios.get("https://vehicle-mng.vercel.app/getGarrisonFalse")
+        axios.get("http://localhost:3000/getGarrisonFalse")
             .then((response) => {
                 let data = response.data
                 // console.log(data.length)
                 setguNotAvailableLength(data.length)
         })
-        axios.get("https://vehicle-mng.vercel.app/occurrences/today")
+        axios.get("http://localhost:3000/occurrences/today")
             .then((response) => {
                 let data = response.data.count
                 // console.log("today total occuenrences : " , data)
                 settodayOccurencesLength(data)
         })
-        axios.get("https://vehicle-mng.vercel.app/occurrences/month")
+        axios.get("http://localhost:3000/occurrences/month")
             .then((response) => {
                 let data = response.data.count
                 // console.log(data.length)
                 setMonthOccurencesLength(data)
         })
-        axios.get("https://vehicle-mng.vercel.app/occurrences/year")
+        axios.get("http://localhost:3000/occurrences/year")
             .then((response) => {
                 let data = response.data.count
                 // console.log(data.length)

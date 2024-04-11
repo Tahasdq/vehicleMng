@@ -5,7 +5,6 @@ const pdf = require('html-pdf');
 const pdfTemplate = require('./template.js');
 const bodyParser = require('body-parser');
 const cors = require("cors");
-const serverless = require('serverless-http');
 const fs = require('fs');
 
 const app = express();
@@ -1176,80 +1175,36 @@ app.get("/occurencewithstatusthree" , (req, res)=>{
 })
 
 
-
-
-// POST route to generate and upload the PDF
-app.post('/create-pdf/:id', async (req, res) => {
-  try {
-      const id = req.params.id;
-      const { ReportCreatedBy } = req.body;
-
-      // Fetch occurrence data based on id
-      const occurrence = await NewOccuranceModel.findById(id);
-
-      // Fetch report data based on occurrence
-      const report = await reportSchemaModel.findOne({ IdOfOccurence: occurrence._id });
-
-      // Generate HTML content for the PDF using the template
-      const htmlContent = pdfTemplate(occurrence, report, ReportCreatedBy);
-
-      // Generate PDF from HTML
-      const pdfBuffer = await generatePdf(htmlContent);
-
-      // Upload PDF to Vercel Blob
-      const blobUrl = await uploadPdfToBlob(pdfBuffer, id);
-
-      // Send the URL of the uploaded PDF as the response
-      res.status(200).json({ pdfUrl: blobUrl });
-  } catch (error) {
-      console.error('Error generating and uploading PDF:', error);
-      res.status(500).send('Error generating and uploading PDF');
-  }
-});
-
-// GET route to fetch the PDF
-app.get('/fetch-pdf/:id', async (req, res) => {
-  try {
-      const id = req.params.id;
-      const pdfUrl = `/tmp/result_${id}.pdf`;
-
-      // Send the PDF file as response if it exists
-      if (fs.existsSync(pdfUrl)) {
-          res.sendFile(pdfUrl);
+app.post('/create-pdf/:id', (req, res) => {
+  let id =req.params.id
+  let {ReportCreatedBy} =req.body
+  NewOccuranceModel.findById(id).
+  then(function (occurence) {
+      // res.send(occurence)
+      reportSchemaModel.findOne({ IdOfOccurence: occurence._id }).then(report => {
+        // Handle the documents in the report array here
+     counter=0;
+     pdf.create(pdfTemplate(occurence, report, ReportCreatedBy), {}).toFile(`result.pdf`, (err) => {
+      if (err) {
+          console.error('Error generating PDF:', err);
+          res.status(500).send('Error generating PDF');
       } else {
-          res.status(404).send('PDF not found');
+          res.status(200).send('PDF generated successfully');
       }
-  } catch (error) {
-      console.error('Error fetching PDF:', error);
-      res.status(500).send('Error fetching PDF');
-  }
+});
+  })
+  .catch(function (err) {
+    console.log(err);
+  });
+
 });
 
-// Function to generate PDF from HTML content
-async function generatePdf(htmlContent) {
-  return new Promise((resolve, reject) => {
-      pdf.create(htmlContent).toBuffer((err, buffer) => {
-          if (err) {
-              reject(err);
-          } else {
-              resolve(buffer);
-          }
-      });
   });
-}
 
-// Function to upload PDF to Vercel Blob
-async function uploadPdfToBlob(pdfBuffer, id) {
-  const pdfPath = `/tmp/result_${id}.pdf`;
   
-  // Write PDF to temporary file
-  fs.writeFileSync(pdfPath, pdfBuffer);
+  
 
-  // Upload PDF to Vercel Blob
-  const blobUrl = await put(pdfPath, { contentType: 'application/pdf' });
+app.get('/fetch-pdf', (req, res) => {
 
-  // Delete temporary file
-  fs.unlinkSync(pdfPath);
-
-  return blobUrl;
-}
+  res.sendFile(`${__dirname}/result.pdf`)
+})

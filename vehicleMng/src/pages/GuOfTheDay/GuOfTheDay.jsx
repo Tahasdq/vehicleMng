@@ -23,7 +23,7 @@ import { jwtDecode } from 'jwt-decode'
     // Fetch data when the component mounts
     setLoading(true);
     axios
-      .get("https://vehicle-mng.vercel.app/getnewoccuranceAllStatus")
+      .get("http://localhost:3000/getnewoccuranceAllStatus")
       .then((response) => {
         // Set the fetched data in state
         SetOccurance_hold(response.data);
@@ -36,7 +36,7 @@ import { jwtDecode } from 'jwt-decode'
 
 
       axios
-      .get("https://vehicle-mng.vercel.app/getGarrison")
+      .get("http://localhost:3000/getGarrison")
       .then((response) => {
         setGarisonFalse(response.data)
         console.log("Garrson finded are",response.data)
@@ -143,7 +143,7 @@ import { jwtDecode } from 'jwt-decode'
 
     const token = localStorage.getItem("token")
        const DispatchBy = jwtDecode(token).username
-    axios.put(`https://vehicle-mng.vercel.app/occuranceDispatch/${occuranceId}` , {DispatchBy})
+    axios.put(`http://localhost:3000/occuranceDispatch/${occuranceId}` , {DispatchBy})
       .then((response)=>{
           console.log("data is "  , response);
           
@@ -153,7 +153,7 @@ import { jwtDecode } from 'jwt-decode'
       });
 
       // dispatch time added 
-      axios.put(`https://vehicle-mng.vercel.app/occuranceDispatchTime/${occuranceId}`)
+      axios.put(`http://localhost:3000/occuranceDispatchTime/${occuranceId}`)
       .then((response)=>{
           console.log("data is "  , response.data);
           
@@ -162,7 +162,7 @@ import { jwtDecode } from 'jwt-decode'
         console.error('Error fetching vehicle data:', error);
       });
 
-      axios.put(`https://vehicle-mng.vercel.app/updataGarrison`, { dataArray: bunchId } )
+      axios.put(`http://localhost:3000/updataGarrison`, { dataArray: bunchId } )
       .then((response)=>{
           console.log(response);  
       })
@@ -170,7 +170,7 @@ import { jwtDecode } from 'jwt-decode'
         console.error('Error fetching vehicle data:', error);
       });
 
-       axios.put(`https://vehicle-mng.vercel.app/occuranceDispatchGarison/${occuranceId}` , {dataArray : av_garison})
+       axios.put(`http://localhost:3000/occuranceDispatchGarison/${occuranceId}` , {dataArray : av_garison})
       .then((response)=>{
           console.log(response);  
       })

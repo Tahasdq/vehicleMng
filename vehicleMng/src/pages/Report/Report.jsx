@@ -39,7 +39,7 @@ const Report = () => {
 
     useEffect(() => {
         setLoading(true);
-        axios.get("https://vehicle-mng-backend1.vercel.app/occurencewithstatusthree")
+        axios.get("http://localhost:3000/occurencewithstatusthree")
             .then((res) => {
                 console.log(res.data);
                 setResult(res.data);
@@ -69,8 +69,8 @@ const Report = () => {
     const createAndDownloadPdf = (id) => {
         const token = localStorage.getItem("token");
         const ReportCreatedBy = jwtDecode(token).username;
-        axios.post(`https://vehicle-mng-backend1.vercel.app/create-pdf/${id}`, { ReportCreatedBy })
-            .then(() => axios.get(`https://vehicle-mng-backend1.vercel.app/fetch-pdf/${id}`, { responseType: 'blob' }))
+        axios.post(`http://localhost:3000/create-pdf/${id}`, { ReportCreatedBy })
+            .then(() => axios.get(`http://localhost:3000/fetch-pdf/${id}`, { responseType: 'blob' }))
             .then((res) => {
                 const pdfBlob = new Blob([res.data], { type: 'application/pdf' });
                 saveAs(pdfBlob, 'newPdf.pdf');

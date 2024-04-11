@@ -64,7 +64,7 @@ const Login = ({ onLogout }) => {
     e.preventDefault();
     if (validation()) {
       axios
-        .post("https://vehicle-mng.vercel.app/admin/dashboard/registerUser", {
+        .post("http://localhost:3000/admin/dashboard/registerUser", {
           username,
           password,
           designation,

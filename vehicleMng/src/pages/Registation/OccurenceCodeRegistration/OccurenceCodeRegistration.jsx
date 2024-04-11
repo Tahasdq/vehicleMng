@@ -21,7 +21,7 @@ const OccurrenceCodeRegistration = () => {
     event.preventDefault();
     if (validateForm()) {
       axios
-        .post('https://vehicle-mng.vercel.app/postoccurance', post)
+        .post('http://localhost:3000/postoccurance', post)
         .then(response => {
           setSubmitStatus('success');
           setTimeout(() => {

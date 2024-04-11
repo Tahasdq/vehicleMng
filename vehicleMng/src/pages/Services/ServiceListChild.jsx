@@ -10,7 +10,7 @@ const [data,setData] = useState([])
 
   useEffect(()=>{
     axios
-    .get(`https://vehicle-mng.vercel.app/getnewoccuranceAll/${id}`)
+    .get(`http://localhost:3000/getnewoccuranceAll/${id}`)
     .then((response) => {
       // Set the fetched data in state
       setData(response.data);

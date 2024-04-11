@@ -61,7 +61,7 @@ const ClosingOccurence = () => {
   useEffect(() => {
     setLoading(true);
     axios
-      .get("https://vehicle-mng.vercel.app/getnewoccuranceAllStatusWithZeroAndTwo")
+      .get("http://localhost:3000/getnewoccuranceAllStatusWithZeroAndTwo")
       .then((response) => {
         setClosingOccurences(response.data);
         console.log("data fetche is from newOcccurences  ", response.data);
@@ -73,7 +73,7 @@ const ClosingOccurence = () => {
       });
 
     axios
-      .get("https://vehicle-mng.vercel.app/getGarrisonAll")
+      .get("http://localhost:3000/getGarrisonAll")
       .then((response) => {
         setGarssions(response.data);
         // console.log("Garrson finded are", response.data);
@@ -84,12 +84,12 @@ const ClosingOccurence = () => {
         console.error("Error fetching data:", error);
       });
 
-    axios.get("https://vehicle-mng.vercel.app/getApplicants").then((response) => {
+    axios.get("http://localhost:3000/getApplicants").then((response) => {
       setApplicants(response.data);
       console.log(response.data);
     });
 
-    axios.get("https://vehicle-mng.vercel.app/getStreet").then((response) => {
+    axios.get("http://localhost:3000/getStreet").then((response) => {
       setStreet(response.data);
       console.log(response.data);
     })
@@ -116,7 +116,7 @@ const ClosingOccurence = () => {
     // console.log("handle delete called");
 
 
-    axios.post("https://vehicle-mng.vercel.app/createreport", { IdOfOccurence, formFields, description })
+    axios.post("http://localhost:3000/createreport", { IdOfOccurence, formFields, description })
       .then((response) => {
         console.log(response)
       })
@@ -125,7 +125,7 @@ const ClosingOccurence = () => {
       })
 
     axios
-      .put(`https://vehicle-mng.vercel.app/updataGarrisonToTrue/${id}`)
+      .put(`http://localhost:3000/updataGarrisonToTrue/${id}`)
       .then((response) => {
         console.log(response);
       })
@@ -136,7 +136,7 @@ const ClosingOccurence = () => {
     const token = localStorage.getItem("token");
     const ClosedBy = jwtDecode(token).username;
 
-    axios.put(`https://vehicle-mng.vercel.app/occuranceclosed/${id}`, { ClosedBy })
+    axios.put(`http://localhost:3000/occuranceclosed/${id}`, { ClosedBy })
       .then((response) => {
         console.log("data is ", response);
       })
@@ -146,7 +146,7 @@ const ClosingOccurence = () => {
 
 
     axios
-      .get("https://vehicle-mng.vercel.app/getnewoccuranceAllStatusWithZeroAndTwo")
+      .get("http://localhost:3000/getnewoccuranceAllStatusWithZeroAndTwo")
       .then((response) => {
         setClosingOccurences(response.data);
         console.log("data fetche is  ", response.data);
@@ -158,7 +158,7 @@ const ClosingOccurence = () => {
       });
 
     axios
-      .put(`https://vehicle-mng.vercel.app/updataGarrisonStat`, {})
+      .put(`http://localhost:3000/updataGarrisonStat`, {})
       .then((response) => {
         console.log(response);
       })
@@ -167,7 +167,7 @@ const ClosingOccurence = () => {
       });
     setFormFields([{ id: 1, name: "", cpf: "", phone: "", street:"" ,Neighborhood :"",City:"" , person: "" }]);
     axios
-      .get("https://vehicle-mng.vercel.app/getnewoccuranceAllStatusWithZeroAndTwo")
+      .get("http://localhost:3000/getnewoccuranceAllStatusWithZeroAndTwo")
       .then((response) => {
         setClosingOccurences(response.data);
         console.log("data fetche is  ", response.data);
