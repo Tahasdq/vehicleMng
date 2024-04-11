@@ -70,7 +70,7 @@ const Report = () => {
         const token = localStorage.getItem("token");
         const ReportCreatedBy = jwtDecode(token).username;
         axios.post(`http://localhost:3000/create-pdf/${id}`, { ReportCreatedBy })
-            .then(() => axios.get(`http://localhost:3000/fetch-pdf/${id}`, { responseType: 'blob' }))
+            .then(() => axios.get(`http://localhost:3000/fetch-pdf`, { responseType: 'blob' }))
             .then((res) => {
                 const pdfBlob = new Blob([res.data], { type: 'application/pdf' });
                 saveAs(pdfBlob, 'newPdf.pdf');
