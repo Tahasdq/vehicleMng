@@ -5,6 +5,7 @@ const pdf = require('html-pdf');
 const pdfTemplate = require('./template.js');
 const bodyParser = require('body-parser');
 const cors = require("cors");
+const fs = require('fs');
 
 const app = express();
 
@@ -1174,37 +1175,49 @@ app.get("/occurencewithstatusthree" , (req, res)=>{
 })
 
 
-app.post('/create-pdf/:id', (req, res) => {
-  let id =req.params.id
-  let {ReportCreatedBy} =req.body
-  NewOccuranceModel.findById(id).
-  then(function (occurence) {
-      // res.send(occurence)
-      reportSchemaModel.findOne({ IdOfOccurence: occurence._id }).then(report => {
-        // Handle the documents in the report array here
-     counter=0;
-     pdf.create(pdfTemplate(occurence, report, ReportCreatedBy), {}).toFile(`result.pdf`, (err) => {
-      if (err) {
-          console.error('Error generating PDF:', err);
-          res.status(500).send('Error generating PDF');
-      } else {
-          res.status(200).send('PDF generated successfully');
-      }
+// / Define a route to generate and serve the PDF
+app.post('/create-pdf/:id', async (req, res) => {
+    try {
+        const id = req.params.id;
+        const { ReportCreatedBy } = req.body;
+
+        // Fetch occurrence data based on id
+        const occurrence = await NewOccuranceModel.findById(id);
+
+        // Fetch report data based on occurrence
+        const report = await reportSchemaModel.findOne({ IdOfOccurence: occurrence._id });
+
+        // Generate PDF from template
+        pdf.create(pdfTemplate(occurrence, report, ReportCreatedBy), {}).toFile(`/tmp/result_${id}.pdf`, (err) => {
+            if (err) {
+                console.error('Error generating PDF:', err);
+                res.status(500).send('Error generating PDF');
+            } else {
+                // Send success response with PDF file path
+                res.status(200).send(`/tmp/result_${id}.pdf`);
+            }
+        });
+    } catch (error) {
+        console.error('Error generating PDF:', error);
+        res.status(500).send('Error generating PDF');
+    }
 });
-  })
-  .catch(function (err) {
-    console.log(err);
-  });
 
+// Define a route to fetch and serve the PDF
+app.get('/fetch-pdf/:id', async (req, res) => {
+    try {
+        const id = req.params.id;
+        const pdfPath = path.join('/tmp', `result_${id}.pdf`);
+
+        // Check if the PDF file exists
+        if (fs.existsSync(pdfPath)) {
+            // Send the PDF file as response
+            res.sendFile(pdfPath);
+        } else {
+            res.status(404).send('PDF not found');
+        }
+    } catch (error) {
+        console.error('Error fetching PDF:', error);
+        res.status(500).send('Error fetching PDF');
+    }
 });
-
-  });
-
-  
-  
-
-app.get('/fetch-pdf', (req, res) => {
-
-  res.sendFile(`${__dirname}/result.pdf`)
-})
-
