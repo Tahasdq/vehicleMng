@@ -1176,6 +1176,8 @@ app.get("/occurencewithstatusthree" , (req, res)=>{
 })
 
 
+
+
 // POST route to generate and upload the PDF
 app.post('/create-pdf/:id', async (req, res) => {
   try {
@@ -1226,7 +1228,7 @@ app.get('/fetch-pdf/:id', async (req, res) => {
 // Function to generate PDF from HTML content
 async function generatePdf(htmlContent) {
   return new Promise((resolve, reject) => {
-      htmlToPdf.create(htmlContent).toBuffer((err, buffer) => {
+      pdf.create(htmlContent).toBuffer((err, buffer) => {
           if (err) {
               reject(err);
           } else {
