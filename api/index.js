@@ -1183,14 +1183,14 @@ app.post('/create-pdf/:id', (req, res) => {
       reportSchemaModel.findOne({ IdOfOccurence: occurence._id }).then(report => {
         // Handle the documents in the report array here
      counter=0;
-    pdf.create(pdfTemplate(occurence ,report,ReportCreatedBy), {}).toFile(`result.pdf`, (err) => {
-      if(err) {
-        res.send(Promise.reject());
-        console.log(err)
+     pdf.create(pdfTemplate(occurence, report, ReportCreatedBy), {}).toFile(`result.pdf`, (err) => {
+      if (err) {
+          console.error('Error generating PDF:', err);
+          res.status(500).send('Error generating PDF');
+      } else {
+          res.status(200).send('PDF generated successfully');
       }
-      
-      res.send(Promise.resolve());
-    });
+});
   })
   .catch(function (err) {
     console.log(err);
