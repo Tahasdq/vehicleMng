@@ -22,7 +22,7 @@ const StreetRegistration = () => {
     event.preventDefault();
     if (validateForm()) {
       axios
-        .post("http://localhost:3000/poststreet", Post)
+        .post("https://vehicle-mng.vercel.app/poststreet", Post)
         .then((response) => {
           console.log(response);
           setSubmitStatus("success");

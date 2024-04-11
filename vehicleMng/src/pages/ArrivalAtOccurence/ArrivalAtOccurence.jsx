@@ -18,7 +18,7 @@ const ArrivalAtOccurence = () => {
   useEffect(() => {
     setLoading(true);
     axios
-      .get("http://localhost:3000/getnewoccuranceAllStatusWithZero")
+      .get("https://vehicle-mng.vercel.app/getnewoccuranceAllStatusWithZero")
       .then((response) => {
         setOccurance_hold(response.data)
         // console.log("Garrson is ", response.data)
@@ -29,7 +29,7 @@ const ArrivalAtOccurence = () => {
         console.error("Error fetching data:", error);
       });
     // console.log("Garrson", Occurance_hold)
-    axios.get(`http://localhost:3000/getnewoccuranceocurrencesgarissonwithtruedisabled/${arriveId}`)
+    axios.get(`https://vehicle-mng.vercel.app/getnewoccuranceocurrencesgarissonwithtruedisabled/${arriveId}`)
     .then((response)=>{
       console.log("garisson who are true",response.data.length)
       setalltruegarrisionallgarison(response.data.length)
@@ -74,7 +74,7 @@ const ArrivalAtOccurence = () => {
     
     //direct api call to get av_garsion from newoccrunces table
     axios
-      .get(`http://localhost:3000/getnewoccuranceAllStatus/${id}`)
+      .get(`https://vehicle-mng.vercel.app/getnewoccuranceAllStatus/${id}`)
       .then((response) => {
         setFindGarission(response.data.av_garison)
         setallgarisonLength(response.data.av_garison.length)
@@ -89,21 +89,18 @@ const ArrivalAtOccurence = () => {
   }
 
   const handleStatus = (e) => {
-    
-    axios.put(`http://localhost:3000/occuranceDispatcharrivegarrison/${arriveId}` , {garissonIds})
+    e.preventDefault()
+    axios.put(`https://vehicle-mng.vercel.app/occuranceDispatcharrivegarrison/${arriveId}` , {garissonIds})
     .then((response)=>{
       console.log("garisson updared",response)
 
     })
 
-
-   
-
     if(alltruegarrisionallgarison === allgarisonLength){
       console.log("alltruegarrisionallgarison === allgarisonLengths");
       const token = localStorage.getItem("token")
       const InformedOfArrivalBy = jwtDecode(token).username
-      axios.put(`http://localhost:3000/occuranceDispatcharrive/${arriveId}`  ,{InformedOfArrivalBy})
+      axios.put(`https://vehicle-mng.vercel.app/occuranceDispatcharrive/${arriveId}`  ,{InformedOfArrivalBy})
       .then((response) => {
         console.log("data is ", response);
 
@@ -114,7 +111,7 @@ const ArrivalAtOccurence = () => {
 
              //Arrival Time added
 
-    axios.put(`http://localhost:3000/getnewoccuranceAllStatusWithZero/${arriveId}`)
+    axios.put(`https://vehicle-mng.vercel.app/getnewoccuranceAllStatusWithZero/${arriveId}`)
     .then((response) => {
       console.log("data is ", response);
 
@@ -227,7 +224,7 @@ const ArrivalAtOccurence = () => {
             </div>
 
             <div className="button mt-3 text-center">
-              <a href="" className="btn btn-primary " onClick={(e)=>handleStatus(e)} style={{ padding: "10px 120px", marginTop:"60px" }}> Chegado</a>
+              <a href="" type='submit' className="btn btn-primary " onClick={(e)=>handleStatus(e)} style={{ padding: "10px 120px", marginTop:"60px" }}> Chegado</a>
 
             </div>
           </div>

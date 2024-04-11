@@ -2,7 +2,7 @@ const express = require("express");
 const mongoose = require("mongoose");
 const jwt = require("jsonwebtoken");
 const pdf = require('html-pdf');
-const pdfTemplate = require('./templates/index.js');
+const pdfTemplate = require('./template.js');
 const bodyParser = require('body-parser');
 const cors = require("cors");
 
@@ -1182,8 +1182,8 @@ app.post('/create-pdf/:id', (req, res) => {
       // res.send(occurence)
       reportSchemaModel.findOne({ IdOfOccurence: occurence._id }).then(report => {
         // Handle the documents in the report array here
-     
-    pdf.create(pdfTemplate(occurence ,report,ReportCreatedBy), {}).toFile('result.pdf', (err) => {
+     counter=0;
+    pdf.create(pdfTemplate(occurence ,report,ReportCreatedBy), {}).toFile(`result.pdf`, (err) => {
       if(err) {
         res.send(Promise.reject());
         console.log(err)

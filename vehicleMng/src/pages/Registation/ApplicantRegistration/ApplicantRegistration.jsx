@@ -22,7 +22,7 @@ const ApplicantRegistration = () => {
     event.preventDefault();
     if (validateForm()) {
       axios
-        .post('http://localhost:3000/postApplicant', post)
+        .post('https://vehicle-mng.vercel.app/postApplicant', post)
         .then(response => {
           setSubmitStatus('success');
           setTimeout(() => {

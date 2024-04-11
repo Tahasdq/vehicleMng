@@ -11,7 +11,7 @@ const SearchData = () => {
   useEffect(() => {
     if (id) {
       axios
-        .get(`http://localhost:3000/SearchedOccurences/${id}`)
+        .get(`https://vehicle-mng.vercel.app/SearchedOccurences/${id}`)
         .then((response) => {
           setDataSearched(response.data);
           console.log("Data fetched:", response.data);

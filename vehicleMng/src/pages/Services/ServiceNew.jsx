@@ -67,7 +67,7 @@ useEffect(() => {
   useEffect(() => {
     // Fetch data when the component mounts
     axios
-      .get("http://localhost:3000/getoccurance")
+      .get("https://vehicle-mng.vercel.app/getoccurance")
       .then((response) => {
         // Set the fetched data in state
         setData(response.data);
@@ -79,7 +79,7 @@ useEffect(() => {
       });
 
     axios
-      .get("http://localhost:3000/getnewoccurance")
+      .get("https://vehicle-mng.vercel.app/getnewoccurance")
       .then((response) => {
         // Set the fetched data in state
         setcountOcc(response.data);
@@ -92,7 +92,7 @@ useEffect(() => {
       });
 
     axios
-      .get("http://localhost:3000/getGarrison")
+      .get("https://vehicle-mng.vercel.app/getGarrison")
       .then((response) => {
         setNewGarrison(response.data)
         console.log("Garrson", response.data)
@@ -107,7 +107,7 @@ useEffect(() => {
 
 
     axios
-      .get("http://localhost:3000/getGarrisonFalse")
+      .get("https://vehicle-mng.vercel.app/getGarrisonFalse")
       .then((response) => {
         setGarrsionIdFalse(response.data)
         console.log("GarrsonFalse", response.data)
@@ -222,7 +222,7 @@ useEffect(() => {
   return initialValue || "";
 
 
-    // axios.put(`http://localhost:3000/updataGarrison/${GarrisonId}`)
+    // axios.put(`https://vehicle-mng.vercel.app/updataGarrison/${GarrisonId}`)
     //   .then((response)=>{
     //       console.log(response);
     //   })
@@ -267,12 +267,12 @@ useEffect(() => {
       const token = localStorage.getItem("token")
        const MadeBy = jwtDecode(token).username
 
-      const responsePost = await axios.post("http://localhost:3000/newOccurance", {...post , MadeBy });
+      const responsePost = await axios.post("https://vehicle-mng.vercel.app/newOccurance", {...post , MadeBy });
       console.log(responsePost);
 
       if (StaffIds.length!==0) {
         console.log("Callled");
-      const updateStaffResponse = await axios.put('http://localhost:3000/updateGarrisoninServiceNew', { dataArray: StaffIds });
+      const updateStaffResponse = await axios.put('https://vehicle-mng.vercel.app/updateGarrisoninServiceNew', { dataArray: StaffIds });
       console.log("update staff api working", updateStaffResponse);
       console.log("update staff api working");
 
@@ -301,14 +301,14 @@ useEffect(() => {
     }
     
 
-      // const responsePut = await axios.put(`http://localhost:3000/updataGarrison/${GarrisonId}`);
+      // const responsePut = await axios.put(`https://vehicle-mng.vercel.app/updataGarrison/${GarrisonId}`);
       // console.log(responsePut);
 
-      const responseGetGarrison = await axios.get("http://localhost:3000/getGarrison");
+      const responseGetGarrison = await axios.get("https://vehicle-mng.vercel.app/getGarrison");
       setNewGarrison(responseGetGarrison.data);
       console.log("Garrison", responseGetGarrison.data);
 
-      const responseGetGarrisonFalse = await axios.get("http://localhost:3000/getGarrisonFalse");
+      const responseGetGarrisonFalse = await axios.get("https://vehicle-mng.vercel.app/getGarrisonFalse");
       setGarrsionIdFalse(responseGetGarrisonFalse.data);
       console.log("GarrisonFalse", responseGetGarrisonFalse.data);
     } catch (error) {
