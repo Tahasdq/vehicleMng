@@ -5,6 +5,7 @@ const pdf = require('html-pdf');
 const pdfTemplate = require('./template.js');
 const bodyParser = require('body-parser');
 const cors = require("cors");
+const serverless = require('serverless-http');
 const fs = require('fs');
 
 const app = express();
@@ -1175,49 +1176,78 @@ app.get("/occurencewithstatusthree" , (req, res)=>{
 })
 
 
-// / Define a route to generate and serve the PDF
+// POST route to generate and upload the PDF
 app.post('/create-pdf/:id', async (req, res) => {
-    try {
-        const id = req.params.id;
-        const { ReportCreatedBy } = req.body;
+  try {
+      const id = req.params.id;
+      const { ReportCreatedBy } = req.body;
 
-        // Fetch occurrence data based on id
-        const occurrence = await NewOccuranceModel.findById(id);
+      // Fetch occurrence data based on id
+      const occurrence = await NewOccuranceModel.findById(id);
 
-        // Fetch report data based on occurrence
-        const report = await reportSchemaModel.findOne({ IdOfOccurence: occurrence._id });
+      // Fetch report data based on occurrence
+      const report = await reportSchemaModel.findOne({ IdOfOccurence: occurrence._id });
 
-        // Generate PDF from template
-        pdf.create(pdfTemplate(occurrence, report, ReportCreatedBy), {}).toFile(`/tmp/result_${id}.pdf`, (err) => {
-            if (err) {
-                console.error('Error generating PDF:', err);
-                res.status(500).send('Error generating PDF');
-            } else {
-                // Send success response with PDF file path
-                res.status(200).send(`/tmp/result_${id}.pdf`);
-            }
-        });
-    } catch (error) {
-        console.error('Error generating PDF:', error);
-        res.status(500).send('Error generating PDF');
-    }
+      // Generate HTML content for the PDF using the template
+      const htmlContent = pdfTemplate(occurrence, report, ReportCreatedBy);
+
+      // Generate PDF from HTML
+      const pdfBuffer = await generatePdf(htmlContent);
+
+      // Upload PDF to Vercel Blob
+      const blobUrl = await uploadPdfToBlob(pdfBuffer, id);
+
+      // Send the URL of the uploaded PDF as the response
+      res.status(200).json({ pdfUrl: blobUrl });
+  } catch (error) {
+      console.error('Error generating and uploading PDF:', error);
+      res.status(500).send('Error generating and uploading PDF');
+  }
 });
 
-// Define a route to fetch and serve the PDF
+// GET route to fetch the PDF
 app.get('/fetch-pdf/:id', async (req, res) => {
-    try {
-        const id = req.params.id;
-        const pdfPath = path.join('/tmp', `result_${id}.pdf`);
+  try {
+      const id = req.params.id;
+      const pdfUrl = `/tmp/result_${id}.pdf`;
 
-        // Check if the PDF file exists
-        if (fs.existsSync(pdfPath)) {
-            // Send the PDF file as response
-            res.sendFile(pdfPath);
-        } else {
-            res.status(404).send('PDF not found');
-        }
-    } catch (error) {
-        console.error('Error fetching PDF:', error);
-        res.status(500).send('Error fetching PDF');
-    }
+      // Send the PDF file as response if it exists
+      if (fs.existsSync(pdfUrl)) {
+          res.sendFile(pdfUrl);
+      } else {
+          res.status(404).send('PDF not found');
+      }
+  } catch (error) {
+      console.error('Error fetching PDF:', error);
+      res.status(500).send('Error fetching PDF');
+  }
 });
+
+// Function to generate PDF from HTML content
+async function generatePdf(htmlContent) {
+  return new Promise((resolve, reject) => {
+      htmlToPdf.create(htmlContent).toBuffer((err, buffer) => {
+          if (err) {
+              reject(err);
+          } else {
+              resolve(buffer);
+          }
+      });
+  });
+}
+
+// Function to upload PDF to Vercel Blob
+async function uploadPdfToBlob(pdfBuffer, id) {
+  const pdfPath = `/tmp/result_${id}.pdf`;
+  
+  // Write PDF to temporary file
+  fs.writeFileSync(pdfPath, pdfBuffer);
+
+  // Upload PDF to Vercel Blob
+  const blobUrl = await put(pdfPath, { contentType: 'application/pdf' });
+
+  // Delete temporary file
+  fs.unlinkSync(pdfPath);
+
+  return blobUrl;
+}
