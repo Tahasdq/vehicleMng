@@ -1175,36 +1175,67 @@ app.get("/occurencewithstatusthree" , (req, res)=>{
 })
 
 
+// app.post('/create-pdf/:id', (req, res) => {
+//   let id =req.params.id
+//   let {ReportCreatedBy} =req.body
+//   NewOccuranceModel.findById(id).
+//   then(function (occurence) {
+//       // res.send(occurence)
+//       reportSchemaModel.findOne({ IdOfOccurence: occurence._id }).then(report => {
+//         // Handle the documents in the report array here
+//      counter=0;
+//      pdf.create(pdfTemplate(occurence, report, ReportCreatedBy), {}).toFile(`result.pdf`, (err) => {
+//       if (err) {
+//           console.error('Error generating PDF:', err);
+//           res.status(500).send('Error generating PDF');
+//       } else {
+//           res.status(200).send('PDF generated successfully');
+//       }
+// });
+//   })
+//   .catch(function (err) {
+//     console.log(err);
+//   });
+
+// });
+
+//   });
+
+  
+  
+
+// app.get('/fetch-pdf', (req, res) => {
+
+//   res.sendFile(`${__dirname}/result.pdf`)
+// })
+
 app.post('/create-pdf/:id', (req, res) => {
-  let id =req.params.id
-  let {ReportCreatedBy} =req.body
-  NewOccuranceModel.findById(id).
-  then(function (occurence) {
-      // res.send(occurence)
-      reportSchemaModel.findOne({ IdOfOccurence: occurence._id }).then(report => {
-        // Handle the documents in the report array here
-     counter=0;
-     pdf.create(pdfTemplate(occurence, report, ReportCreatedBy), {}).toFile(`result.pdf`, (err) => {
-      if (err) {
-          console.error('Error generating PDF:', err);
-          res.status(500).send('Error generating PDF');
-      } else {
-          res.status(200).send('PDF generated successfully');
-      }
+  const id = req.params.id;
+  const { ReportCreatedBy } = req.body;
+
+  NewOccuranceModel.findById(id)
+      .then((occurrence) => {
+          reportSchemaModel.findOne({ IdOfOccurrence: occurrence._id })
+              .then((report) => {
+                  // Generate PDF in memory
+                  pdf.create(pdfTemplate(occurrence, report, ReportCreatedBy), {}).toBuffer((err, buffer) => {
+                      if (err) {
+                          console.error('Error generating PDF:', err);
+                          return res.status(500).send('Error generating PDF');
+                      }
+                      // Send PDF buffer as response
+                      res.contentType("application/pdf");
+                      res.send(buffer);
+                  });
+              })
+              .catch((err) => {
+                  console.error('Error finding report:', err);
+                  return res.status(500).send('Error finding report');
+              });
+      })
+      .catch((err) => {
+          console.error('Error finding occurrence:', err);
+          return res.status(500).send('Error finding occurrence');
+      });
 });
-  })
-  .catch(function (err) {
-    console.log(err);
-  });
 
-});
-
-  });
-
-  
-  
-
-app.get('/fetch-pdf', (req, res) => {
-
-  res.sendFile(`${__dirname}/result.pdf`)
-})
