@@ -1209,33 +1209,35 @@ app.get("/occurencewithstatusthree" , (req, res)=>{
 //   res.sendFile(`${__dirname}/result.pdf`)
 // })
 
-app.post('/create-pdf/:id', (req, res) => {
-  const id = req.params.id;
-  const { ReportCreatedBy } = req.body;
+// Routes
 
-  NewOccuranceModel.findById(id)
-      .then((occurrence) => { 
-          reportSchemaModel.findOne({ IdOfOccurence: occurrence._id })
-              .then((report) => {
-                  // Generate PDF in memory
-                  pdf.create(pdfTemplate(occurrence, report, ReportCreatedBy), {}).toBuffer((err, buffer) => {
-                      if (err) {
-                          console.error('Error generating PDF:', err);
-                          return res.status(500).send('Error generating PDF');
-                      }
-                      // Send PDF buffer as response
-                      res.contentType("application/pdf");
-                      res.send(buffer);
-                  });
-              })
-              .catch((err) => {
-                  console.error('Error finding report:', err);
-                  return res.status(500).send('Error finding report');
-              });
-      })
-      .catch((err) => {
-          console.error('Error finding occurrence:', err);
-          return res.status(500).send('Error finding occurrence');
-      });
+
+app.post('/create-pdf/:id', async (req, res) => {
+  try {
+    const id = req.params.id;
+    const token = req.headers.authorization.split(' ')[1];
+    const ReportCreatedBy = jwtDecode(token).username;
+
+    const occurrence = await NewOccuranceModel.findById(id);
+    const report = await reportSchemaModel.findOne({ IdOfOccurence: occurrence._id });
+
+    // Generate PDF using Puppeteer
+    const pdfBuffer = await pdfTemplate(occurrence, report, ReportCreatedBy);
+
+    // Send PDF as response
+    res.set({
+      'Content-Type': 'application/pdf',
+      'Content-Disposition': 'attachment; filename="report.pdf"',
+    });
+    res.send(pdfBuffer);
+  } catch (error) {
+    console.error('Error generating PDF:', error);
+    res.status(500).send('Error generating PDF');
+  }
 });
 
+// Error handling middleware
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).send('Something went wrong!');
+});

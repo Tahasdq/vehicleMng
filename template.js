@@ -1,14 +1,16 @@
- module.exports = (occurence , report,ReportCreatedBy) => {
-    let { av_garison , occurance_Number, ClosedBy , MadeBy ,Request,Description } = occurence
-    let {formFields ,description} =report
-   
-    console.log("formFields",formFields)
+const puppeteer = require('puppeteer');
+
+module.exports = async (occurence, report, ReportCreatedBy) => {
+    let { av_garison, occurance_Number, ClosedBy, MadeBy, Request, Description } = occurence;
+    let { formFields, description } = report;
+
+    console.log("formFields", formFields);
     let occurence_code_to_display = occurance_Number.toString().padStart(4, '0');
 
     const date = new Date;
     const formattedDate = date.toLocaleDateString()
     const time = date.toLocaleTimeString()
-    
+
     // Sample data
     const sampleData = {
         applicant: [
@@ -44,20 +46,20 @@
         data.forEach(entry => {
             const Arrivaldate = new Date(entry.ArrivalTime);
             const Departuredate = new Date(entry.DispachTime);
-            const formattedDate =(date)=>(
+            const formattedDate = (date) => (
                 date.toLocaleDateString('en-GB', {
-                day: '2-digit',
-                month: '2-digit',
-                year: 'numeric'
-            }))
-            const formattedTime=(date)=>(
+                    day: '2-digit',
+                    month: '2-digit',
+                    year: 'numeric'
+                }))
+            const formattedTime = (date) => (
                 date.toLocaleTimeString()
             )
             const Diiference_Total_Millisencond = (Arrivaldate - Departuredate) / 1000
             let hours = Math.floor(Diiference_Total_Millisencond / 3600);
             let remainingSeconds = Diiference_Total_Millisencond % 3600;
             let minutes = Math.floor(remainingSeconds / 60);
-            let TimeDifference = hours + "h:" + minutes  +"m:"+ Math.floor(remainingSeconds) +"s"
+            let TimeDifference = hours + "h:" + minutes + "m:" + Math.floor(remainingSeconds) + "s"
             rowsHtml += `<tr><td>${entry.garissonName}</td><td>${TimeDifference}</td><td>${formattedDate(Arrivaldate)} - ${formattedTime(Arrivaldate)} </td><td>${formattedDate(Departuredate)} - ${formattedTime(Departuredate)}</td></tr>`;
         });
         return rowsHtml;
@@ -96,29 +98,29 @@
                     margin: 0;
                     padding: 0;
                 }
-    
+
                 html,
                 body {
                     font-family: Arial, sans-serif;
                 }
-    
+
                 .report-wrapper {
                     padding: 20px;
                     width: 90%;
                     max-width: 1200px;
                     margin: 0 auto;
                 }
-    
+
                 .header {
                     overflow: auto;
                     /* Clear floats */
                     margin-bottom: 20px;
                 }
-        
+
                 .header .header-left{
                     float: left;
                 }
-        
+
                 .header .header-right {
                     float: right;
                 }
@@ -128,14 +130,14 @@
                     border-collapse: collapse;
                     margin-bottom: 20px;
                 }
-    
+
                 th,
                 td {
                     padding: 10px;
                     text-align: left;
                     border-bottom: 1px solid #ddd;
                 }
-    
+
                 th {
                     background-color: #f2f2f2;
                 }
@@ -150,7 +152,7 @@
                     border: 1px solid #ddd;
                     margin-bottom: 20px;
                 }
-    
+
                 .RequestGenerator{
                     text-align:right;
                 }
@@ -159,18 +161,18 @@
                 .ClosingDescription {
                     text-align:left ;
                 }
-    
+
                 /* Media Queries */
                 @media screen and (max-width: 768px) {
                     .report-wrapper {
                         padding: 10px;
                     }
-    
-    
+
+
                     table {
                         font-size: 14px;
                     }
-    
+
                     .RequestDescription,
                     .request,
                     .ClosingDescription,
@@ -178,16 +180,16 @@
                         font-size: 14px;
                     }
                 }
-    
+
                 /* Additional Styles */
                 #PeopleInvolved-main {
                     margin-bottom: 20px;
                 }
-    
+
                 .people-involved-table {
                     width: 100%;
                 }
-    
+
                 .people-involved-table th,
                 .people-involved-table td {
                     padding: 8px;
@@ -195,7 +197,7 @@
                     border-bottom: 1px solid #ddd;
                     width: 50%; /* Set a fixed width for each cell */
                 }
-    
+
                 .people-involved-table th {
                     background-color: #f2f2f2;
                 }
@@ -212,12 +214,12 @@
                             <span><strong>Relatório da ocorrencia numero :</strong>${occurence_code_to_display}</span>
                         </div>
                         <div class="header-right">
-                        <span><strong>Report Generated By:</strong> ${ReportCreatedBy}</span>
-                        <span><strong>Data:</strong> ${formattedDate}</span>
-                        <span><strong>Hora:</strong> ${time}</span>
+                            <span><strong>Report Generated By:</strong> ${ReportCreatedBy}</span>
+                            <span><strong>Data:</strong> ${formattedDate}</span>
+                            <span><strong>Hora:</strong> ${time}</span>
                         </div>
                     </div>
-        
+
                     <div class="main">
                         <!-- Applicant data -->
                         <div class="applicant">
@@ -229,19 +231,19 @@
                         </div>
 
                         <div id="Request">
-                        <h2>Solicitação</h2>
-                        <div class="request margin-top">
-                            ${Request}
+                            <h2>Solicitação</h2>
+                            <div class="request margin-top">
+                                ${Request}
+                            </div>
+                            <label for="request-description">Descrever a solicitação</label>
+                            <div class="RequestDescription margin-top">
+                                <p>${Description}</p>
+                            </div>
+                            <div class="RequestGenerator">
+                                <!-- Dynamic generator will be added here -->
+                                <span>Gerado por : ${MadeBy}</span>
+                            </div>
                         </div>
-                        <label for="request-description">Descrever a solicitação</label>
-                        <div class="RequestDescription margin-top">
-                        <p>${Description}</p>
-                        </div>
-                        <div class="RequestGenerator">
-                            <!-- Dynamic generator will be added here -->
-                            <span>Gerado por : ${MadeBy}</span>
-                        </div>
-                    </div>
 
                         <!-- Garrison detail -->
                         <div class="garrison">
@@ -253,16 +255,16 @@
                         </div>
 
                         <!-- Closing detail -->
-                <div id="ClosingDescription">
-                    <h2>Destritivo do encerramento</h2>
-                    <div class="RequestDescription margin-top">
-                       ${description}
-                    </div>
-                    <div class="RequestGenerator">
-                        <!-- Dynamic generator will be added here -->
-                        <span>Encerrado por : ${ClosedBy}</span>
-                    </div>
-                </div>
+                        <div id="ClosingDescription">
+                            <h2>Destritivo do encerramento</h2>
+                            <div class="RequestDescription margin-top">
+                                ${description}
+                            </div>
+                            <div class="RequestGenerator">
+                                <!-- Dynamic generator will be added here -->
+                                <span>Encerrado por : ${ClosedBy}</span>
+                            </div>
+                        </div>
 
                         <!-- People involved -->
                         <div id="PeopleInvolved-main">
@@ -276,5 +278,11 @@
         </html>
     `;
 
-    return htmlTemplate;
+    // Create a PDF file using Puppeteer
+    const browser = await puppeteer.launch();
+    const page = await browser.newPage();
+    await page.setContent(htmlTemplate);
+    await page.pdf({ path: 'result.pdf', format: 'A4' });
+
+    await browser.close();
 };
