@@ -1214,8 +1214,7 @@ app.get("/occurencewithstatusthree" , (req, res)=>{
 app.post('/create-pdf/:id', async (req, res) => {
   try {
     const id = req.params.id;
-    const token = req.headers.authorization.split(' ')[1];
-    const ReportCreatedBy = jwtDecode(token).username;
+    let {ReportCreatedBy} =req.body
 
     const occurrence = await NewOccuranceModel.findById(id);
     const report = await reportSchemaModel.findOne({ IdOfOccurence: occurrence._id });

@@ -278,11 +278,14 @@ module.exports = async (occurence, report, ReportCreatedBy) => {
         </html>
     `;
 
-    // Create a PDF file using Puppeteer
-    const browser = await puppeteer.launch();
+    // Launch Puppeteer browser and generate PDF
+    const browser = await puppeteer.launch({ headless: true });
     const page = await browser.newPage();
-    await page.setContent(htmlTemplate);
-    await page.pdf({ path: 'result.pdf', format: 'A4' });
+    await page.setContent(htmlTemplate, { waitUntil: 'networkidle0' });
+    const pdfBuffer = await page.pdf({ format: 'A4' });
 
+    // Close browser
     await browser.close();
+
+    return pdfBuffer;
 };
