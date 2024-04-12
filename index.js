@@ -1214,12 +1214,13 @@ app.post('/create-pdf/:id', (req, res) => {
   const { ReportCreatedBy } = req.body;
 
   NewOccuranceModel.findById(id)
-      .then((occurrence) => {
+      .then((occurrence) => { 
           reportSchemaModel.findOne({ IdOfOccurrence: occurrence._id })
               .then((report) => {
                   // Generate PDF in memory
                   pdf.create(pdfTemplate(occurrence, report, ReportCreatedBy), {}).toBuffer((err, buffer) => {
                       if (err) {
+                        console.log(report)
                           console.error('Error generating PDF:', err);
                           return res.status(500).send('Error generating PDF');
                       }
