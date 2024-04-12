@@ -1,7 +1,6 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const jwt = require("jsonwebtoken");
-const pdf = require('html-pdf');
 const pdfTemplate = require('./template.js');
 const bodyParser = require('body-parser');
 const cors = require("cors");
