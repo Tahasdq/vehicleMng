@@ -25,7 +25,7 @@ mongoose.connect(uri, { dbName: 'VehicleMng' ,useNewUrlParser: true, useUnifiedT
     console.error("Error connecting to MongoDB Atlas:", error);
   });
 
-app.listen(3000, () => {
+app.listen(process.env.PORT || 3000, () => {
   console.log("Server Is Running");
 });
 
