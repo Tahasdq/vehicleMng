@@ -275,7 +275,7 @@ module.exports = async (occurrence, report, ReportCreatedBy) => {
 
     // Puppeteer PDF generation logic
    
-const browser = await puppeteer.launch({
+const browser1 = await puppeteer.launch({
     headless: true,
     executablePath: "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe",
     args: [`--disable-gpu`, `--disable-dev-shm-usage`],
