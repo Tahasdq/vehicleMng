@@ -3,7 +3,6 @@ const mongoose = require("mongoose");
 const jwt = require("jsonwebtoken");
 const pdfTemplate = require('./template.js');
 const bodyParser = require('body-parser');
-const pdf = require('html-pdf')
 const cors = require("cors");
 const fs = require('fs');
 
@@ -1215,34 +1214,24 @@ app.get("/occurencewithstatusthree" , (req, res)=>{
 // Routes
 
 
-app.post('/create-pdf/:id', (req, res) => {
+app.post('/create-pdf/:id', async (req, res) => {
   const id = req.params.id;
   const { ReportCreatedBy } = req.body;
 
-  NewOccuranceModel.findById(id)
-      .then((occurrence) => {
-          reportSchemaModel.findOne({ IdOfOccurence: occurrence._id })
-              .then((report) => {
-                  // Generate PDF in memory
-                  pdf.create(pdfTemplate(occurrence, report, ReportCreatedBy), {}).toBuffer((err, buffer) => {
-                      if (err) {
-                          console.error('Error generating PDF:', err);
-                          return res.status(500).send('Error generating PDF');
-                      }
-                      // Send PDF buffer as response
-                      res.contentType("application/pdf");
-                      res.send(buffer);
-                  });
-              })
-              .catch((err) => {
-                  console.error('Error finding report:', err);
-                  return res.status(500).send('Error finding report');
-              });
-      })
-      .catch((err) => {
-          console.error('Error finding occurrence:', err);
-          return res.status(500).send('Error finding occurrence');
-      });
+  try {
+      const occurrence = await NewOccuranceModel.findById(id);
+      const report = await reportSchemaModel.findOne({ IdOfOccurence: occurrence._id });
+
+      // Generate PDF in memory
+      const pdfBuffer = await pdfTemplate(occurrence, report, ReportCreatedBy);
+
+      // Send PDF buffer as response
+      res.contentType("application/pdf");
+      res.send(pdfBuffer);
+  } catch (err) {
+      console.error('Error generating PDF:', err);
+      return res.status(500).send('Error generating PDF');
+  }
 });
 
 

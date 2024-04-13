@@ -1,89 +1,33 @@
-module.exports = (occurence , report,ReportCreatedBy) => {
-    let { av_garison , occurance_Number, ClosedBy , MadeBy ,Request,Description } = occurence
-    let {formFields ,description} =report
-   
-    console.log("formFields",formFields)
-    let occurence_code_to_display = occurance_Number.toString().padStart(4, '0');
+const puppeteer = require('puppeteer');
 
-    const date = new Date;
-    const formattedDate = date.toLocaleDateString()
-    const time = date.toLocaleTimeString()
-    
-    // Sample data
+module.exports = async (occurrence, report, ReportCreatedBy) => {
+    let { av_garison, occurance_Number, ClosedBy, MadeBy, Request, Description } = occurrence;
+    let { formFields, description } = report;
+
+    const occurence_code_to_display = occurance_Number.toString().padStart(4, '0');
+    const date = new Date();
+    const formattedDate = date.toLocaleDateString();
+    const time = date.toLocaleTimeString();
+
     const sampleData = {
         applicant: [
-            { label: "Nome", data: `${occurence.Applicant}` },
-            { label: "CPF", data: `${occurence.Reference}` },
-            { label: "Telefone", data: `${occurence.phone}` },
-            { label: "Rua", data: `${occurence.Street}` },
-            { label: "Bairro", data: `${occurence.Neighbourhood}` },
-            { label: "Cidade", data: `${occurence.City}` },
-            { label: "Código de ocorrência", data: `${occurence.occurance_Code}` }
+            { label: "Nome", data: `${occurrence.Applicant}` },
+            { label: "CPF", data: `${occurrence.Reference}` },
+            { label: "Telefone", data: `${occurrence.phone}` },
+            { label: "Rua", data: `${occurrence.Street}` },
+            { label: "Bairro", data: `${occurrence.Neighbourhood}` },
+            { label: "Cidade", data: `${occurrence.City}` },
+            { label: "Código de ocorrência", data: `${occurrence.occurance_Code}` }
         ],
-        garrison: [
-            ...av_garison
-        ],
-        peopleInvolved: [
-            ...formFields
-        ]
+        garrison: [...av_garison],
+        peopleInvolved: [...formFields]
     };
 
-    // Function to dynamically populate the applicant table
-    function populateApplicantTable(data) {
-        let rowsHtml = '';
-        data.forEach(entry => {
-            rowsHtml += `<tr><td>${entry.label}</td><td>${entry.data}</td></tr>`;
-        });
-        return rowsHtml;
-    }
+    const browser = await puppeteer.launch();
+    const page = await browser.newPage();
 
-    // Function to dynamically populate the garrison table
-    function populateGarrisonTable(data) {
-
-        let rowsHtml = '';
-        data.forEach(entry => {
-            const Arrivaldate = new Date(entry.ArrivalTime);
-            const Departuredate = new Date(entry.DispachTime);
-            const formattedDate =(date)=>(
-                date.toLocaleDateString('en-GB', {
-                day: '2-digit',
-                month: '2-digit',
-                year: 'numeric'
-            }))
-            const formattedTime=(date)=>(
-                date.toLocaleTimeString()
-            )
-            const Diiference_Total_Millisencond = (Arrivaldate - Departuredate) / 1000
-            let hours = Math.floor(Diiference_Total_Millisencond / 3600);
-            let remainingSeconds = Diiference_Total_Millisencond % 3600;
-            let minutes = Math.floor(remainingSeconds / 60);
-            let TimeDifference = hours + "h:" + minutes  +"m:"+ Math.floor(remainingSeconds) +"s"
-            rowsHtml += `<tr><td>${entry.garissonName}</td><td>${TimeDifference}</td><td>${formattedDate(Arrivaldate)} - ${formattedTime(Arrivaldate)} </td><td>${formattedDate(Departuredate)} - ${formattedTime(Departuredate)}</td></tr>`;
-        });
-        return rowsHtml;
-    }
-
-    // Function to dynamically populate the people involved tables
-    function populatePeopleInvolvedTables(data) {
-        let tablesHtml = '';
-        data.forEach(person => {
-            tablesHtml += `
-                <table class="people-involved-table">
-                    <thead><tr><th>Envolvimento</th><th>${person.person}</th></tr></thead>
-                    <tbody><tr><td>Nome</td><td>${person.name}</td></tr></tbody>
-                    <tbody><tr><td>CPF</td><td>${person.cpf}</td></tr></tbody>
-                    <tbody><tr><td>telefone</td><td>${person.phone}</td></tr></tbody>
-                    <tbody><tr><td>Rua</td><td>${person.street}</td></tr></tbody>
-                    <tbody><tr><td>Bairro</td><td>${person.Neighborhood}</td></tr></tbody>
-                    <tbody><tr><td>Cidade</td><td>${person.City}</td></tr></tbody>
-                </table>
-            `;
-        });
-        return tablesHtml;
-    }
-
-    // HTML template with dynamic sample data and full styling
-    const htmlTemplate = `
+    // Construct HTML content dynamically
+    let htmlContent = `
         <!DOCTYPE html>
         <html lang="en">
         <head>
@@ -276,5 +220,65 @@ module.exports = (occurence , report,ReportCreatedBy) => {
         </html>
     `;
 
-    return htmlTemplate;
+    // Function to dynamically populate the applicant table
+    function populateApplicantTable(data) {
+        let rowsHtml = '';
+        data.forEach(entry => {
+            rowsHtml += `<tr><td>${entry.label}</td><td>${entry.data}</td></tr>`;
+        });
+        return rowsHtml;
+    }
+
+    // Function to dynamically populate the garrison table
+    function populateGarrisonTable(data) {
+        let rowsHtml = '';
+        data.forEach(entry => {
+            const Arrivaldate = new Date(entry.ArrivalTime);
+            const Departuredate = new Date(entry.DispachTime);
+            const formattedDate = (date) => (
+                date.toLocaleDateString('en-GB', {
+                    day: '2-digit',
+                    month: '2-digit',
+                    year: 'numeric'
+                }))
+            const formattedTime = (date) => (
+                date.toLocaleTimeString()
+            )
+            const Diiference_Total_Millisencond = (Arrivaldate - Departuredate) / 1000
+            let hours = Math.floor(Diiference_Total_Millisencond / 3600);
+            let remainingSeconds = Diiference_Total_Millisencond % 3600;
+            let minutes = Math.floor(remainingSeconds / 60);
+            let TimeDifference = hours + "h:" + minutes + "m:" + Math.floor(remainingSeconds) + "s"
+            rowsHtml += `<tr><td>${entry.garissonName}</td><td>${TimeDifference}</td><td>${formattedDate(Arrivaldate)} - ${formattedTime(Arrivaldate)} </td><td>${formattedDate(Departuredate)} - ${formattedTime(Departuredate)}</td></tr>`;
+        });
+        return rowsHtml;
+    }
+
+    // Function to dynamically populate the people involved tables
+    function populatePeopleInvolvedTables(data) {
+        let tablesHtml = '';
+        data.forEach(person => {
+            tablesHtml += `
+                <table class="people-involved-table">
+                    <thead><tr><th>Envolvimento</th><th>${person.person}</th></tr></thead>
+                    <tbody><tr><td>Nome</td><td>${person.name}</td></tr></tbody>
+                    <tbody><tr><td>CPF</td><td>${person.cpf}</td></tr></tbody>
+                    <tbody><tr><td>telefone</td><td>${person.phone}</td></tr></tbody>
+                    <tbody><tr><td>Rua</td><td>${person.street}</td></tr></tbody>
+                    <tbody><tr><td>Bairro</td><td>${person.Neighborhood}</td></tr></tbody>
+                    <tbody><tr><td>Cidade</td><td>${person.City}</td></tr></tbody>
+                </table>
+            `;
+        });
+        return tablesHtml;
+    }
+
+    // Puppeteer PDF generation logic
+    const browser1 = await puppeteer.launch();
+    const page1 = await browser1.newPage();
+    await page1.setContent(htmlContent);
+    const pdfBuffer = await page1.pdf({ format: 'A4' });
+    await browser.close();
+
+    return pdfBuffer;
 };
