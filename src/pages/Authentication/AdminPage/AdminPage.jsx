@@ -64,7 +64,7 @@ const Login = ({ onLogout }) => {
     e.preventDefault();
     if (validation()) {
       axios
-        .post("http://localhost:3000/admin/dashboard/registerUser", {
+        .post("https://vehiclemng.onrender.com/admin/dashboard/registerUser", {
           username,
           password,
           designation,
