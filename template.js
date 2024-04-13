@@ -282,7 +282,7 @@ const browser1 = await puppeteer.launch({
     const page1 = await browser1.newPage();
     await page1.setContent(htmlContent);
     const pdfBuffer = await page1.pdf({ format: 'A4' });
-    await browser.close();
+    await browser1.close();
 
     return pdfBuffer;
 };
