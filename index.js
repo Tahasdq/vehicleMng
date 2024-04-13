@@ -3,6 +3,7 @@ const mongoose = require("mongoose");
 const jwt = require("jsonwebtoken");
 const pdfTemplate = require('./template.js');
 const bodyParser = require('body-parser');
+const pdf = require('html-pdf')
 const cors = require("cors");
 const fs = require('fs');
 
@@ -1211,28 +1212,36 @@ app.get("/occurencewithstatusthree" , (req, res)=>{
 // Routes
 
 
-app.post('/create-pdf/:id', async (req, res) => {
-  try {
-    const id = req.params.id;
-    let {ReportCreatedBy} =req.body
+app.post('/create-pdf/:id', (req, res) => {
+  const id = req.params.id;
+  const { ReportCreatedBy } = req.body;
 
-    const occurrence = await NewOccuranceModel.findById(id);
-    const report = await reportSchemaModel.findOne({ IdOfOccurence: occurrence._id });
-
-    // Generate PDF using Puppeteer
-    const pdfBuffer = await pdfTemplate(occurrence, report, ReportCreatedBy);
-
-    // Send PDF as response
-    res.set({
-      'Content-Type': 'application/pdf',
-      'Content-Disposition': 'attachment; filename="report.pdf"',
-    });
-    res.send(pdfBuffer);
-  } catch (error) {
-    console.error('Error generating PDF:', error);
-    res.status(500).send('Error generating PDF');
-  }
+  NewOccuranceModel.findById(id)
+      .then((occurrence) => {
+          reportSchemaModel.findOne({ IdOfOccurence: occurrence._id })
+              .then((report) => {
+                  // Generate PDF in memory
+                  pdf.create(pdfTemplate(occurrence, report, ReportCreatedBy), {}).toBuffer((err, buffer) => {
+                      if (err) {
+                          console.error('Error generating PDF:', err);
+                          return res.status(500).send('Error generating PDF');
+                      }
+                      // Send PDF buffer as response
+                      res.contentType("application/pdf");
+                      res.send(buffer);
+                  });
+              })
+              .catch((err) => {
+                  console.error('Error finding report:', err);
+                  return res.status(500).send('Error finding report');
+              });
+      })
+      .catch((err) => {
+          console.error('Error finding occurrence:', err);
+          return res.status(500).send('Error finding occurrence');
+      });
 });
+
 
 // Error handling middleware
 app.use((err, req, res, next) => {
