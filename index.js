@@ -576,47 +576,41 @@ app.get("/getAllStaff", (req, res) => {
 
 
 //occurnce garision arrived 
+app.put("/occuranceDispatcharrivegarrison/:id", async (req, res) => {
+  try {
+    const occurrenceId = req.params.id;
+    const { garissonIds } = req.body;
+    console.log("Garrisons are: ", garissonIds);
+    console.log("Occurrence ID is: ", occurrenceId);
 
-app.put("/occuranceDispatcharrivegarrison/:id", (req, res) => {
-  const OccurenceId = req.params.id
-  const { garissonIds } = req.body
-  console.log("garsion are ", garissonIds);
-  console.log("occurenceid is ", OccurenceId)
+    const currentTime = new Date();
 
-  const currentTime = new Date(); // Get the current date and time
+    const updateFields = {
+      $set: {}
+    };
 
+    const arrayFilters = garissonIds.map((id, index) => ({ [`av_garison.${index}.id`]: id }));
 
-  const updateFields = {
-    $set: {}
-  };
-  
-  // Constructing the arrayFilters based on garissonIds
-  const arrayFilters = garissonIds.map((id, index) => ({ [`elem${index}.id`]: id }));
-  
-  // Setting the 'disabled' key to true for matching Ids
-  garissonIds.forEach(id => {
-    updateFields.$set[`av_garison.$[elem${garissonIds.indexOf(id)}].disabled`] = true;
-    updateFields.$set[`av_garison.$[elem${garissonIds.indexOf(id)}].ArrivalTime`] = currentTime;
-  });
-
-  
-  const options = {
-    arrayFilters,
-    new: true // Return the updated document after update
-  };
-
-
-  NewOccuranceModel.findByIdAndUpdate(OccurenceId, updateFields, options)
-    .then(updatedDocument => {
-      console.log("Updated document:", updatedDocument);
-      // Respond with updatedDocument or any other desired response
-    })
-    .catch(error => {
-      console.error("Error updating document:", error);
-      // Handle error appropriately
+    garissonIds.forEach((id, index) => {
+      updateFields.$set[`av_garison.${index}.disabled`] = true;
+      updateFields.$set[`av_garison.${index}.ArrivalTime`] = currentTime;
     });
 
+    const options = {
+      arrayFilters,
+      new: true
+    };
+
+    const updatedDocument = await NewOccurrenceModel.findByIdAndUpdate(occurrenceId, updateFields, options);
+    console.log("Updated document:", updatedDocument);
+
+    res.status(200).json({ message: "Occurrence updated successfully", data: updatedDocument });
+  } catch (error) {
+    console.error("Error updating occurrence:", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
 });
+
 
 app.get("/getnewoccuranceocurrencesgarissonwithtruedisabled/:id", (req, res) => {
   const OccurrenceId = req.params.id;
