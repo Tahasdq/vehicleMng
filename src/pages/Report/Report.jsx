@@ -39,7 +39,7 @@ const Report = () => {
 
     useEffect(() => {
         setLoading(true);
-        axios.get("https://vehiclemng-e031303f4c77.herokuapp.com/occurencewithstatusthree")
+        axios.get("https://vehiclemng.onrender.com/occurencewithstatusthree")
             .then((res) => {
                 console.log(res.data);
                 setResult(res.data);

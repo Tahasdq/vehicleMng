@@ -23,7 +23,7 @@ const VehicleRegistration = () => {
     if (validateForm()) {
       const postData = { ...post, Status: true };
       axios
-        .post("http://localhost:3000/postVehicle", postData)
+        .post("https://vehiclemng.onrender.com/postVehicle", postData)
         .then((response) => {
           console.log(response);
           setSubmitStatus('success');
@@ -72,14 +72,19 @@ const VehicleRegistration = () => {
 
   return (
     <>
-      {submitStatus === 'success' && (
-        <div className="alert alert-success" style={{ width: '20%' }} role="alert">
-          Submitted successfully
+      {submitStatus === "success" && (
+        <div className="alert-setting">
+          <div className="alert alert-success" role="alert">
+            Submitted successfully
+          </div>
         </div>
       )}
-      {submitStatus === 'error' && (
-        <div className="alert alert-danger" style={{ width: '20%' }} role="alert">
-          An error occurred
+
+      {submitStatus === "error" && (
+        <div className=" alert-setting" >
+          <div className="alert alert-danger" >
+            An error occurred
+          </div>
         </div>
       )}
       <section id="form">

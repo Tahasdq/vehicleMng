@@ -23,7 +23,7 @@ import { jwtDecode } from 'jwt-decode'
     // Fetch data when the component mounts
     setLoading(true);
     axios
-      .get("http://localhost:3000/getnewoccuranceAllStatus")
+      .get("https://vehiclemng.onrender.com/getnewoccuranceAllStatus")
       .then((response) => {
         // Set the fetched data in state
         SetOccurance_hold(response.data);
@@ -36,7 +36,7 @@ import { jwtDecode } from 'jwt-decode'
 
 
       axios
-      .get("http://localhost:3000/getGarrison")
+      .get("https://vehiclemng.onrender.com/getGarrison")
       .then((response) => {
         setGarisonFalse(response.data)
         console.log("Garrson finded are",response.data)
@@ -118,7 +118,6 @@ import { jwtDecode } from 'jwt-decode'
         ? [...prevValues, value] // If checked, add the value to the bunchValue array
         : prevValues.filter((item) => item !== value); // If unchecked, remove the value from the bunchValue array
         // console.log("updated bunvh value is " , updatedBunchValue);
-
       // setav_garison([occuranceId, updatedBunchValue]); // Update av_garison with the updated bunchValue
       return updatedBunchValue; // Return the updated bunchValue
     });
@@ -129,9 +128,9 @@ import { jwtDecode } from 'jwt-decode'
   // console.log("BunchValue" , bunchValue)
   console.log("Av_garison",av_garison )
 
-  const handleData =() =>{
-
-    if(!occuranceId){
+  const handleData =(e) =>{
+    // e.preventDefault()
+;    if(!occuranceId){
       alert("select occurence please")
       return
     }
@@ -143,9 +142,16 @@ import { jwtDecode } from 'jwt-decode'
 
     const token = localStorage.getItem("token")
        const DispatchBy = jwtDecode(token).username
-    axios.put(`http://localhost:3000/occuranceDispatch/${occuranceId}` , {DispatchBy})
+    axios.put(`https://vehiclemng.onrender.com/occuranceDispatch/${occuranceId}` , {DispatchBy})
       .then((response)=>{
-          console.log("data is "  , response);
+          console.log("data is ", response);
+          axios.get("https://vehiclemng.onrender.com/getnewoccuranceAllStatus")
+        .then((response) => {
+          SetOccurance_hold(response.data);
+        })
+        .catch((error) => {
+          console.error("Error fetching data:", error);
+        });
           
       })
       .catch((error) => {
@@ -153,7 +159,7 @@ import { jwtDecode } from 'jwt-decode'
       });
 
       // dispatch time added 
-      axios.put(`http://localhost:3000/occuranceDispatchTime/${occuranceId}`)
+      axios.put(`https://vehiclemng.onrender.com/occuranceDispatchTime/${occuranceId}`)
       .then((response)=>{
           console.log("data is "  , response.data);
           
@@ -162,15 +168,23 @@ import { jwtDecode } from 'jwt-decode'
         console.error('Error fetching vehicle data:', error);
       });
 
-      axios.put(`http://localhost:3000/updataGarrison`, { dataArray: bunchId } )
+      axios.put(`https://vehiclemng.onrender.com/updataGarrison`, { dataArray: bunchId } )
       .then((response)=>{
           console.log(response);  
+          // Fetch updated GarisonFalse data after dispatch
+      axios.get("https://vehiclemng.onrender.com/getGarrison")
+      .then((response) => {
+        setGarisonFalse(response.data);
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+      });
       })
       .catch((error) => {
         console.error('Error fetching vehicle data:', error);
       });
 
-       axios.put(`http://localhost:3000/occuranceDispatchGarison/${occuranceId}` , {dataArray : av_garison})
+       axios.put(`https://vehiclemng.onrender.com/occuranceDispatchGarison/${occuranceId}` , {dataArray : av_garison})
       .then((response)=>{
           console.log(response);  
       })
@@ -248,10 +262,8 @@ import { jwtDecode } from 'jwt-decode'
           </div>
         
           <div className="button mt-3 text-center">
-          <a href="" className="btn btn-primary " onClick={(e)=>handleData(e)} style={{padding:"10px 120px"}}> Despatcho</a>
+          <button href=""  className="btn btn-primary " onClick={handleData} style={{padding:"10px 120px"}}> Despatcho</button>
           </div>
-
-
         </div>
       </div>
     </div>

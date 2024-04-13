@@ -61,7 +61,7 @@ const ClosingOccurence = () => {
   useEffect(() => {
     setLoading(true);
     axios
-      .get("https://vehiclemng-e031303f4c77.herokuapp.com/getnewoccuranceAllStatusWithZeroAndTwo")
+      .get("https://vehiclemng.onrender.com/getnewoccuranceAllStatusWithZeroAndTwo")
       .then((response) => {
         setClosingOccurences(response.data);
         console.log("data fetche is from newOcccurences  ", response.data);
@@ -73,7 +73,7 @@ const ClosingOccurence = () => {
       });
 
     axios
-      .get("https://vehiclemng-e031303f4c77.herokuapp.com/getGarrisonAll")
+      .get("https://vehiclemng.onrender.com/getGarrisonAll")
       .then((response) => {
         setGarssions(response.data);
         // console.log("Garrson finded are", response.data);
@@ -84,12 +84,12 @@ const ClosingOccurence = () => {
         console.error("Error fetching data:", error);
       });
 
-    axios.get("https://vehiclemng-e031303f4c77.herokuapp.com/getApplicants").then((response) => {
+    axios.get("https://vehiclemng.onrender.com/getApplicants").then((response) => {
       setApplicants(response.data);
       console.log(response.data);
     });
 
-    axios.get("https://vehiclemng-e031303f4c77.herokuapp.com/getStreet").then((response) => {
+    axios.get("https://vehiclemng.onrender.com/getStreet").then((response) => {
       setStreet(response.data);
       console.log(response.data);
     })
@@ -116,7 +116,7 @@ const ClosingOccurence = () => {
     // console.log("handle delete called");
 
 
-    axios.post("https://vehiclemng-e031303f4c77.herokuapp.com/createreport", { IdOfOccurence, formFields, description })
+    axios.post("https://vehiclemng.onrender.com/createreport", { IdOfOccurence, formFields, description })
       .then((response) => {
         console.log(response)
       })
@@ -125,7 +125,7 @@ const ClosingOccurence = () => {
       })
 
     axios
-      .put(`https://vehiclemng-e031303f4c77.herokuapp.com/updataGarrisonToTrue/${id}`)
+      .put(`https://vehiclemng.onrender.com/updataGarrisonToTrue/${id}`)
       .then((response) => {
         console.log(response);
       })
@@ -136,7 +136,7 @@ const ClosingOccurence = () => {
     const token = localStorage.getItem("token");
     const ClosedBy = jwtDecode(token).username;
 
-    axios.put(`https://vehiclemng-e031303f4c77.herokuapp.com/occuranceclosed/${id}`, { ClosedBy })
+    axios.put(`https://vehiclemng.onrender.com/occuranceclosed/${id}`, { ClosedBy })
       .then((response) => {
         console.log("data is ", response);
       })
@@ -146,7 +146,7 @@ const ClosingOccurence = () => {
 
 
     axios
-      .get("https://vehiclemng-e031303f4c77.herokuapp.com/getnewoccuranceAllStatusWithZeroAndTwo")
+      .get("https://vehiclemng.onrender.com/getnewoccuranceAllStatusWithZeroAndTwo")
       .then((response) => {
         setClosingOccurences(response.data);
         console.log("data fetche is  ", response.data);
@@ -158,7 +158,7 @@ const ClosingOccurence = () => {
       });
 
     axios
-      .put(`https://vehiclemng-e031303f4c77.herokuapp.com/updataGarrisonStat`, {})
+      .put(`https://vehiclemng.onrender.com/updataGarrisonStat`, {})
       .then((response) => {
         console.log(response);
       })
@@ -167,7 +167,7 @@ const ClosingOccurence = () => {
       });
     setFormFields([{ id: 1, name: "", cpf: "", phone: "", street:"" ,Neighborhood :"",City:"" , person: "" }]);
     axios
-      .get("https://vehiclemng-e031303f4c77.herokuapp.com/getnewoccuranceAllStatusWithZeroAndTwo")
+      .get("https://vehiclemng.onrender.com/getnewoccuranceAllStatusWithZeroAndTwo")
       .then((response) => {
         setClosingOccurences(response.data);
         console.log("data fetche is  ", response.data);

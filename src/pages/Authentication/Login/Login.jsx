@@ -59,7 +59,7 @@ const Login = ({ onLoginSuccess }) => {
     console.log("admin called", e.target.name);
     if (validation()) {
       axios
-        .post("https://vehiclemng-e031303f4c77.herokuapp.com/userLogin", { username, password, isAdmin: e.target.name === 'admin' })
+        .post("https://vehiclemng.onrender.com/userLogin", { username, password, isAdmin: e.target.name === 'admin' })
         .then((res) => {
           console.log("res.user is ", res.data.user);
           if (res.data.user) {

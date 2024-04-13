@@ -9,46 +9,45 @@ const ArrivalAtOccurence = () => {
   const [Occurance_hold, setOccurance_hold] = useState([]);
   const [findgarrison, setFindGarission] = useState([])
   const [arriveId, setarriveId] = useState([])
-  const [garissonIds , setGarissonIds]=useState([])
-  const[alltruegarrisionallgarison ,setalltruegarrisionallgarison ] = useState(0)
-  const[allgarisonLength , setallgarisonLength]=useState(0)
-  const [loading , setLoading] = useState(false)
+  const [garissonIds, setGarissonIds] = useState([])
+  const [alltruegarrisionallgarison, setalltruegarrisionallgarison] = useState(0)
+  const [allgarisonLength, setallgarisonLength] = useState(0)
+  const [loading, setLoading] = useState(false)
+  const [jugaar ,setjugaar] =useState(0)
 
 
   useEffect(() => {
     setLoading(true);
     axios
-      .get("http://localhost:3000/getnewoccuranceAllStatusWithZero")
+      .get("https://vehiclemng.onrender.com/getnewoccuranceAllStatusWithZero")
       .then((response) => {
         setOccurance_hold(response.data)
-        // console.log("Garrson is ", response.data)
-        // Set the fetched data in state
       })
       .catch((error) => {
         // Handle errors, if any
         console.error("Error fetching data:", error);
       });
     // console.log("Garrson", Occurance_hold)
-    axios.get(`http://localhost:3000/getnewoccuranceocurrencesgarissonwithtruedisabled/${arriveId}`)
-    .then((response)=>{
-      console.log("garisson who are true",response.data.length)
-      setalltruegarrisionallgarison(response.data.length)
+    axios.get(`https://vehiclemng.onrender.com/getnewoccuranceocurrencesgarissonwithtruedisabled/${arriveId}`)
+      .then((response) => {
+        console.log("garisson who are true", response.data.length)
+        setalltruegarrisionallgarison(response.data.length)
 
-    })
-    .catch((err)=>{
-    console.log(err);
-    })
-    .finally(()=>{
-      setLoading(false)
-  })
+      })
+      .catch((err) => {
+        console.log(err);
+      })
+      .finally(() => {
+        setLoading(false)
+      })
 
 
-    
-  }, [arriveId])
+
+  }, [arriveId,jugaar])
 
   const handleChange = (event) => {
     console.log("handle chnage triggered");
-    const { value ,id,checked  } = event.target;
+    const { value, id, checked } = event.target;
 
     // console.log(value)
 
@@ -61,20 +60,20 @@ const ArrivalAtOccurence = () => {
       setGarissonIds(prevIds => prevIds.filter(item => item !== id));
     }
 
-   
+
 
   }
   // console.log("garsion id are " , garissonIds)
   const handleInput = (e) => {
-    e.preventDefault()
+    // e.preventDefault()
     // console.log(e)
     const { id } = e.target;
     setarriveId(id)
 
-    
+
     //direct api call to get av_garsion from newoccrunces table
     axios
-      .get(`http://localhost:3000/getnewoccuranceAllStatus/${id}`)
+      .get(`https://vehiclemng.onrender.com/getnewoccuranceAllStatus/${id}`)
       .then((response) => {
         setFindGarission(response.data.av_garison)
         setallgarisonLength(response.data.av_garison.length)
@@ -89,43 +88,77 @@ const ArrivalAtOccurence = () => {
   }
 
   const handleStatus = (e) => {
-    e.preventDefault()
-    axios.put(`http://localhost:3000/occuranceDispatcharrivegarrison/${arriveId}` , {garissonIds})
-    .then((response)=>{
-      console.log("garisson updared",response)
-
+    e.preventDefault(); 
+    axios.put(`https://vehiclemng.onrender.com/occuranceDispatcharrivegarrison/${arriveId}`, { garissonIds })
+    .then((response) => {
+      // Update Occurance_hold after the arrival status has been successfully updated
+      setjugaar(response)
+      setFindGarission([])
+      axios.get("https://vehiclemng.onrender.com/getnewoccuranceAllStatusWithZero")
+        .then((response) => {
+          setOccurance_hold(response.data);
+        })
+        .catch((error) => {
+          console.error("Error fetching data:", error);
+        });
     })
+    .catch((error) => {
+      console.error("Error updating garrisons:", error);
+    });
 
-    if(alltruegarrisionallgarison === allgarisonLength){
+    if (alltruegarrisionallgarison === allgarisonLength) {
       console.log("alltruegarrisionallgarison === allgarisonLengths");
       const token = localStorage.getItem("token")
       const InformedOfArrivalBy = jwtDecode(token).username
-      axios.put(`http://localhost:3000/occuranceDispatcharrive/${arriveId}`  ,{InformedOfArrivalBy})
-      .then((response) => {
-        console.log("data is ", response);
-
-      })
-      .catch((error) => {
-        console.error('Error fetching vehicle data:', error);
-      });
-
-             //Arrival Time added
-
-    axios.put(`http://localhost:3000/getnewoccuranceAllStatusWithZero/${arriveId}`)
-    .then((response) => {
-      console.log("data is ", response);
-
-    })
-    .catch((error) => {
-      console.error('Error fetching vehicle data:', error);
-    });
-          }
-
-       }
+      axios.put(`https://vehiclemng.onrender.com/occuranceDispatcharrive/${arriveId}`, { InformedOfArrivalBy })
+        .then((response) => {
+          console.log("data is ", response);
+          axios
+          .get("https://vehiclemng.onrender.com/getnewoccuranceAllStatusWithZero")
+          .then((response) => {
+            setOccurance_hold(response.data)
+            // console.log("Garrson is ", response.data)
+            // Set the fetched data in state
+          })
+          .catch((error) => {
+            // Handle errors, if any
+            console.error("Error fetching data:", error);
+          });
 
 
+        })
+        .catch((error) => {
+          console.error('Error fetching vehicle data:', error);
+        });
 
-  
+      //Arrival Time added
+
+      axios.put(`https://vehiclemng.onrender.com/getnewoccuranceAllStatusWithZero/${arriveId}`)
+        .then((response) => {
+          console.log("data is ", response);
+          axios
+          .get("https://vehiclemng.onrender.com/getnewoccuranceAllStatusWithZero")
+          .then((response) => {
+            setOccurance_hold(response.data)
+            // console.log("Garrson is ", response.data)
+            // Set the fetched data in state
+          })
+          .catch((error) => {
+            // Handle errors, if any
+            console.error("Error fetching data:", error);
+          });
+
+        })
+        .catch((error) => {
+          console.error('Error fetching vehicle data:', error);
+        });
+    }
+
+  }
+
+
+
+
 
   // console.log("garrison id is" , findgarrison);
   return (
@@ -140,55 +173,55 @@ const ArrivalAtOccurence = () => {
 
             {
               loading ? <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '400px' }}>
-              <CircularProgress size={100} />
-          </Box>:
-            Occurance_hold.map((v, i) => {
+                <CircularProgress size={100} />
+              </Box> :
+                Occurance_hold.map((v, i) => {
 
-              const dateTime = new Date(v.Time);
+                  const dateTime = new Date(v.Time);
 
-              const formattedTime = `${dateTime.getHours().toString().padStart(2, '0')}:${dateTime.getMinutes().toString().padStart(2, '0')}`;
+                  const formattedTime = `${dateTime.getHours().toString().padStart(2, '0')}:${dateTime.getMinutes().toString().padStart(2, '0')}`;
 
-              return (
-
-
-                <div className="col-md-12 col-sm-12 my-3 occurance_holds row  d-flex  ">
+                  return (
 
 
+                    <div className="col-md-12 col-sm-12 my-3 occurance_holds row  d-flex  ">
 
 
-                  <input type="radio" name='11' id={v._id} onChange={handleInput} />
 
 
-                  <div className="col-md-4 col-sm-12">
-                    <h6 >Telefone : {v.phone} </h6>
-                  </div>
-                  <div className="col-md-4 col-sm-12">
-                    <h6 >Solicitante : {v.Applicant} </h6>
-                  </div>
+                      <input type="radio" name='11' id={v._id} onChange={handleInput} />
 
-                  <div className="col-md-4 col-sm-12 ml-md-3 ">
-                    <h6 >Bonde : {v.Street} </h6>
 
-                  </div>
-                  <div className="col-md-4 col-sm-12">
-                    <h6>Rua : {v.Street} </h6>
+                      <div className="col-md-4 col-sm-12">
+                        <h6 >Telefone : {v.phone} </h6>
+                      </div>
+                      <div className="col-md-4 col-sm-12">
+                        <h6 >Solicitante : {v.Applicant} </h6>
+                      </div>
 
-                  </div>
-                  <div className="col-md-4 col-sm-12 ml-md-3 ">
-                    <h6>Cód. Atendimento : {v.occurance_Code} </h6>
+                      <div className="col-md-4 col-sm-12 ml-md-3 ">
+                        <h6 >Bonde : {v.Street} </h6>
 
-                  </div>
-                  {/* <div className="col-md-6 col-sm-12">
+                      </div>
+                      <div className="col-md-4 col-sm-12">
+                        <h6>Rua : {v.Street} </h6>
+
+                      </div>
+                      <div className="col-md-4 col-sm-12 ml-md-3 ">
+                        <h6>Cód. Atendimento : {v.occurance_Code} </h6>
+
+                      </div>
+                      {/* <div className="col-md-6 col-sm-12">
                     <h6> Garnição deixando a cena: {v.Neighbourhood} </h6>
                   </div> */}
-                  <div className="col-md-6 col-sm-12">
-                    <h6> Garnição deixando a cena:
-                      {formattedTime}
-                    </h6>
-                  </div>
-                </div>
-              );
-            })}
+                      <div className="col-md-6 col-sm-12">
+                        <h6> Garnição deixando a cena:
+                          {formattedTime}
+                        </h6>
+                      </div>
+                    </div>
+                  );
+                })}
           </div>
 
 
@@ -199,33 +232,32 @@ const ArrivalAtOccurence = () => {
 
               {
                 loading ? <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '200px' }}>
-                <CircularProgress size={60} />
-            </Box>:
-              findgarrison.map((v, i) => {
-                return (
-                  <>
-                    <input
-                      disabled={v.disabled}
-                      key={i}
-                      id={v.id}
-                      type="checkbox"
-                      name="av_garison"
-                      value={v.garissonName} // Adjust this to the correct property or index
-                      onChange={handleChange}
-                    />  {v.garissonName}
-                    <br />
-                  </>
-                );
-              })}
-              
+                  <CircularProgress size={60} />
+                </Box> :
+                  findgarrison.map((v, i) => {
+                    return (
+                      <>
+                        <input
+                          disabled={v.disabled}
+                          key={i}
+                          id={v.id}
+                          type="checkbox"
+                          name="av_garison"
+                          value={v.garissonName} // Adjust this to the correct property or index
+                          onChange={handleChange}
+                        />  {v.garissonName}
+                        <br />
+                      </>
+                    );
+                  })}
+
 
 
               {/* <h6 style={{marginTop:"10px"}}> {findgarrison[0]}</h6> */}
             </div>
 
             <div className="button mt-3 text-center">
-              <a href="" type='submit' className="btn btn-primary " onClick={(e)=>handleStatus(e)} style={{ padding: "10px 120px", marginTop:"60px" }}> Chegado</a>
-
+              <a href='' type='submit'  className="btn btn-primary"  onClick={handleStatus} style={{ padding: "10px 120px", marginTop: "60px" }}>Chegado</a> 
             </div>
           </div>
         </div>
@@ -234,5 +266,5 @@ const ArrivalAtOccurence = () => {
 
     </div>
   )
-            }
+}
 export default ArrivalAtOccurence

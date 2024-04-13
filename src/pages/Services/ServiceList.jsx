@@ -15,7 +15,7 @@ const ServiceList = () => {
   useEffect(()=>{
     setLoading(true);
     axios
-    .get("https://vehicle-mng.vercel.app/getnewoccuranceAll")
+    .get("https://vehiclemng.onrender.com/getnewoccuranceAll")
     .then((response) => {
       // Set the fetched data in state
       setData(response.data);

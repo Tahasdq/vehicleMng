@@ -19,55 +19,55 @@ const Home = () => {
 
     useEffect(() => {
         setLoading(true);
-        axios.get("http://localhost:3000/getnewoccuranceAllStatusWithZeroAndTwo")
+        axios.get("https://vehiclemng.onrender.com/getnewoccuranceAllStatusWithZeroAndTwo")
             .then((response) => {
                 let data = response.data
                 // console.log(data.length)
                 setoccurenceInCareLength(data.length)
         })
-        axios.get("http://localhost:3000/getnewoccuranceOpenCases")
+        axios.get("https://vehiclemng.onrender.com/getnewoccuranceOpenCases")
             .then((response) => {
                 let data = response.data
                 // console.log(data.length)
                 setopenCasesLength(data.length)
         })
-        axios.get("http://localhost:3000/getAllStaff")
+        axios.get("https://vehiclemng.onrender.com/getAllStaff")
             .then((response) => {
                 let data = response.data
                 // console.log(data.length)
                 setStaffRegistrationsLength(data.length)
         })
-        axios.get("http://localhost:3000/getVehcle")
+        axios.get("https://vehiclemng.onrender.com/getVehcle")
             .then((response) => {
                 let data = response.data
                 // console.log(data.length)
                 setvehicleRegistrationsLength(data.length)
         })
-        axios.get("http://localhost:3000/getGarrisonTrue")
+        axios.get("https://vehiclemng.onrender.com/getGarrisonTrue")
             .then((response) => {
                 let data = response.data
                 // console.log(data.length)
                 setguAvailableLength(data.length)
         })
-        axios.get("http://localhost:3000/getGarrisonFalse")
+        axios.get("https://vehiclemng.onrender.com/getGarrisonFalse")
             .then((response) => {
                 let data = response.data
                 // console.log(data.length)
                 setguNotAvailableLength(data.length)
         })
-        axios.get("http://localhost:3000/occurrences/today")
+        axios.get("https://vehiclemng.onrender.com/occurrences/today")
             .then((response) => {
                 let data = response.data.count
                 // console.log("today total occuenrences : " , data)
                 settodayOccurencesLength(data)
         })
-        axios.get("http://localhost:3000/occurrences/month")
+        axios.get("https://vehiclemng.onrender.com/occurrences/month")
             .then((response) => {
                 let data = response.data.count
                 // console.log(data.length)
                 setMonthOccurencesLength(data)
         })
-        axios.get("http://localhost:3000/occurrences/year")
+        axios.get("https://vehiclemng.onrender.com/occurrences/year")
             .then((response) => {
                 let data = response.data.count
                 // console.log(data.length)
