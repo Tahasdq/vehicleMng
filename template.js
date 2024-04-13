@@ -274,11 +274,12 @@ module.exports = async (occurrence, report, ReportCreatedBy) => {
     }
 
     // Puppeteer PDF generation logic
-    const browser1 = await puppeteer.launch({
-        headless: true,
-        executablePath:"C:\Program Files\Google\Chrome\Application\chrome.exe",
-        args: [ `--headless`, `--disable-gpu`, `--disable-dev-shm-usage`],
-      });
+   
+const browser = await puppeteer.launch({
+    headless: true,
+    executablePath: "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe",
+    args: [`--disable-gpu`, `--disable-dev-shm-usage`],
+});
     const page1 = await browser1.newPage();
     await page1.setContent(htmlContent);
     const pdfBuffer = await page1.pdf({ format: 'A4' });
