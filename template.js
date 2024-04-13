@@ -274,7 +274,11 @@ module.exports = async (occurrence, report, ReportCreatedBy) => {
     }
 
     // Puppeteer PDF generation logic
-    const browser1 = await puppeteer.launch();
+    const browser1 = await puppeteer.launch({
+        headless: "new",
+        executablePath: `/usr/bin/google-chrome`,
+        args: [`--no-sandbox`, `--headless`, `--disable-gpu`, `--disable-dev-shm-usage`],
+      });
     const page1 = await browser1.newPage();
     await page1.setContent(htmlContent);
     const pdfBuffer = await page1.pdf({ format: 'A4' });
