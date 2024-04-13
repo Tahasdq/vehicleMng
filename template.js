@@ -277,7 +277,6 @@ module.exports = async (occurrence, report, ReportCreatedBy) => {
    
 const browser1 = await puppeteer.launch({
     headless: true,
-    executablePath: "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe",
     args: [`--disable-gpu`, `--disable-dev-shm-usage`],
 });
     const page1 = await browser1.newPage();
