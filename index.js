@@ -1225,6 +1225,10 @@ app.post('/create-pdf/:id', async (req, res) => {
       // Generate PDF in memory
       const pdfBuffer = await pdfTemplate(occurrence, report, ReportCreatedBy);
 
+      // Set additional headers
+      res.header('Content-Disposition', 'attachment; filename="newPdf.pdf"'); // Force download
+      res.header('Cache-Control', 'no-cache'); // Ensure no caching
+      
       // Send PDF buffer as response
       res.contentType("application/pdf");
       res.send(pdfBuffer);
