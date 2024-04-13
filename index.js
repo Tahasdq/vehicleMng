@@ -601,7 +601,7 @@ app.put("/occuranceDispatcharrivegarrison/:id", async (req, res) => {
       new: true
     };
 
-    const updatedDocument = await NewOccurrenceModel.findByIdAndUpdate(occurrenceId, updateFields, options);
+    const updatedDocument = await NewOccuranceModel.findByIdAndUpdate(occurrenceId, updateFields, options);
     console.log("Updated document:", updatedDocument);
 
     res.status(200).json({ message: "Occurrence updated successfully", data: updatedDocument });
