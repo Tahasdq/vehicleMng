@@ -1226,7 +1226,7 @@ app.post('/create-pdf/:id', async (req, res) => {
       const pdfBuffer = await pdfTemplate(occurrence, report, ReportCreatedBy);
 
       // Send PDF buffer as response
-      res.setHeader('Content-Type', 'application/pdf');
+      res.contentType("application/pdf");
       res.send(pdfBuffer);
   } catch (err) {
       console.error('Error generating PDF:', err);
