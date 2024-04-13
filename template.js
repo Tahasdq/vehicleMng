@@ -1,4 +1,5 @@
 const puppeteer = require('puppeteer');
+const { executablePath } = require('puppeteer')
 
 module.exports = async (occurrence, report, ReportCreatedBy) => {
     let { av_garison, occurance_Number, ClosedBy, MadeBy, Request, Description } = occurrence;
@@ -276,7 +277,7 @@ module.exports = async (occurrence, report, ReportCreatedBy) => {
     // Puppeteer PDF generation logic
     const browser1 = await puppeteer.launch({
         headless: "new",
-        executablePath: `/opt/render/project/src/.cache/puppeteer/chrome/linux-123.0.6312.122/chrome-linux64/chrome`,
+        executablePath: executablePath(),
         args: [`--no-sandbox`, `--headless`, `--disable-gpu`, `--disable-dev-shm-usage`],
       });
     const page1 = await browser1.newPage();
