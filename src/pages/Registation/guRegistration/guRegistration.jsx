@@ -379,7 +379,7 @@ const GuRegistration = () => {
 
             <div className='GuRegistration-btn'>
               <button type="submit" className="btn btn-primary my-5 py-2 px-5 ml-3">Atribuir</button>
-              <button type="submit" className="btn btn-primary my-5 py-2 px-5 ml-3" onClick={(e) => handleDelete(e)}>Delete All</button>
+              {/* <button type="submit" className="btn btn-primary my-5 py-2 px-5 ml-3" onClick={(e) => handleDelete(e)}>Delete All</button> */}
             </div>
           </div>
         </form>

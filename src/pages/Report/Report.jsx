@@ -70,11 +70,12 @@ const Report = () => {
         // Decode the JWT token to get the username
         const token = localStorage.getItem("token");
         const ReportCreatedBy = jwtDecode(token).username;
-    
+        console.log(ReportCreatedBy)
         // Send ID and ReportCreatedBy to backend to generate PDF
-        axios.post(`https://vehiclemng.onrender.com/create-pdf/${id}`, { ReportCreatedBy })
+        axios.post(`https://vehiclemng.onrender.com/create-pdf/${id}`, { ReportCreatedBy }, { responseType: 'blob' })
             .then((response) => {
                 // Create a blob from the PDF data
+                console.log(response.data)
                 const pdfBlob = new Blob([response.data], { type: 'application/pdf' });
     
                 // Create a temporary URL for the blob

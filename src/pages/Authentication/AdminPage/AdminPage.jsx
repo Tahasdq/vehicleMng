@@ -129,18 +129,18 @@ const Login = ({ onLogout }) => {
         <div className="viewItems">
           <button className="btn btn-primary">
             <Link to="/admin/dashboard/viewitems" style={{ color: "white" }}>
-              View Items
+            Visualizar usuários
             </Link>
           </button>
         </div>
         <div className={"titleContainer"}>
-          <div>Register User</div>
+          <div>Cadastrar usuário</div>
         </div>
         <br />
         <div className={"inputContainer"}>
           <input
             value={username}
-            placeholder="Enter username"
+            placeholder="Nome de usuário"
             onChange={(ev) => setUserName(ev.target.value)}
             className={"inputBox"}
           />
@@ -151,7 +151,7 @@ const Login = ({ onLogout }) => {
           <input
             value={password}
             type="password"
-            placeholder="Enter password"
+            placeholder="Senha"
             onChange={(ev) => setPassword(ev.target.value)}
             className={"inputBox"}
           />
@@ -161,7 +161,7 @@ const Login = ({ onLogout }) => {
         <div className={"inputContainer"}>
           <input
             value={designation}
-            placeholder="Enter Designation here"
+            placeholder="Designação"
             onChange={(ev) => setDesignation(ev.target.value)}
             className={"inputBox"}
           />
@@ -176,7 +176,7 @@ const Login = ({ onLogout }) => {
             className="inputButton btn btn-primary px-5 py-2 text-center"
             type="submit"
             onClick={(e) => handleLogin(e)}
-            value="Register User"
+            value="Cadastrar usuário"
           />
         </div>
       </div>

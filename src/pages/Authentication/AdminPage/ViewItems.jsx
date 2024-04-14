@@ -86,11 +86,11 @@ const ViewItems = () => {
           <thead className="thead-dark">
             <tr>
               <th>#</th>
-              <th>Username</th>
-              <th>Password</th>
-              <th>Designation</th>
-              <th>Edit</th>
-              <th>Delete</th>
+              <th>nome de usuário</th>
+              <th>Senha</th>
+              <th>Designação</th>
+              <th>Editar</th>
+              <th>Excluir</th>
             </tr>
           </thead>
           <tbody>
@@ -138,13 +138,13 @@ const ViewItems = () => {
                 </td>
                 <td>
                   {editMode && selectedUser === user ? (
-                    <Button onClick={handleSave} variant="contained" color="primary">Save</Button>
+                    <Button onClick={handleSave} variant="contained" color="primary">Salvar</Button>
                   ) : (
-                    <Button onClick={() => handleEdit(user)} variant="contained" color="primary">Edit</Button>
+                    <Button onClick={() => handleEdit(user)} variant="contained" color="primary">Editar</Button>
                   )}
                 </td>
                 <td>
-                  <Button onClick={() => handleDelete(user)} variant="contained" color="secondary" disabled={editMode}>Delete</Button>
+                  <Button onClick={() => handleDelete(user)} variant="contained" color="secondary" disabled={editMode}>Excluir</Button>
                 </td>
               </tr>
             ))}

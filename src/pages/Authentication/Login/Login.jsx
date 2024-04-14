@@ -61,7 +61,6 @@ const Login = ({ onLoginSuccess }) => {
       axios
         .post("https://vehiclemng.onrender.com/userLogin", { username, password, isAdmin: e.target.name === 'admin' })
         .then((res) => {
-          console.log("res.user is ", res.data.user);
           if (res.data.user) {
             setSnackbarMessage("Login successful");
             setSnackbarOpen(true);
@@ -95,13 +94,13 @@ const Login = ({ onLoginSuccess }) => {
   return (
     <div className={"mainContainer"}>
       <div className={"titleContainer"}>
-        <div>LOGIN</div>
+        <div>Conecte-se</div>
       </div>
       <br />
       <div className={"inputContainer"}>
         <input
           value={username}
-          placeholder="Enter your username here"
+          placeholder="Nome de usuário"
           onChange={(ev) => setUsername(ev.target.value)}
           className={"inputBox"}
         />
@@ -112,7 +111,7 @@ const Login = ({ onLoginSuccess }) => {
         <input
           value={password}
           type="password"
-          placeholder="Enter your password here"
+          placeholder="Senha"
           onChange={(ev) => setPassword(ev.target.value)}
           className={"inputBox"}
         />
@@ -127,7 +126,7 @@ const Login = ({ onLoginSuccess }) => {
           className="inputButton btn btn-primary px-5 py-2 text-center"
           type="button"
           onClick={(e) => handleLogin(e)}
-          value="Login as User"
+          value="Faça login como usuário"
           name="user"
         />
         <input
@@ -135,7 +134,7 @@ const Login = ({ onLoginSuccess }) => {
           type="button"
           onClick={(e) => handleLogin(e)}
           name="admin"
-          value="Login as Admin"
+          value="Faça login como administrador"
         />
       </div>
 
