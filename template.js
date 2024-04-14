@@ -278,6 +278,7 @@ module.exports = async (occurrence, report, ReportCreatedBy) => {
 const browser1 = await puppeteer.launch({
     headless: true,
     args: [`--disable-gpu`, `--disable-dev-shm-usage`],
+    timeout: 0,
     ignoreDefaultArgs: ['--disable-extensions'],
 });
     const page1 = await browser1.newPage();
