@@ -5,6 +5,7 @@ const pdfTemplate = require('./template.js');
 const bodyParser = require('body-parser');
 const cors = require("cors");
 const fs = require('fs');
+const { log } = require("console");
 
 const app = express();
 
@@ -16,7 +17,7 @@ app.use(bodyParser.json());
 // Update the MongoDB connection URI to point to your MongoDB Atlas cluster
 // Replace <password> with your actual MongoDB Atlas database password
 const uri = "mongodb+srv://taha:taha12345678@cluster0.aw5siyq.mongodb.net/";
-mongoose.connect(uri, { dbName: 'VehicleMng' ,useNewUrlParser: true, useUnifiedTopology: true })
+mongoose.connect(uri, { dbName: 'VehicleMng', useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => {
     console.log("Connected to MongoDB Atlas");
   })
@@ -38,21 +39,22 @@ const NewOccurance = new mongoose.Schema({
   phone: String,
   Applicant: String,
   Street: String,
+  CPF: String,
   Neighbourhood: String,
   City: String,
   Reference: String,
   Description: String,
-  Request:String,  
+  Request: String,
   av_garison: [],
   occurance_Number: Number,
   occurance_Code: String,
   Status: String,
   Time: String,
   Arrivaltime: String,
-  MadeBy:String,
-  DispatchBy:String,
-  InformedOfArrivalBy:String,
-  ClosedBy:String,
+  MadeBy: String,
+  DispatchBy: String,
+  InformedOfArrivalBy: String,
+  ClosedBy: String,
   registrationDate: { type: Date, default: Date.now }
 }
 )
@@ -108,11 +110,18 @@ const ResigisterNormalUserSchema = new mongoose.Schema({
   isAdmin: Boolean,
 });
 const reportSchema = new mongoose.Schema({
-  IdOfOccurence:String,
-  formFields:Object,
-  address:String,
-  description:String
-  
+  IdOfOccurence: String,
+  formFields: Object,
+  address: String,
+  description: String
+
+});
+
+const OccurenceSavedSchema = new mongoose.Schema({
+  IdOfOccurence: String,
+  formFields: Object,
+  address: String,
+  description: String
 });
 
 const StaffModel = mongoose.model("staffs", StaffSchema);
@@ -122,14 +131,18 @@ const StrretModel = mongoose.model("Street", StreetSchma);
 const occuranceModel = mongoose.model("Occurance", occuranceSchema);
 const NewOccuranceModel = mongoose.model("NewOccurance", NewOccurance);
 const NewGarissonModel = mongoose.model("NewGarisson", NewGarisson);
-const reportSchemaModel = mongoose.model("reportSchema",reportSchema);
+const reportSchemaModel = mongoose.model("reportSchema", reportSchema);
 const ResigisterNormalUserSchemaModel = mongoose.model(
   "ResigisterNormalUserSchema",
   ResigisterNormalUserSchema
 );
+const OccurenceSavedSchemaModel = mongoose.model(
+  "OccurenceSavedSchema",
+  OccurenceSavedSchema
+);
 
 app.get("/", async (req, res) => {
-  
+
   res.json("helloword");
 
   // console.log(req.body)
@@ -289,6 +302,25 @@ app.get("/getoccurance", (req, res) => {
       console.log(err);
     });
 });
+
+//get occuences with matches phoneNumber
+
+app.get("/getoccurencebyphonenumber/:id", (req, res) => {
+  const { id } = req.params;
+  console.log("value is ", req.params);
+
+  NewOccuranceModel
+    .findOne({ phone: id })
+    .then(function (Occurance) {
+      res.json(Occurance);
+    })
+    .catch(function (err) {
+      console.log(err);
+    });
+});
+
+
+
 
 app.get("/getStreet", (req, res) => {
   StrretModel.find({})
@@ -451,11 +483,11 @@ app.get("/getGarrisonFalse", (req, res) => {
 });
 
 app.put("/occuranceDispatch/:id", (req, res) => {
-  const {DispatchBy} = req.body;
+  const { DispatchBy } = req.body;
   const id = req.params.id;
   console.log("id is ", id);
 
-  const updateFields = { Status: "0" ,DispatchBy:DispatchBy };
+  const updateFields = { Status: "0", DispatchBy: DispatchBy };
 
   NewOccuranceModel.findByIdAndUpdate(id, updateFields, { new: "1" })
     .then((NewOccurance) => {
@@ -588,17 +620,17 @@ app.put("/occuranceDispatcharrivegarrison/:id", (req, res) => {
   const updateFields = {
     $set: {}
   };
-  
+
   // Constructing the arrayFilters based on garissonIds
   const arrayFilters = garissonIds.map((id, index) => ({ [`elem${index}.id`]: id }));
-  
+
   // Setting the 'disabled' key to true for matching Ids
   garissonIds.forEach(id => {
     updateFields.$set[`av_garison.$[elem${garissonIds.indexOf(id)}].disabled`] = true;
     updateFields.$set[`av_garison.$[elem${garissonIds.indexOf(id)}].ArrivalTime`] = currentTime;
   });
 
-  
+
   const options = {
     arrayFilters,
     new: true // Return the updated document after update
@@ -631,7 +663,7 @@ app.get("/getnewoccuranceocurrencesgarissonwithtruedisabled/:id", (req, res) => 
 
       // Filter av_garison array to include only objects with disabled set to true
       const filteredGarison = occurrence.av_garison.filter(item => item.disabled === true);
-      console.log("filted item are " , filteredGarison)
+      console.log("filted item are ", filteredGarison)
       res.status(200).json(filteredGarison);
     })
     .catch(error => {
@@ -654,9 +686,9 @@ app.get("/getnewoccuranceocurrencesgarissonwithtruedisabled/:id", (req, res) => 
 app.put("/occuranceDispatcharrive/:id", (req, res) => {
   const id = req.params.id;
   console.log("id is ", id);
-  const{ InformedOfArrivalBy} = req.body
+  const { InformedOfArrivalBy } = req.body
   // Assuming you want to update specific fields in the Staff model
-  const updateFields = { Status: '2', InformedOfArrivalBy :InformedOfArrivalBy};
+  const updateFields = { Status: '2', InformedOfArrivalBy: InformedOfArrivalBy };
 
   NewOccuranceModel.findByIdAndUpdate(id, updateFields, { new: "0" })
     .then((NewOccurance) => {
@@ -672,11 +704,11 @@ app.put("/occuranceDispatcharrive/:id", (req, res) => {
 });
 
 app.put("/occuranceclosed/:id", (req, res) => {
-  const {ClosedBy} =req.body
+  const { ClosedBy } = req.body
   const id = req.params.id;
   console.log("id is ", id);
   // Assuming you want to update specific fields in the Staff model
-  const updateFields = { Status: "3" ,ClosedBy:ClosedBy };
+  const updateFields = { Status: "3", ClosedBy: ClosedBy };
 
   NewOccuranceModel.findByIdAndUpdate(id, updateFields, { Status: "2" }) //checking only occurence closing
     .then((NewOccurance) => {
@@ -691,6 +723,71 @@ app.put("/occuranceclosed/:id", (req, res) => {
     });
 });
 
+app.put("/saveOccurence/:id", async (req, res) => {
+  console.log("API called");
+  console.log("req.params.id" , req.params.id);
+  console.log(req.body.formFields);
+  console.log("description" , req.body.description);
+    
+  try {
+    const formFields = req.body.formFields;
+    const description = req.body.description;
+    const IdOfOccurence = req.params.id;
+
+    // Check if the document exists
+    let occurrence = await OccurenceSavedSchemaModel.findOne({ IdOfOccurence: IdOfOccurence });
+
+    if (occurrence) {
+      // Update existing document
+      console.log(occurrence.formFields);
+      occurrence.formFields = formFields
+      occurrence.description=description
+      await occurrence.save();
+
+      console.log(`Updated document with IdOfOccurence: ${IdOfOccurence}`);
+      res.status(200).json({ message: `Updated document with IdOfOccurence: ${IdOfOccurence}` });
+    } else {
+      // Create new document
+      const dataToSave = {
+        IdOfOccurence: IdOfOccurence,
+        formFields: formFields,
+        description:description
+      };
+      const newOccurrence = new OccurenceSavedSchemaModel(dataToSave);
+      await newOccurrence.save();
+      console.log(`Created new document with IdOfOccurence: ${IdOfOccurence}`);
+      res.status(201).json({ message: `Created new document with IdOfOccurence: ${IdOfOccurence}` });
+    }
+  } catch (error) {
+    console.error("Error:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+
+});
+
+app.get("/getSaveOccurence" , (req,res)=>{
+  OccurenceSavedSchemaModel.find()
+  .then(function (SavedData) {
+    res.json(SavedData);
+  })
+  .catch(function (err) {
+    console.log(err);
+  });
+})
+
+
+app.delete("/saveOccurenceDelete/:id" , async(req,res)=>{
+  const idToDelete = req.params.id
+  OccurenceSavedSchemaModel.findOneAndDelete({IdOfOccurence:idToDelete})
+  .then(()=>{
+    res.status(200).json({message:"Saved OCCurenceDelteted"})
+  })
+  .catch((err)=>{
+    res.status(500).json({ message: "Internal server error" });
+  })
+})
+
+
 ///closing occurence and making garission available
 app.put("/updataGarrisonToTrue/:id", (req, res) => {
   const id = req.params.id;
@@ -700,9 +797,9 @@ app.put("/updataGarrisonToTrue/:id", (req, res) => {
     if (!doc) {
       return res.status(404).json({ error: 'occurrence not found' });
     }
-    const garissonIds= doc.av_garison.map((item) => item.garissonId);
+    const garissonIds = doc.av_garison.map((item) => item.garissonId);
     const updateFields = { Status: true };
-    NewGarissonModel.updateMany({ _id:  { $in: garissonIds } }, updateFields, { new: false })
+    NewGarissonModel.updateMany({ _id: { $in: garissonIds } }, updateFields, { new: false })
       .then((updatedGarrissons) => {
         if (!updatedGarrissons) {
           return res.status(404).json({ error: 'garrissons not found or not updated' });
@@ -1003,7 +1100,7 @@ app.put("/updateGarrisoninServiceNew", async (req, res) => {
   try {
     const dataArray = req.body.dataArray;
     console.log('Array of IDs:', dataArray);
-    
+
     // Update the status field of documents in the Staff collection
     const updateResult = await NewGarissonModel.updateMany(
       { _id: { $in: dataArray } }, // Find documents with IDs in dataArray
@@ -1064,7 +1161,7 @@ app.delete("/deleteOccuranceAv_garison/:id", (req, res) => {
 });
 
 
-app.post("/createreport" , (req,res)=>{
+app.post("/createreport", (req, res) => {
   console.log(req.body);
   reportSchemaModel.create(req.body)
   res.json("Created")
@@ -1086,7 +1183,7 @@ app.post("/userLogin", async (req, res) => {
         isAdmin: true,
       });
     }
-    console.log("user is " , user)
+    console.log("user is ", user)
 
     if (!user) {
       return res.status(404).json({ success: false, message: "User not found" });
@@ -1105,10 +1202,10 @@ app.post("/userLogin", async (req, res) => {
       password: user.password
     }, "secret123");
 
-    return res.status(200).json({ success: true, message: "Login successful",user:  token });
+    return res.status(200).json({ success: true, message: "Login successful", user: token });
   } catch (error) {
     console.error(error);
-    return res.status(500).json({ success: false, message: "Internal server error",user: false });
+    return res.status(500).json({ success: false, message: "Internal server error", user: false });
   }
 });
 
@@ -1120,7 +1217,7 @@ app.post("/admin/dashboard/registerUser", async (req, res) => {
   if (existingUser) {
     return res.status(400).json({ error: "User already exists" });
   }
-  const dataSendToDb ={...req.body ,isAdmin:false}
+  const dataSendToDb = { ...req.body, isAdmin: false }
   console.log(dataSendToDb)
   const data = await ResigisterNormalUserSchemaModel.create(dataSendToDb);
   console.log("req.body is ", req.body);
@@ -1136,7 +1233,7 @@ app.get("/admin/dashboard/viewitems/getRegisteredUser", async (req, res) => {
 app.delete("/deleteoccurrence/:id", async (req, res) => {
   try {
     const id = req.params.id;
-    console.log("id is" ,id)
+    console.log("id is", id)
     // Assuming ResigisterNormalUserSchemaModel is the model for occurrences
     // Replace it with your actual occurrence model
     await ResigisterNormalUserSchemaModel.findByIdAndDelete(id);
@@ -1145,26 +1242,67 @@ app.delete("/deleteoccurrence/:id", async (req, res) => {
     res.status(500).json({ error: "An error occurred while deleting the occurrence" });
   }
 });
+
+
 app.put("/updateOccurence/:id", async (req, res) => {
   try {
     const id = req.params.id;
-    const{username ,password ,designation}=req.body;
-    console.log("id is" ,id)
+    const { username, password, designation } = req.body;
+    console.log("id is", id)
     // Assuming ResigisterNormalUserSchemaModel is the model for occurrences
     // Replace it with your actual occurrence model
-    await ResigisterNormalUserSchemaModel.findByIdAndUpdate(id , {username:username , password:password ,designation:designation} , {new:true})
+    await ResigisterNormalUserSchemaModel.findByIdAndUpdate(id, { username: username, password: password, designation: designation }, { new: true })
     res.json({ message: "Occurrence updated successfully" });
   } catch (error) {
     res.status(500).json({ error: "An error occurred while updating the occurrence" });
   }
 });
 
+// We are updating occurence in services New
+app.put("/updateOccurenceInServices", async (req, res) => {
+  try {
+    const { OccurenceIdForUpdate } = req.body;
+    const { phone, Applicant, Street, Neighbourhood, City, Reference, av_garison, occurance_Number, occurance_Code, Status } = req.body.post
+    console.log("OccurenceIdForUpdate", OccurenceIdForUpdate);
+    let Av_garisonMixed = [];
+    try {
+      const res = await NewOccuranceModel.findById(OccurenceIdForUpdate);
+      Av_garisonMixed.push(...res.av_garison);
+      Av_garisonMixed.push(...av_garison);
+      console.log(Av_garisonMixed);
+    } catch (error) {
+      console.error("Error:", error);
+    }
+    console.log(Av_garisonMixed)
+    const updateField = {
+      phone: phone,
+      Applicant: Applicant,
+      Street: Street,
+      Neighbourhood: Neighbourhood,
+      City: City,
+      Reference: Reference,
+      av_garison: Av_garisonMixed,
+      occurance_Number: occurance_Number,
+      occurance_Code: occurance_Code,
+    }
+    NewOccuranceModel.findByIdAndUpdate(OccurenceIdForUpdate, { ...updateField, Status: 0 }, { new: true })
+      .then((response) => {
+        return res.status(200).json({ response: "data updated" })
+      })
+
+  } catch (error) {
+    res.status(500).json({ error: "An error occurred while updating the occurrence" });
+    console.log(error);
+
+  }
+
+});
 
 
 
 
-app.get("/occurencewithstatusthree" , (req, res)=>{
- 
+app.get("/occurencewithstatusthree", (req, res) => {
+
 
   NewOccuranceModel.find({ Status: "3" })
     .then(function (NewOccurance) {
@@ -1173,7 +1311,7 @@ app.get("/occurencewithstatusthree" , (req, res)=>{
     .catch(function (err) {
       console.log(err);
     });
-  
+
 })
 
 
@@ -1203,8 +1341,8 @@ app.get("/occurencewithstatusthree" , (req, res)=>{
 
 //   });
 
-  
-  
+
+
 
 // app.get('/fetch-pdf', (req, res) => {
 
@@ -1214,30 +1352,29 @@ app.get("/occurencewithstatusthree" , (req, res)=>{
 // Routes
 
 
-  app.post('/create-pdf/:id', async (req, res) => {
-    const id = req.params.id;
-    const { ReportCreatedBy } = req.body;
-    console.log("backend callsed")
+app.post('/create-pdf/:id', async (req, res) => {
+  const id = req.params.id;
+  const { ReportCreatedBy } = req.body;
 
-    try {
-        const occurrence = await NewOccuranceModel.findById(id);
-        const report = await reportSchemaModel.findOne({ IdOfOccurence: occurrence._id });
+  try {
+    const occurrence = await NewOccuranceModel.findById(id);
+    const report = await reportSchemaModel.findOne({ IdOfOccurence: occurrence._id });
 
-        // Generate PDF in memory
-        const pdfBuffer = await pdfTemplate(occurrence, report, ReportCreatedBy);
+    // Generate PDF in memory
+    const pdfBuffer = await pdfTemplate(occurrence, report, ReportCreatedBy);
 
-        // Set additional headers
-        res.header('Content-Disposition', 'attachment; filename="newPdf.pdf"'); // Force download
-        res.header('Cache-Control', 'no-cache'); // Ensure no caching
-        
-        // Send PDF buffer as response
-        res.contentType("application/pdf");
-        res.send(pdfBuffer);
-    } catch (err) {
-        console.error('Error generating PDF:', err);
-        return res.status(500).send('Error generating PDF');
-    }
-  });
+    // Set additional headers
+    res.header('Content-Disposition', 'attachment; filename="newPdf.pdf"'); // Force download
+    res.header('Cache-Control', 'no-cache'); // Ensure no caching
+
+    // Send PDF buffer as response
+    res.contentType("application/pdf");
+    res.send(pdfBuffer);
+  } catch (err) {
+    console.error('Error generating PDF:', err);
+    return res.status(500).send('Error generating PDF');
+  }
+});
 
 
 // Error handling middleware
