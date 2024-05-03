@@ -350,9 +350,7 @@ const GuRegistration = () => {
               <ul>
                 {garison.length > 0 && garison.map((v, i) => {
                   return (
-
                     <>
-
                       {
                         v.Status == true ?
                           <li style={{ color: 'green' }}>

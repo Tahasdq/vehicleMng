@@ -215,7 +215,7 @@ const ArrivalAtOccurence = () => {
                     <h6> Garnição deixando a cena: {v.Neighbourhood} </h6>
                   </div> */}
                       <div className="col-md-6 col-sm-12">
-                        <h6> Garnição deixando a cena:
+                        <h6> Hora de saída da guarnição:
                           {formattedTime}
                         </h6>
                       </div>

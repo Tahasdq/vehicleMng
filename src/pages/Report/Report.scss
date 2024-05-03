@@ -61,27 +61,55 @@
     border-radius: 10px;
     min-height: auto;
     width: 100%;
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
+    // display: flex;
+    // justify-content: space-around;
+    // align-items: center;
     margin-top: 1rem;
-    min-height:200px;
+    // min-height:200px;
     // gap: 20px;
 
     >div{
         display: flex;
-        width: 40%;
+        width: 100%;
         justify-content: space-between;
         height: 100%;
         flex-direction: column;
-       >div{
-       display: flex;
-       
-       }
+
     }
+       table th,
+       table td{
+        border: 1px solid #ccc;
+        padding: 8px;
+        white-space: nowrap; /* Prevent text wrapping */
+        overflow: auto; /* Enable overflow scrolling */
+        max-width: 40px; /* Set a maximum width to trigger overflow */
+       }
+    //    table td{
+        
+    //    }
+       table  td {
+        scrollbar-width: thin; /* For Firefox */
+        scrollbar-color: #ccc #f0f0f0; /* Track and thumb color */
+      } 
+      table td::-webkit-scrollbar {
+        width: 8px; /* Width of the scrollbar */
+      }
+      table td::-webkit-scrollbar-track {
+        background: #f0f0f0; /* Track color */
+      } 
+      table td::-webkit-scrollbar-thumb {
+        background-color: #ccc; /* Thumb color */
+        border-radius: 4px; /* Rounded corners for the thumb */
+      }
+    
+    
+    //    >div{
+    //    display: flex;
+       
+    //    }
     .download-btn {
-        min-height: 200px;
-        width: 20%;
+        min-height: 50px;
+        width: 10%;
         display: inline-flex;
         align-items: center;
         justify-content: center;
@@ -170,7 +198,25 @@
         gap: 20px;
         >div{
             width: 100%;
+            table{
+                display: flex;
 
+                th,td{
+                    max-width: 100%;
+                }
+                thead {
+                    width: 30%;
+                }
+                tbody{
+                    width: 70%;
+                }
+            }
+            table tr{
+                display: flex;
+                flex-direction: column;
+                width: 100%;
+                // position: absolute;
+            }
         }
 
         .download-btn {

@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import axios from "axios";
 import { v4 as uuidv4 } from 'uuid';
 import { jwtDecode } from 'jwt-decode'
+// import { Experimental_CssVarsProvider } from "@mui/material";
 
 
 
@@ -16,53 +17,57 @@ const ServiceNew = () => {
   const [GarrisonIdFalse, setGarrsionIdFalse] = useState([]);
   const [StaffIds, setStaffIds] = useState([]);
   const [checkedBoxes, setCheckedBoxes] = useState({}); // State to keep track of checked checkboxes
+  const [OccurenceNumberSaved, setOccurenceNumberSaved] = useState(0);
+  const [OccurenceIdForUpdate, setOccurenceIdForUpdate] = useState("");
 
 
-  function getformValues(){
-    const storedValue =localStorage.getItem("data");    
-    if(!storedValue) return{
+
+  function getformValues() {
+    const storedValue = localStorage.getItem("data");
+    if (!storedValue) return {
       phone: "",
       Applicant: "",
       Street: "",
+      CPF:"",
       Neighbourhood: "",
       City: "",
       Reference: "",
       Description: "",
       Request: "",
       av_garison: [],
-      occurance_Number: 0,
       occurance_Code: 0,
-      Time:"",
-      ArrivalTime:"",
-      MadeBy:"",
+      occurance_Number: 0,
+      Time: "",
+      ArrivalTime: "",
+      MadeBy: "",
     }
     return JSON.parse(storedValue)
   }
 
 
-const [post, setPost] = useState(getformValues);
+  const [post, setPost] = useState(getformValues);
 
-useEffect(()=>{
-  localStorage.setItem("data" , JSON.stringify(post))
-},[post])
+  useEffect(() => {
+    localStorage.setItem("data", JSON.stringify(post))
+  }, [post])
 
 
-// Function to save checkbox state to local storage
-const saveCheckedBoxesToLocalStorage = (checkedBoxes) => {
-  localStorage.setItem("checkedBoxes", JSON.stringify(checkedBoxes));
-};
+  // Function to save checkbox state to local storage
+  const saveCheckedBoxesToLocalStorage = (checkedBoxes) => {
+    localStorage.setItem("checkedBoxes", JSON.stringify(checkedBoxes));
+  };
 
-// Function to load checkbox state from local storage
-const loadCheckedBoxesFromLocalStorage = () => {
-  const storedCheckedBoxes = JSON.parse(localStorage.getItem("checkedBoxes"));
-  if (storedCheckedBoxes) {
-    setCheckedBoxes(storedCheckedBoxes);
-  }
-};
+  // Function to load checkbox state from local storage
+  const loadCheckedBoxesFromLocalStorage = () => {
+    const storedCheckedBoxes = JSON.parse(localStorage.getItem("checkedBoxes"));
+    if (storedCheckedBoxes) {
+      setCheckedBoxes(storedCheckedBoxes);
+    }
+  };
 
-useEffect(() => {
-  loadCheckedBoxesFromLocalStorage(); // Load checkbox state from local storage on component mount
-}, []);
+  useEffect(() => {
+    loadCheckedBoxesFromLocalStorage(); // Load checkbox state from local storage on component mount
+  }, []);
 
   useEffect(() => {
     // Fetch data when the component mounts
@@ -125,8 +130,8 @@ useEffect(() => {
 
   const handleInput = (event) => {
 
-    
-    const { id, checked, name, value ,type } = event.target;
+
+    const { id, checked, name, value, type } = event.target;
 
     // Update GarrisonId based on the checked checkbox
 
@@ -138,8 +143,8 @@ useEffect(() => {
       // If checkbox is unchecked and ID is in staffId, remove it
       setStaffIds(prevIds => prevIds.filter(item => item !== id));
     }
-    if (type==="checkbox") {
-      
+    if (type === "checkbox") {
+
       setCheckedBoxes({ ...checkedBoxes, [id]: checked }); // Update checkbox state
       saveCheckedBoxesToLocalStorage({ ...checkedBoxes, [id]: checked }); // Save checkbox state to local storage
     }
@@ -149,18 +154,18 @@ useEffect(() => {
     } else if (id === GarrisonId) {
       setGarrsionId(''); // Unset GarrisonId if the checkbox is unchecked
     }
-    if(checked && name==="Status") localStorage.removeItem("checkedBoxes")
+    if (checked && name === "Status") localStorage.removeItem("checkedBoxes")
 
-    
-    if (checked && name !=="Status") {
-        console.log("fisrt call ");
-      let obj={ 
+
+    if (checked && name !== "Status") {
+      console.log("fisrt call ");
+      let obj = {
         id: uuidv4(),
-        "garissonName":value,
-        garissonId:id,
-        DispachTime:new Date(),
-        ArrivalTime:"Notarrived",
-        disabled:false
+        "garissonName": value,
+        garissonId: id,
+        DispachTime: new Date(),
+        ArrivalTime: "Notarrived",
+        disabled: false
       }
       setGarrsionValue((prevValues) => [...prevValues, obj]);
       // setGarrsionValue((prevValues) => [...prevValues, value]);
@@ -169,17 +174,74 @@ useEffect(() => {
       setGarrsionValue((prevValues) => prevValues.filter((item) => item.garissonName !== value));
     }
 
-    
-    
+    // calling coocurence for autofilling( api )
+    if (name === "phone") {
+      axios.get(`https://vehiclemng.onrender.com/getoccurencebyphonenumber/${value}`)
+        .then((res) => {
+          console.log("occ is ", res.data._id);
+          console.log("occurence number is s", res.data.occurance_Number)
+          setOccurenceNumberSaved(res.data.occurance_Number)
+          setOccurenceIdForUpdate(res.data._id)
+
+          if (res.data) {
+            setPost((prevState) => ({
+              ...prevState,
+              Applicant: res.data.Applicant,
+              Street: res.data.Street,
+              Neighbourhood: res.data.Neighbourhood,
+              City: res.data.City,
+            }));
+          }
+        }).catch((err) => {
+          setOccurenceNumberSaved(null)
+          setPost((prevState) => ({
+            ...prevState,
+            Applicant: "",
+            Street: "",
+            Neighbourhood: "",
+            City: "",
+          }));
+        })
+    }
+
+
+    // calling zipcode(Street api )
+    if (name === "Street") {
+      axios.get(`https://viacep.com.br/ws/${value}/json/`)
+        .then((res) => {
+          console.log("res.data", res.data)
+          if (res.data) {
+            setPost((prevState) => ({
+              ...prevState,
+              Neighbourhood: res.data.bairro,
+              City: res.data.localidade
+
+            }));
+          }
+        }).catch((err) => {
+          setPost((prevState) => ({
+            ...prevState,
+            Neighbourhood: "",
+            City: ""
+          }));
+        })
+
+
+    }
+
+
+
+
+
     setPost((prevState) => ({
       ...prevState,
       [name]: value,
-      av_garison: checked && name !== "Status" ? [...GarrisonValue, { id: uuidv4(), garissonName: value, DispachTime: new Date(), ArrivalTime: "Notarrived",garissonId:id, disabled: false }] : (name === "Status" && checked ? [] : GarrisonValue.filter((item) => item.garissonName !== value)),
+      av_garison: checked && name !== "Status" ? [...GarrisonValue, { id: uuidv4(), garissonName: value, DispachTime: new Date(), ArrivalTime: "Notarrived", garissonId: id, disabled: false }] : (name === "Status" && checked ? [] : GarrisonValue.filter((item) => item.garissonName !== value)),
       Status: checked && name !== "Status" ? "0" : "1",
-
+      occurance_Number: OccurenceNumberSaved ? OccurenceNumberSaved : countOcc
     }));
-    
-   
+
+
 
 
 
@@ -199,8 +261,8 @@ useEffect(() => {
   };
 
 
-  console.log("valueGarisoin is " , GarrisonValue)
-  console.log("post value is " , post  )
+  console.log("valueGarisoin is ", GarrisonValue)
+  console.log("post value is ", post)
 
   console.log([post])
 
@@ -208,18 +270,18 @@ useEffect(() => {
 
   const handleChange = (event) => {
     const { name, value } = event.target;
-    
+
 
     setPost((prevState) => ({
       ...prevState,
       [name]: value,
     }));
 
-  const saved = localStorage.getItem("data");
-  
-  const initialValue = JSON.parse(saved);
-  console.log(initialValue);
-  return initialValue || "";
+    const saved = localStorage.getItem("data");
+
+    const initialValue = JSON.parse(saved);
+    console.log(initialValue);
+    return initialValue || "";
 
 
     // axios.put(`https://vehiclemng.onrender.com/updataGarrison/${GarrisonId}`)
@@ -233,73 +295,53 @@ useEffect(() => {
 
   };
 
-  
+
 
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-
-    if (
-      !post.phone ||
-      !post.Applicant ||
-      !post.Street ||
-      !post.Neighbourhood ||
-      !post.City ||
-      !post.Reference ||
-      !post.occurance_Code ||
-      !post.occurance_Number ||
-      !post.Request ||
-      !post.Description
-    ) {
-      // If any required field is missing, set submit status to error
-      alert("please fill all the feilds")
-      setSubmitStatus("error");
-      setTimeout(() => {
-        setSubmitStatus(null);
-      }, 3000);
-      return;
-    }
 
 
 
 
     try {
       const token = localStorage.getItem("token")
-       const MadeBy = jwtDecode(token).username
+      const MadeBy = jwtDecode(token).username
 
-      const responsePost = await axios.post("https://vehiclemng.onrender.com/newOccurance", {...post , MadeBy });
+      const responsePost = await axios.post("https://vehiclemng.onrender.com/newOccurance", { ...post, MadeBy });
       console.log(responsePost);
 
-      if (StaffIds.length!==0) {
+      if (StaffIds.length !== 0) {
         console.log("Callled");
-      const updateStaffResponse = await axios.put('https://vehiclemng.onrender.com/updateGarrisoninServiceNew', { dataArray: StaffIds });
-      console.log("update staff api working", updateStaffResponse);
-      console.log("update staff api working");
+        const updateStaffResponse = await axios.put('https://vehiclemng.onrender.com/updateGarrisoninServiceNew', { dataArray: StaffIds });
+        console.log("update staff api working", updateStaffResponse);
+        console.log("update staff api working");
 
-      // Assuming the response contains the updated post object
-      console.log("Code", post.occurance_Code);
-      console.log("Number", post.occurance_Number);
-      setGarrsionValue([]);
-      setSubmitStatus("success");
-      setTimeout(() => {
-        setSubmitStatus(null);
-      }, 1000);
-      setPost({
-        phone: "",
-        Applicant: "",
-        Street: "",
-        Neighbourhood: "",
-        City: "",
-        Reference: "",
-        Description: "",
-        Request: "",
-        av_garison: [null],
-        occurance_Number: "", // Clearing the fields
-        occurance_Code: "",
-      });
-      localStorage.removeItem("checkedBoxes")
-    }
-    
+        // Assuming the response contains the updated post object
+        console.log("Code", post.occurance_Code);
+        console.log("Number", post.occurance_Number);
+        setGarrsionValue([]);
+        setSubmitStatus("success");
+        setTimeout(() => {
+          setSubmitStatus(null);
+        }, 1000);
+        setPost({
+          phone: "",
+          Applicant: "",
+          Street: "",
+          CPF:"",
+          Neighbourhood: "",
+          City: "",
+          Reference: "",
+          Description: "",
+          Request: "",
+          av_garison: [null],
+          occurance_Number: "", // Clearing the fields
+          occurance_Code: "",
+        });
+        localStorage.removeItem("checkedBoxes")
+      }
+
 
       // const responsePut = await axios.put(`https://vehiclemng.onrender.com/updataGarrison/${GarrisonId}`);
       // console.log(responsePut);
@@ -320,247 +362,345 @@ useEffect(() => {
     }
 
     setGarrsionValue([]);
-      setSubmitStatus("success");
-      setTimeout(() => {
-        setSubmitStatus(null);
-      }, 1000);
-      setPost({
-        phone: "",
-        Applicant: "",
-        Street: "",
-        Neighbourhood: "",
-        City: "",
-        Reference: "",
-        Description: "",
-        Request: "",
-        av_garison: [null],
-        occurance_Number: "", // Clearing the fields
-        occurance_Code: "",
-      });
+    setSubmitStatus("success");
+    setTimeout(() => {
+      setSubmitStatus(null);
+    }, 1000);
+    setPost({
+      phone: "",
+      Applicant: "",
+      Street: "",
+      Neighbourhood: "",
+      CPF:"",
+      City: "",
+      Reference: "",
+      Description: "",
+      Request: "",
+      av_garison: [null],
+      occurance_Number: "", // Clearing the fields
+      occurance_Code: "",
+    });
   };
 
+  const occurenceUpdate = async () => {
+    axios.put(`https://vehiclemng.onrender.com/updateOccurenceInServices`, { post, OccurenceIdForUpdate })
+      .then((res) => {
+        console.log("data updated", res);
+      })
+      .catch((err) => {
+        console.log(console.log(err));
+      })
+      try {
+
+      if (StaffIds.length !== 0) {
+        console.log("Callled");
+        const updateStaffResponse = await axios.put('https://vehiclemng.onrender.com/updateGarrisoninServiceNew', { dataArray: StaffIds });
+        console.log("update staff api working", updateStaffResponse);
+        console.log("update staff api working");
+
+        // Assuming the response contains the updated post object
+        console.log("Code", post.occurance_Code);
+        console.log("Number", post.occurance_Number);
+        setGarrsionValue([]);
+        setSubmitStatus("success");
+        setTimeout(() => {
+          setSubmitStatus(null);
+        }, 1000);
+        setPost({
+          phone: "",
+          Applicant: "",
+          Street: "",
+          CPF:"",
+          Neighbourhood: "",
+          City: "",
+          Reference: "",
+          Description: "",
+          Request: "",
+          av_garison: [null],
+          occurance_Number: "", // Clearing the fields
+          occurance_Code: "",
+        });
+        localStorage.removeItem("checkedBoxes")
+      }
+
+
+      // const responsePut = await axios.put(`https://vehiclemng.onrender.com/updataGarrison/${GarrisonId}`);
+      // console.log(responsePut);
+
+      const responseGetGarrison = await axios.get("https://vehiclemng.onrender.com/getGarrison");
+      setNewGarrison(responseGetGarrison.data);
+      console.log("Garrison", responseGetGarrison.data);
+
+      const responseGetGarrisonFalse = await axios.get("https://vehiclemng.onrender.com/getGarrisonFalse");
+      setGarrsionIdFalse(responseGetGarrisonFalse.data);
+      console.log("GarrisonFalse", responseGetGarrisonFalse.data);
+    } catch (error) {
+      setSubmitStatus("error");
+      setTimeout(() => {
+        setSubmitStatus(null);
+      }, 3000);
+      console.error("Error:", error);
+    }
+
+    setGarrsionValue([]);
+    setSubmitStatus("Edited");
+    setTimeout(() => {
+      setSubmitStatus(null);
+    }, 1000);
+    setPost({
+      phone: "",
+      Applicant: "",
+      Street: "",
+      CPF:"",
+      Neighbourhood: "",
+      City: "",
+      Reference: "",
+      Description: "",
+      Request: "",
+      av_garison: [null],
+      occurance_Number: "", // Clearing the fields
+      occurance_Code: "",
+    });
+
+  }
 
 
   return (
     <>
-    {submitStatus === 'success' && (
-      <div className="alert alert-success" style={{ width: '20%' }} role="alert">
-        Submitted successfully
-      </div>
-    )}
-    {submitStatus === 'error' && (
-      <div className="alert alert-danger" style={{ width: '20%' }} role="alert">
-        An error occurred
-      </div>
-    )}
-    <div className="custom-container">
-      <div className="container">
-        <form onSubmit={handleSubmit}>
-          <div className="form form_card row my-5">
-            <div class="input-group mb-3 col-md-4 col-sm-12">
+      {submitStatus === 'success' && (
+        <div className="alert alert-success" style={{ width: '20%' }} role="alert">
+          Submitted successfully
+        </div>
+      )}
+      {submitStatus === 'error' && (
+        <div className="alert alert-danger" style={{ width: '20%' }} role="alert">
+          An error occurred
+        </div>
+      )}
+      {submitStatus === 'Edited' && (
+        <div className="alert alert-danger" style={{ width: '20%' }} role="alert">
+         updated successfully
+        </div>
+      )}
+      <div className="custom-container">
+        <div className="container">
+          <form onSubmit={handleSubmit}>
+            <div className="form form_card row my-2">
+              <div class="input-group mb-3 col-md-4 col-sm-12">
+                <input
+                  type="text"
+                  class="form-control"
+                  name="phone"
+                  placeholder="phone"
+                  value={post.phone}
+                  onChange={handleInput}
+                  aria-label="Username"
+                  aria-describedby="basic-addon1"
+                />
+              </div>
+
+              <div class="input-group mb-3 col-md-4  col-sm-12">
+                <input
+                  type="text"
+                  class="form-control"
+                  placeholder="Solicitante"
+                  value={post.Applicant}
+                  onChange={handleInput}
+                  name="Applicant"
+                  aria-label="Username"
+                  aria-describedby="basic-addon1"
+                />
+              </div>
+              <div class="input-group mb-3 col-md-4  col-sm-12">
+                <input
+                  type="text"
+                  class="form-control"
+                  name="CPF"
+                  placeholder="CEP"
+                  value={post.CPF}
+                  onChange={handleInput}
+                  aria-label="Username"
+                  aria-describedby="basic-addon1"
+                />
+              </div>
+              <div class="input-group mb-3 col-md-4 col-sm-12">
+                <input
+                  type="text"
+                  class="form-control"
+                  name="Street"
+                  placeholder="Zip code"
+                  value={post.Street}
+                  onChange={handleInput}
+                  aria-label="Username"
+                  aria-describedby="basic-addon1"
+                />
+              </div>
+              
+              <div class="input-group mb-3 col-md-4  col-sm-12">
+                <input
+                  type="text"
+                  class="form-control"
+                  name="Neighbourhood"
+                  placeholder="Bairro"
+                  value={post.Neighbourhood}
+                  onChange={handleInput}
+                  aria-label="Username"
+                  aria-describedby="basic-addon1"
+                />
+              </div>
+              <div class="input-group mb-3 col-md-4 col-sm-12">
+                <input
+                  type="text"
+                  class="form-control"
+                  name="City"
+                  placeholder="Cidade"
+                  value={post.City}
+                  onChange={handleInput}
+                  aria-label="Username"
+                  aria-describedby="basic-addon1"
+                />
+              </div>
+              <div class="input-group mb-3 col-md-4 col-sm-12 ">
+                <input
+                  type="text"
+                  class="form-control"
+                  placeholder="Referência"
+                  value={post.Reference}
+                  onChange={handleInput}
+                  name="Reference"
+                  aria-label="Username"
+                  aria-describedby="basic-addon1"
+                />
+              </div>
+            </div>
+
+            <div className="request_card my-5">
+              <div class="">
+                <select
+                  className="btn border dropdown-toggle dropdown p-0"
+                  role="button"
+                  name="occurance_Code"
+                  value={post.occurance_Code}
+                  onChange={handleChange}
+                >
+                  <option value="">Cód. Atendimento</option>
+                  {data &&
+                    data.map((v, i) => (
+                      <option key={i} value={v.Code}>
+                        {v.Code}
+                      </option>
+                    ))}
+                </select>
+
+
+                <span >
+                  <span>Numero de Ocorrência: </span>
+                  <span ><strong>{OccurenceNumberSaved ? OccurenceNumberSaved : countOcc}</strong> </span>
+                </span>
+
+              </div>
+              <div class="input-group request-group mb-3 mt-3">
+                <input
+                  type="text"
+                  class="form-control"
+                  name="Request"
+                  placeholder="Solicitação"
+                  value={post.Request}
+                  onChange={handleInput}
+                  aria-label="Username"
+                  aria-describedby="basic-addon1"
+                />
+              </div>
+            </div>
+
+            <div className="request_card py-5 my-5">
+              <div class="input-group request-group mb-3 mt-3">
+                <input
+                  type="text"
+                  class="form-control"
+                  placeholder="Observaçã"
+                  value={post.Description}
+                  onChange={handleInput}
+                  name="Description"
+                  aria-label="Username"
+                  aria-describedby="basic-addon1"
+                />
+              </div>
+            </div>
+
+            <div style={{ fontSize: "1.5rem", fontWeight: "700", color: "red" }}>
               <input
-                type="text"
-                class="form-control"
-                name="phone"
-                placeholder="phone"
-                value={post.phone}
+                type="radio"
+                id="vehicle3"
+                name="Status"
+                value="1"
                 onChange={handleInput}
-                aria-label="Username"
-                aria-describedby="basic-addon1"
+
               />
+              <label for="vehicle3" className="ml-2">
+                {" "}
+                Em Espera
+              </label>
             </div>
 
-            <div class="input-group mb-3 col-md-4  col-sm-12">
-              <input
-                type="text"
-                class="form-control"
-                placeholder="Solicitante"
-                value={post.Applicant}
-                onChange={handleInput}
-                name="Applicant"
-                aria-label="Username"
-                aria-describedby="basic-addon1"
-              />
-            </div>
-            <div class="input-group mb-3 col-md-4 col-sm-12">
-              <input
-                type="text"
-                class="form-control"
-                name="Street"
-                placeholder="Rua"
-                value={post.Street}
-                onChange={handleInput}
-                aria-label="Username"
-                aria-describedby="basic-addon1"
-              />
-            </div>
-            <div class="input-group mb-3 col-md-4  col-sm-12">
-              <input
-                type="text"
-                class="form-control"
-                name="Neighbourhood"
-                placeholder="Bairro"
-                value={post.Neighbourhood}
-                onChange={handleInput}
-                aria-label="Username"
-                aria-describedby="basic-addon1"
-              />
-            </div>
-            <div class="input-group mb-3 col-md-4 col-sm-12">
-              <input
-                type="text"
-                class="form-control"
-                name="City"
-                placeholder="Cidade"
-                value={post.City}
-                onChange={handleInput}
-                aria-label="Username"
-                aria-describedby="basic-addon1"
-              />
-            </div>
-            <div class="input-group mb-3 col-md-4 col-sm-12 ">
-              <input
-                type="text"
-                class="form-control"
-                placeholder="Referência"
-                value={post.Reference}
-                onChange={handleInput}
-                name="Reference"
-                aria-label="Username"
-                aria-describedby="basic-addon1"
-              />
-            </div>
-          </div>
-
-          <div className="request_card my-5">
-            <div class="">
-              <select
-                className="btn border dropdown-toggle dropdown"
-                role="button"
-                name="occurance_Code"
-                value={post.occurance_Code}
-                onChange={handleChange}
-              >
-                <option value="">Cód. Atendimento</option>
-                {data &&
-                  data.map((v, i) => (
-                    <option key={i} value={v.Code}>
-                      {v.Code}
-                    </option>
-                  ))}
-              </select>
 
 
-              <select
-                className="btn border dropdown-toggle dropdown"
-                role="button"
-                name="occurance_Number"
-                value={post.occurance_Number}
-                onChange={handleChange}
-              >
-                <option value="">Numero de Ocorrência</option>
-                <option value={countOcc}>{countOcc}</option>
-              </select>
-
-            </div>
-            <div class="input-group request-group mb-3 mt-3">
-              <input
-                type="text"
-                class="form-control"
-                name="Request"
-                placeholder="Solicitação"
-                value={post.Request}
-                onChange={handleInput}
-                aria-label="Username"
-                aria-describedby="basic-addon1"
-              />
-            </div>
-          </div>
-
-          <div className="request_card py-5 my-5">
-            <div class="input-group request-group mb-3 mt-3">
-              <input
-                type="text"
-                class="form-control"
-                placeholder="Observaçã"
-                value={post.Description}
-                onChange={handleInput}
-                name="Description"
-                aria-label="Username"
-                aria-describedby="basic-addon1"
-              />
-            </div>
-          </div>
-
-          <div style={{ fontSize: "1.5rem", fontWeight: "700", color: "red" }}>
-            <input
-              type="radio"
-              id="vehicle3"
-              name="Status"
-              value="1"
-              onChange={handleInput}
-
-            />
-            <label for="vehicle3" className="ml-2">
-              {" "}
-              Em Espera
-            </label>
-          </div>
-
-
-
-          <div className=" row garison my-5">
-            <div className=" col-md-5 col-sm-12 avalible_garison ">
-              <h3 className="text-center">Garnição Disponível</h3>
-              {Garrison.map((v, i) => {
-                return (
-                  <div>
-                    <input
-                      type="checkbox"
-                      id={v._id}
-                      name="av_garison"
-                      // value={v.VehcleName + v.StaffName} //changes
-                      value={v.Av_garison}
-                      onChange={handleInput}
-                    disabled={v.disabled}
-                    checked={checkedBoxes[v._id]}
-                    />
-                    <label for="vehicle1" className="ml-2">
-                    { v.VehcleName + v.StaffName }
-                    </label>
-                  </div>
-                )
-              })}
-            </div>
-
-            <div className=" col-md-5 col-sm-12 unavalible_garison ml-5">
-              <h3 className="text-center">Garnição Indisponível</h3>
-
-
-              <ul>
-                {GarrisonIdFalse.map((v, i) => {
+            <div className=" row garison my-2">
+              <div className=" col-md-5 col-sm-12 avalible_garison ">
+                <h3 className="text-center">Garnição Disponível</h3>
+                {Garrison.map((v, i) => {
                   return (
-                    <>
-                      <li>   {v.StaffName + v.VehcleName}</li>
-                    </>
-
+                    <div>
+                      <input
+                        type="checkbox"
+                        id={v._id}
+                        name="av_garison"
+                        // value={v.VehcleName + v.StaffName} //changes
+                        value={v.Av_garison}
+                        onChange={handleInput}
+                        disabled={v.disabled}
+                        checked={checkedBoxes[v._id]}
+                      />
+                      <label for="vehicle1" className="ml-2">
+                        {v.VehcleName + v.StaffName}
+                      </label>
+                    </div>
                   )
                 })}
-              </ul>
+              </div>
+
+              <div className=" col-md-5 col-sm-12 unavalible_garison ml-5">
+                <h3 className="text-center">Garnição Indisponível</h3>
+
+
+                <ul>
+                  {GarrisonIdFalse.map((v, i) => {
+                    return (
+                      <>
+                        <li>   {v.StaffName + v.VehcleName}</li>
+                      </>
+
+                    )
+                  })}
+                </ul>
+              </div>
             </div>
-          </div>
 
 
 
-          <div className="d-flex justify-content-center ">
+            <div className="d-flex justify-content-center ">
 
 
-            <input class="btn btn-primary px-5 py-2 w-50 text-center" value="Enviar" type="submit" />
+              <input class="btn btn-primary px-5 py-2 w-50 text-center" value="Enviar" type="submit" />
+              <input
+                disabled={OccurenceNumberSaved ? false : true}
+                onClick={occurenceUpdate}
+                class="btn btn-primary px-5 py-2 w-50 text-center" value="Edit" type="edit" />
 
-          </div>
-        </form>
+            </div>
+          </form>
+        </div>
       </div>
-    </div>
     </>
   );
 };

@@ -4,7 +4,7 @@ const Services = () => {
   return (
     <>
     <div className="custom-container">
-      <div className="container mt-5">
+      <div className="container ">
       <h3 className=''>Atendimento</h3>
       <hr className='my-3' />
       <div className="button-group my-4 mx-3">

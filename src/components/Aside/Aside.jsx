@@ -13,6 +13,7 @@ import StreetviewIcon from '@mui/icons-material/Streetview';
 import CloseIcon from '@mui/icons-material/Close';
 import LogoutIcon from '@mui/icons-material/Logout';
 import ArticleIcon from '@mui/icons-material/Article';
+import logo from '../../assets/r7t7t1alcs182ncao9mvjis909.png'
 const Aside = ({sendDataToParent ,onLogout}) => {
     
    const navigate =  useNavigate()
@@ -37,7 +38,7 @@ const handleLogout=()=>{
             <div className="logoandmenuicon">
 
                 <Link to="/">
-                    LOGO
+                    <img style={{width:"40px"}} src={logo} alt="" srcset="" />
                 </Link>
                 <div className="menu-icon" onClick={handleTrigger} >
                     <CloseIcon />

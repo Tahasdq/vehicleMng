@@ -77,19 +77,19 @@ const Report = () => {
                 // Create a blob from the PDF data
                 console.log(response.data)
                 const pdfBlob = new Blob([response.data], { type: 'application/pdf' });
-    
+
                 // Create a temporary URL for the blob
                 const url = URL.createObjectURL(pdfBlob);
-    
+
                 // Create an anchor element to trigger the download
                 const link = document.createElement('a');
                 link.href = url;
                 link.download = 'newPdf.pdf';
                 document.body.appendChild(link);
-    
+
                 // Trigger the download
                 link.click();
-    
+
                 // Cleanup
                 URL.revokeObjectURL(url);
                 document.body.removeChild(link);
@@ -98,7 +98,7 @@ const Report = () => {
                 console.error('Error creating or downloading PDF:', error);
             });
     };
-    
+
 
     const handleDownloadButtonClick = (id) => {
         createAndDownloadPdf(id);
@@ -182,37 +182,37 @@ const Report = () => {
                                         <div className="result-content" key={i}>
                                             <div>
                                                 <table className="table">
-                                                    <tbody>
+                                                    <thead>
                                                         <tr className="standout-row">
-                                                            <td><strong >Data</strong></td>
+                                                            <th><strong>Data</strong></th>
+                                                            <th><strong>Occurencia</strong></th>
+                                                            <th><strong>Cod</strong></th>
+                                                            <th><strong>Rua</strong></th>
+                                                            <th><strong>Bairro</strong></th>
+                                                            <th><strong>Download</strong></th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr>
                                                             <td>{formattedDateRegistratonDate}</td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td><strong>Occurencia</strong></td>
                                                             <td>{v.occurance_Number}</td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td><strong>Cod</strong></td>
                                                             <td>{v.occurance_Code}</td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td><strong>Rua</strong></td>
-                                                            <td>{v.Street}</td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td><strong>Bairro</strong></td>
-                                                            <td>{v.City}</td>
+                                                            <td className='street'>{v.Street}</td>
+                                                            <td lassName='city'>{v.City}</td>
+                                                            <td>
+                                                                <div id={v._id} onClick={handleClick}>
+                                                                    <FileDownloadIcon
+                                                                        sx={{
+                                                                            cursor: "pointer"
+                                                                        }}
+                                                                    />
+                                                                </div>
+                                                            </td>
                                                         </tr>
                                                     </tbody>
                                                 </table>
                                             </div>
-                                            <div className='download-btn' id={v._id} onClick={handleClick}>
-                                                <FileDownloadIcon
-                                                    sx={{
-                                                        cursor: "pointer"
-                                                    }}
-                                                />
-                                            </div>
+
                                         </div>
                                     )
                                 }) : <div className="no-result-content text-center my-3">
