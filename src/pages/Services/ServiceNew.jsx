@@ -516,7 +516,7 @@ const ServiceNew = () => {
                   type="text"
                   class="form-control"
                   name="CPF"
-                  placeholder="CEP"
+                  placeholder="CPF"
                   value={post.CPF}
                   onChange={handleInput}
                   aria-label="Username"
@@ -528,7 +528,7 @@ const ServiceNew = () => {
                   type="text"
                   class="form-control"
                   name="Street"
-                  placeholder="Zip code"
+                  placeholder="CEP"
                   value={post.Street}
                   onChange={handleInput}
                   aria-label="Username"
