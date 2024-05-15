@@ -40,6 +40,7 @@ const NewOccurance = new mongoose.Schema({
   Applicant: String,
   Street: String,
   CPF: String,
+  CEP:String,
   Neighbourhood: String,
   City: String,
   Reference: String,
