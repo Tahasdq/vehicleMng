@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import axios from "axios";
 import { v4 as uuidv4 } from 'uuid';
 import { jwtDecode } from 'jwt-decode'
+import ClearAllButton from "../../components/ClearAllButton/ClearAllButton";
 // import { Experimental_CssVarsProvider } from "@mui/material";
 
 
@@ -29,6 +30,7 @@ const ServiceNew = () => {
       Applicant: "",
       Street: "",
       CPF:"",
+      CEP:"",
       Neighbourhood: "",
       City: "",
       Reference: "",
@@ -178,7 +180,7 @@ const ServiceNew = () => {
     if (name === "phone") {
       axios.get(`https://vehiclemng.onrender.com/getoccurencebyphonenumber/${value}`)
         .then((res) => {
-          console.log("occ is ", res.data._id);
+          console.log("occ is ", res);
           console.log("occurence number is s", res.data.occurance_Number)
           setOccurenceNumberSaved(res.data.occurance_Number)
           setOccurenceIdForUpdate(res.data._id)
@@ -186,6 +188,12 @@ const ServiceNew = () => {
           if (res.data) {
             setPost((prevState) => ({
               ...prevState,
+              occurance_Code:res.data.occurance_Code              ,
+              CPF:res.data.CPF,
+              CEP:res.data.CEP,
+              Description:res.data.Description,
+              Request:res.data.Request,
+              Reference:res.data.Reference,
               Applicant: res.data.Applicant,
               Street: res.data.Street,
               Neighbourhood: res.data.Neighbourhood,
@@ -196,6 +204,12 @@ const ServiceNew = () => {
           setOccurenceNumberSaved(null)
           setPost((prevState) => ({
             ...prevState,
+            occurance_Code:"",
+            CEP:"",
+            CPF:"",
+            Description:"",
+            Request:"",
+            Reference:"",
             Applicant: "",
             Street: "",
             Neighbourhood: "",
@@ -206,21 +220,22 @@ const ServiceNew = () => {
 
 
     // calling zipcode(Street api )
-    if (name === "Street") {
+    if (name === "CEP") {
       axios.get(`https://viacep.com.br/ws/${value}/json/`)
         .then((res) => {
           console.log("res.data", res.data)
           if (res.data) {
             setPost((prevState) => ({
               ...prevState,
+              Street:res.data.logradouro,
               Neighbourhood: res.data.bairro,
               City: res.data.localidade
-
             }));
           }
         }).catch((err) => {
           setPost((prevState) => ({
             ...prevState,
+            Street:"",
             Neighbourhood: "",
             City: ""
           }));
@@ -302,7 +317,59 @@ const ServiceNew = () => {
     event.preventDefault();
 
 
+    function validCPF(cpf) {
+      cpf = cpf.replace(/[^\d]+/g, '');
+      if (cpf === '') {
+          alert("CPF is empty.");
+          return false;
+      }
 
+      // Elimina CPFs inválidos conhecidos
+      if (cpf.length !== 11 || 
+          cpf === "00000000000" || 
+          cpf === "11111111111" || 
+          cpf === "22222222222" || 
+          cpf === "33333333333" || 
+          cpf === "44444444444" || 
+          cpf === "55555555555" || 
+          cpf === "66666666666" || 
+          cpf === "77777777777" || 
+          cpf === "88888888888" || 
+          cpf === "99999999999") {
+          alert("Invalid CPF: Known invalid CPF pattern.");
+          return false;
+      }
+
+      // Valida 1o dígito
+      let add = 0;
+      for (let i = 0; i < 9; i++) {
+          add += parseInt(cpf.charAt(i)) * (10 - i);
+      }
+      let rev = 11 - (add % 11);
+      if (rev === 10 || rev === 11) rev = 0;
+      if (rev !== parseInt(cpf.charAt(9))) {
+          alert("Invalid CPF: First digit validation failed.");
+          return false;
+      }
+
+      // Valida 2o dígito
+      add = 0;
+      for (let i = 0; i < 10; i++) {
+          add += parseInt(cpf.charAt(i)) * (11 - i);
+      }
+      rev = 11 - (add % 11);
+      if (rev === 10 || rev === 11) rev = 0;
+      if (rev !== parseInt(cpf.charAt(10))) {
+          alert("Invalid CPF: Second digit validation failed.");
+          return false;
+      }
+
+      return true;
+  }
+
+  if (!validCPF(post.CPF)) {
+      return false;
+  }
 
     try {
       const token = localStorage.getItem("token")
@@ -328,6 +395,7 @@ const ServiceNew = () => {
         setPost({
           phone: "",
           Applicant: "",
+          CEP:"",
           Street: "",
           CPF:"",
           Neighbourhood: "",
@@ -341,7 +409,7 @@ const ServiceNew = () => {
         });
         localStorage.removeItem("checkedBoxes")
       }
-
+      
 
       // const responsePut = await axios.put(`https://vehiclemng.onrender.com/updataGarrison/${GarrisonId}`);
       // console.log(responsePut);
@@ -372,6 +440,7 @@ const ServiceNew = () => {
       Street: "",
       Neighbourhood: "",
       CPF:"",
+      CEP:"",
       City: "",
       Reference: "",
       Description: "",
@@ -412,6 +481,7 @@ const ServiceNew = () => {
           Street: "",
           CPF:"",
           Neighbourhood: "",
+          CEP:"",
           City: "",
           Reference: "",
           Description: "",
@@ -454,6 +524,7 @@ const ServiceNew = () => {
       CPF:"",
       Neighbourhood: "",
       City: "",
+      CEP:"",
       Reference: "",
       Description: "",
       Request: "",
@@ -461,6 +532,33 @@ const ServiceNew = () => {
       occurance_Number: "", // Clearing the fields
       occurance_Code: "",
     });
+
+  }
+
+  const clearFeilds=()=>{
+
+    const inputs = document.querySelectorAll('input[type="checkbox"]');
+                inputs.forEach(input => {
+                  setCheckedBoxes(false)
+    });
+    setPost({
+      phone: "",
+      Applicant: "",
+      Street: "",
+      CEP:"",
+      CPF:"",
+      Neighbourhood: "",
+      City: "",
+      Reference: "",
+      Description: "",
+      Request: "",
+      av_garison: [null],
+      occurance_Number: "", // Clearing the fields
+      occurance_Code: "",
+    });
+    localStorage.removeItem("checkedBoxes") 
+    
+
 
   }
 
@@ -482,6 +580,7 @@ const ServiceNew = () => {
          updated successfully
         </div>
       )}
+      <ClearAllButton clearField={clearFeilds}  />
       <div className="custom-container">
         <div className="container">
           <form onSubmit={handleSubmit}>
@@ -491,7 +590,7 @@ const ServiceNew = () => {
                   type="text"
                   class="form-control"
                   name="phone"
-                  placeholder="phone"
+                  placeholder="Phona"
                   value={post.phone}
                   onChange={handleInput}
                   aria-label="Username"
@@ -527,8 +626,20 @@ const ServiceNew = () => {
                 <input
                   type="text"
                   class="form-control"
-                  name="Street"
+                  name="CEP"
                   placeholder="CEP"
+                  value={post.CEP}
+                  onChange={handleInput}
+                  aria-label="Username"
+                  aria-describedby="basic-addon1"
+                />
+              </div>
+              <div class="input-group mb-3 col-md-4 col-sm-12">
+                <input
+                  type="text"
+                  class="form-control"
+                  name="Street"
+                  placeholder="Rua"
                   value={post.Street}
                   onChange={handleInput}
                   aria-label="Username"
@@ -686,16 +797,12 @@ const ServiceNew = () => {
               </div>
             </div>
 
-
-
             <div className="d-flex justify-content-center ">
-
-
-              <input class="btn btn-primary px-5 py-2 w-50 text-center" value="Enviar" type="submit" />
+              <input class="btn btn-primary p-3 m-3 w-50 text-center" value="Enviar" type="submit" />
               <input
                 disabled={OccurenceNumberSaved ? false : true}
                 onClick={occurenceUpdate}
-                class="btn btn-primary px-5 py-2 w-50 text-center" value="Edit" type="edit" />
+                class="btn btn-primary p-3 m-3 w-50 text-center" value="Edit" type="edit" />
 
             </div>
           </form>

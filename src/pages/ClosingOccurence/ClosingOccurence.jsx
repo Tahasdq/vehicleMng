@@ -111,10 +111,7 @@ const ClosingOccurence = () => {
           setOccurenceNumberSaved(null);
         });
     }
-
-
   };
-
 
   // Function to handle removing a form field
   const handleRemoveField = (id) => {
@@ -434,7 +431,6 @@ const ClosingOccurence = () => {
 
 
                   return (
-
                     <div className="col-md-12 col-sm-12 my-3 occurancea_holds row">
                       <div className="col-md-10 row">
                         <div className="col-md-3 col-sm-12">
@@ -452,9 +448,9 @@ const ClosingOccurence = () => {
                         <div className="col-md-3 col-sm-12">
                           <h6>Bairro : {v.Neighbourhood} </h6>
                         </div>
-                        {/* <div className="col-md-3 col-sm-12">
-                          <h6>OcN : {v.occurance_Number.toString().padStart(4, '0')} </h6>
-                        </div> */}
+                        <div className="col-md-3 col-sm-12">
+                          <h6>Número de ocorrência: {v.occurance_Number.toString().padStart(4, '0')} </h6>
+                        </div>
                         {/* <div className="col-md-3 col-sm-12">
                       <h6>tempo de chegada : {formattedTimeArrival} </h6>
                     </div>
@@ -815,13 +811,13 @@ const ClosingOccurence = () => {
                           id={v._id}
                           onClick={handleClickOpen}
                           className="btn btn-danger"
-                          style={{ padding: "50px 60px" }}
+                          style={{ padding: "24px 24px" }}
                         >
-                          <i  id={v._id}
+                          <span  id={v._id}
                             onClick={(e) => e.currentTarget.parentNode.click()}
-                            className="fa-2xl fa-solid fa-minus"
-                          // style={{ fontSize: "25px" }}
-                          ></i>
+                            className="font-weight-bold fs-6"
+                            style={{fontSize:"2rem"}}
+                          >Fechar</span>
                         </a>
                       </div>
                     </div>

@@ -326,6 +326,10 @@ input {
 }
 
 @media (max-width: 500px) {
+    .deltbtn {
+        margin-top: 20px !important;
+    }
+
 
     .custom-container {
         margin: 0;
@@ -483,7 +487,8 @@ input {
     .deltbtn {
         position: absolute;
         left: 470px;
-        top: 200px
+        top: 200px;
+        margin-top: 20px !important;
     }
 
     .guofdybtn {

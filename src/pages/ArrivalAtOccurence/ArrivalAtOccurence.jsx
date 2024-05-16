@@ -205,11 +205,9 @@ const ArrivalAtOccurence = () => {
                       </div>
                       <div className="col-md-4 col-sm-12">
                         <h6>Rua : {v.Street} </h6>
-
                       </div>
                       <div className="col-md-4 col-sm-12 ml-md-3 ">
                         <h6>Cód. Atendimento : {v.occurance_Code} </h6>
-
                       </div>
                       {/* <div className="col-md-6 col-sm-12">
                     <h6> Garnição deixando a cena: {v.Neighbourhood} </h6>

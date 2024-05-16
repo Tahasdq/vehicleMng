@@ -55,12 +55,12 @@ return(
   <Link to={`/service/listchild/${id}`} >
   <div className="col-md-12 col-sm-12">
       
-      <div className="list mt-5"> 
+      <div className="list mt-2 p-4 "> 
 
-            <h4>Telephono: {v.phone} </h4>
-            <h4>Solicitante: {v.Applicant} </h4>
-            <h4>Rua: {v.Street}</h4>
-            <h4>Cód. Atendimento: {v.occurance_Code}</h4>
+            <h6>Telephono: {v.phone} </h6>
+            <h6>Solicitante: {v.Applicant} </h6>
+            <h6>Rua: {v.Street}</h6>
+            <h6>Cód. Atendimento: {v.occurance_Code}</h6>
             {/* <h4>Occurance Code : {v.occurance_Code}</h4> */}
         </div>
       </div>

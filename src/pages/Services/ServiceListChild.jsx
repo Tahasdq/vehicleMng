@@ -28,8 +28,8 @@ const [data,setData] = useState([])
 
   return (
     <div className="container">
-      <div className=" row garison my-5 popa">
-        <div className=" col-md-4 col-sm-12 Record_1">
+      <div className=" row garison my-5 popa ">
+        <div style={{backgroundColor: "#ffff"}} className=" col-md-4 col-sm-12 Record_1 ">
 
       
           <ul>
@@ -47,7 +47,7 @@ const [data,setData] = useState([])
             </li>
           </ul>
         </div>
-        <div className=" col-md-4 col-sm-12  Record_2">
+        <div style={{backgroundColor: "#ffff"}}  className=" col-md-4 col-sm-12  Record_2 ">
           <ul>
             <li>
               <h4> Rua:{data.Street}</h4>
