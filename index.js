@@ -1263,7 +1263,7 @@ app.put("/updateOccurence/:id", async (req, res) => {
 app.put("/updateOccurenceInServices", async (req, res) => {
   try {
     const { OccurenceIdForUpdate } = req.body;
-    const { phone, Applicant, Street, Neighbourhood, City, Reference, av_garison, occurance_Number, occurance_Code, Status } = req.body.post
+    const { phone, Applicant, Street, Neighbourhood, City, Reference, av_garison, occurance_Number, occurance_Code, CEP,CPF,Request,Description } = req.body.post
     console.log("OccurenceIdForUpdate", OccurenceIdForUpdate);
     let Av_garisonMixed = [];
     try {
@@ -1285,6 +1285,10 @@ app.put("/updateOccurenceInServices", async (req, res) => {
       av_garison: Av_garisonMixed,
       occurance_Number: occurance_Number,
       occurance_Code: occurance_Code,
+      Description:Description,
+      Request:Request,
+      CEP:CEP,
+      CPF:CPF
     }
     NewOccuranceModel.findByIdAndUpdate(OccurenceIdForUpdate, { ...updateField, Status: 0 }, { new: true })
       .then((response) => {
