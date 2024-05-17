@@ -1290,7 +1290,7 @@ app.put("/updateOccurenceInServices", async (req, res) => {
       CEP:CEP,
       CPF:CPF
     }
-    NewOccuranceModel.findByIdAndUpdate(OccurenceIdForUpdate, { ...updateField, Status: 0 }, { new: true })
+    NewOccuranceModel.findByIdAndUpdate(OccurenceIdForUpdate, { ...updateField }, { new: true })
       .then((response) => {
         return res.status(200).json({ response: "data updated" })
       })
