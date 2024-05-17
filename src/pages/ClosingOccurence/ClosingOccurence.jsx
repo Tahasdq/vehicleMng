@@ -187,6 +187,9 @@ const ClosingOccurence = () => {
   }, []);
 
   const handleDeleteClick = (e) => {
+    if (checkCpf()) {
+      return true;
+    }
     e.preventDefault();
     // Basic form validation
     // const isValid = formFields.every(field =>
@@ -251,7 +254,7 @@ const ClosingOccurence = () => {
       .catch((error) => {
         console.error("Error fetching vehicle data:", error);
       });
-    setFormFields([{ id: 1, name: "", cpf: "",cep:"", phone: "", street: "", Neighborhood: "", City: "", person: "" }]);
+    setFormFields([{ id: 1, name: "", cpf: "", cep: "", phone: "", street: "", Neighborhood: "", City: "", person: "" }]);
     axios
       .get("https://vehiclemng.onrender.com/getnewoccuranceAllStatusWithZeroAndTwo")
       .then((response) => {
@@ -266,18 +269,16 @@ const ClosingOccurence = () => {
     handleCloseAndDelete();
 
   };
-  const handleCloseAndDelete=()=>{
+  const handleCloseAndDelete = () => {
     axios.delete(`https://vehiclemng.onrender.com/saveOccurenceDelete/${idForSaving}`)
-    .then((res)=>{
-      console.log("Occurence Deteted");
-      setOpen(false);
-    // setSelectedValue(""); // Reset selectedValue on dialog close
-    setFormFields([{ id: 1, name: "", cpf: "", cep: "", phone: "", street: "", Neighborhood: "", City: "", person: "" }]);
-    setDescription("")
-    })
+      .then((res) => {
+        console.log("Occurence Deteted");
+        setOpen(false);
+        // setSelectedValue(""); // Reset selectedValue on dialog close
+        setFormFields([{ id: 1, name: "", cpf: "", cep: "", phone: "", street: "", Neighborhood: "", City: "", person: "" }]);
+        setDescription("")
+      })
 
-
-    
   }
 
   const [open, setOpen] = useState(false);
@@ -300,7 +301,7 @@ const ClosingOccurence = () => {
     console.log("shouldIncludeInitialFormFields", shouldIncludeInitialFormFields)
 
     const updatedFormFields = savedOccurences.reduce((acc, curr) => {
-      if (curr.formFields ) {
+      if (curr.formFields) {
         acc.push(...curr.formFields);
       }
       return acc;
@@ -313,16 +314,76 @@ const ClosingOccurence = () => {
         acc += curr.description; // Concatenate description strings
       }
       return acc;
-    }, shouldIncludeInitialFormFields ? "" : description);    
+    }, shouldIncludeInitialFormFields ? "" : description);
     console.log(updatedDescription)
     setDescription(updatedDescription)
 
   };
 
+  const checkCpf = () => {
+    formFields.forEach((item) => {
+      const cpf = item.cpf;
+      if (!cpf) {
+        alert("O campo CPF não existe.");
+        isValid = false; // Mark as invalid
+        return false;
+      }
+      if (cpf === '') {
+        alert("O CPF está vazio.");
+        return false;
+      }
+  
+      // Elimina CPFs inválidos conhecidos
+      if (cpf.length !== 11 || 
+          cpf === "00000000000" || 
+          cpf === "11111111111" || 
+          cpf === "22222222222" || 
+          cpf === "33333333333" || 
+          cpf === "44444444444" || 
+          cpf === "55555555555" || 
+          cpf === "66666666666" || 
+          cpf === "77777777777" || 
+          cpf === "88888888888" || 
+          cpf === "99999999999") {
+        alert("CPF inválido: Padrão de CPF inválido conhecido");
+        return false;
+      }
+  
+      // Valida 1o dígito
+      let add = 0;
+      for (let i = 0; i < 9; i++) {
+        add += parseInt(cpf.charAt(i)) * (10 - i);
+      }
+      let rev = 11 - (add % 11);
+      if (rev === 10 || rev === 11) rev = 0;
+      if (rev !== parseInt(cpf.charAt(9))) {
+        alert("CPF inválido: Primeiro dígito verificador está incorreto");
+        return false;
+      }
+  
+      // Valida 2o dígito
+      add = 0;
+      for (let i = 0; i < 10; i++) {
+        add += parseInt(cpf.charAt(i)) * (11 - i);
+      }
+      rev = 11 - (add % 11);
+      if (rev === 10 || rev === 11) rev = 0;
+      if (rev !== parseInt(cpf.charAt(10))) {
+        alert("CPF inválido: Segundo dígito verificador está incorreto");
+        return false;
+      }
+  
+      return true;
+    });
+  };
+  
+
+
+
   const handleClose = (event, reason) => {
     const IdOfOccurence = event.target.id
     console.log("event.target.id handleclose", IdOfOccurence);
-    console.log("idForSaving :" , idForSaving)
+    console.log("idForSaving :", idForSaving)
     if (reason !== 'backdropClick' && reason !== 'escapeKeyDown') {
       console.log("escapeKeyDown & backdropClick");
       console.log("saveOccurence", { formFields });
@@ -548,7 +609,7 @@ const ClosingOccurence = () => {
                           {formFields.map((field) => (
                             <div key={field.id}>
                               <Box display="flex">
-                              <Autocomplete
+                                <Autocomplete
                                   disablePortal
                                   id={`phone-${field.id}`}
                                   options={closingOccurences.map((item) => item.phone)}
@@ -573,7 +634,7 @@ const ClosingOccurence = () => {
                                     />
                                   )}
                                 />
-                                
+
                                 <Autocomplete
                                   disablePortal
                                   id={`cpf-${field.id}`}
@@ -813,10 +874,10 @@ const ClosingOccurence = () => {
                           className="btn btn-danger"
                           style={{ padding: "24px 24px" }}
                         >
-                          <span  id={v._id}
+                          <span id={v._id}
                             onClick={(e) => e.currentTarget.parentNode.click()}
                             className="font-weight-bold fs-6"
-                            style={{fontSize:"2rem"}}
+                            style={{ fontSize: "2rem" }}
                           >Fechar</span>
                         </a>
                       </div>

@@ -320,7 +320,7 @@ const ServiceNew = () => {
     function validCPF(cpf) {
       cpf = cpf.replace(/[^\d]+/g, '');
       if (cpf === '') {
-          alert("CPF is empty.");
+          alert("O CPF está vazio.");
           return false;
       }
 
@@ -336,7 +336,7 @@ const ServiceNew = () => {
           cpf === "77777777777" || 
           cpf === "88888888888" || 
           cpf === "99999999999") {
-          alert("Invalid CPF: Known invalid CPF pattern.");
+          alert("CPF inválido: Padrão de CPF inválido conhecido");
           return false;
       }
 
@@ -348,7 +348,7 @@ const ServiceNew = () => {
       let rev = 11 - (add % 11);
       if (rev === 10 || rev === 11) rev = 0;
       if (rev !== parseInt(cpf.charAt(9))) {
-          alert("Invalid CPF: First digit validation failed.");
+          alert("CPF inválido");
           return false;
       }
 
@@ -360,7 +360,7 @@ const ServiceNew = () => {
       rev = 11 - (add % 11);
       if (rev === 10 || rev === 11) rev = 0;
       if (rev !== parseInt(cpf.charAt(10))) {
-          alert("Invalid CPF: Second digit validation failed.");
+          alert("CPF inválido");
           return false;
       }
 
@@ -369,6 +369,18 @@ const ServiceNew = () => {
 
   if (!validCPF(post.CPF)) {
       return false;
+  }
+  const checkifgarissonSelectedornot = (av_garison) => {
+    if (av_garison.length === 0) {
+      alert("Selecione a guarnição ou coloque em espera");
+      return false;
+    }
+    return true;
+  }
+  
+  // Assuming `post.av_garison` is the variable you're checking
+  if (!checkifgarissonSelectedornot(post.av_garison)) {
+    return false;
   }
 
     try {
